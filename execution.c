@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 16:16:16 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 02:01:26 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 13:11:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static	void	ft_check_redirs(t_data *data)
 		{
 			if (prev)
 				close(data->fd_in);
-			data->fd_in = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0666);
+			data->fd_in = open(cmd->cmd_data->cmd_path, O_WRONLY | O_APPEND | O_CREAT, 0666);
 		}
 		if (id == L1_REDIRECT && path)
 		{
