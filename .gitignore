@@ -1,6 +1,7 @@
-error
-not_compile_on_linux
+test.sh
 
+mem_leaks/
+*.mem
 libft/libft.a
 libft/srcs/libft/*.o
 libft/srcs/libft/*.d
