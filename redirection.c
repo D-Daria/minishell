@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:08:37 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 18:59:17 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:45:48 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,5 @@ int	ft_check_files(t_data *data, t_list *redir, int id)
 		ft_close_all(data, NULL);
 		exit(1);
 	}
-	return (-1);
+	return (1);
 }

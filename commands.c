@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 19:17:34 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:43:39 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,11 +138,10 @@ static void	ft_get_args(t_data *data, t_list **token, int id, int num)
 	{
 		if ((*token)->next && (*token)->next->content->token_id == WORD)
 		{
-			// (*token) = (*token)->next;
-			// cmd_path = ft_strdup((*token)->next->content->token);
 			new_redir = ft_new_redir_lst((*token)->next->content->token, id, num);
 			ft_lstadd_back(&data->redirs, new_redir);
 			new_redir = NULL;
+			(*token) = (*token)->next;
 		}
 		else
 		{
@@ -151,9 +150,6 @@ static void	ft_get_args(t_data *data, t_list **token, int id, int num)
 			new_redir = NULL;
 		}
 	}
-	// new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
-	// ft_lstadd_back(&data->commands, new_cmd);
-	// new_cmd = NULL; printf("cmd cleared\n");
 	ft_free_split(cmd);
 	ft_memdel(cmd_path);
 }

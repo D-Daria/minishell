@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 16:16:16 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 19:02:18 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:50:06 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,38 +114,38 @@ static void	ft_execute_child(t_data *data, int *fd_read, t_list **cmd)
 
 static void	ft_execute_child(t_data *data, t_list *cmd)
 {
-	// t_list	*redir;
-	// int		id;
+	t_list	*redir;
+	int		id;
 
 	if (!cmd)
 		ft_perror(cmd);
 	if (cmd->next == NULL)
 		ft_execute_single_cmd(data, cmd, data->redirs);
-	// dup2(data->fd_read, STDIN_FILENO); // read_in
-	// if (cmd->next)
-	// 	dup2(data->fd_pipe[1], STDOUT_FILENO);
-	// if (data->redirs)
-	// {
-	// 	printf("is redirect\n");
-	// 	redir = data->redirs;
-	// 	while (redir && redir->redir_data->num == cmd->cmd_data->num)
-	// 	{
-	// 		printf("several redirects\n");
-	// 		id = redir->redir_data->id;
-	// 		if (ft_check_files(data, redir, id) == -1)
-	// 			ft_perror(cmd);
-	// 		ft_redirect(data, id);
-	// 		id = close(data->fd_in);
-	// 		printf("ret: %d\n", id);
-	// 		redir = redir->next;
-	// 	}
-	// }
-	// close(data->fd_in);
-	// close(data->fd_pipe[0]);
-	// if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
-	// 	execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
-	// ft_perror(cmd);
-	// exit(0);
+	dup2(data->fd_read, STDIN_FILENO); // read_in
+	if (cmd->next)
+		dup2(data->fd_pipe[1], STDOUT_FILENO);
+	if (data->redirs)
+	{
+		printf("is redirect\n");
+		redir = data->redirs;
+		while (redir && redir->redir_data->num == cmd->cmd_data->num)
+		{
+			printf("several redirects\n");
+			id = redir->redir_data->id;
+			if (ft_check_files(data, redir, id) == -1)
+				ft_perror(cmd);
+			ft_redirect(data, id);
+			id = close(data->fd_in);
+			printf("ret: %d\n", id);
+			redir = redir->next;
+		}
+	}
+	close(data->fd_in);
+	close(data->fd_pipe[0]);
+	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
+		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
+	ft_perror(cmd);
+	exit(0);
 }
 
 
@@ -166,12 +166,8 @@ int	ft_pipe(t_data *data)
 			return (ft_close_all(data, "perror"));
 		else if (pid == 0)
 		{
-			// if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
-			// {
-				printf("execute simple command: %s\n", cmd->cmd_data->cmd_path);
-				ft_execute_child(data, cmd); // simple command
-				// printf("cmd after execution: %s\n", cmd->cmd_data->cmd_path);
-				// }
+			printf("execute simple command: %s\n", cmd->cmd_data->cmd_path);
+			ft_execute_child(data, cmd); // simple command
 		}
 		else
 		{
