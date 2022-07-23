@@ -6,11 +6,13 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 16:16:16 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 13:11:18 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:28:10 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
 /*
 static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
 {
