@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:48 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/22 15:18:13 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:38:19 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	debug_print_commands_list(t_data *data)
 		printf(YELLOW);
 		printf("list #%d\n", i + 1);
 		printf(BREAK);
+		printf("num: %d\n", cmd_lst->cmd_data->num);
 		printf("cmd: ");
 		debug_print_double_arr(cmd_lst->cmd_data->cmd);
 		printf("cmd_path: ");
@@ -52,6 +53,23 @@ void	debug_print_commands_list(t_data *data)
 		i++;
 		cmd_lst = cmd_lst->next;
 		printf("\n");
+	}
+}
+
+void	debug_print_redirections(t_data *data)
+{
+	t_list	*redirs;
+
+	redirs = data->redirs;
+	if (!redirs)
+		printf("No redirections\n");
+	while (redirs)
+	{
+		printf(GREEN"redirs\n"BREAK);
+		printf("num: %d\n", redirs->redir_data->num);
+		printf("file: %s\n", redirs->redir_data->file);
+		printf("id: %d\n", redirs->redir_data->id);
+		redirs = redirs->next;
 	}
 }
 

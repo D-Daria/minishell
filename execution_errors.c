@@ -6,25 +6,24 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:29:08 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 01:00:31 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:33:39 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_close_all(t_data *data, int fd_read, const char *error)
+int	ft_close_all(t_data *data, const char *error)
 {
 	int	ret;
 
 	ret = 0;
-	(void)fd_read;
 	if (data->fd_in)
 		ret = close(data->fd_in);
 	if (data->fd_out)
 		ret = close(data->fd_out);
-	printf("ret1: %d\n", ret);
+	// printf("ret1: %d\n", ret);
 	ret = close(data->fd_pipe[0]);
-	printf("ret2: %d\n", ret);
+	// printf("ret2: %d\n", ret);
 	ret = close(data->fd_pipe[1]);
 	// printf("ret3: %d\n", ret);
 	// ret = close(fd_read);

@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/22 15:17:08 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:47:55 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,31 @@ void	ft_free_commands(t_list	**cmd_head)
 	printf("commands cleared\n");
 }
 
-t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id)
+void	ft_free_redirs(t_list **redir_head)
+{
+	t_list	*next;
+
+	if (*redir_head == NULL)
+	{
+		printf("redirs are empty\n");
+		return ;
+	}
+	if (*redir_head != NULL)
+	{
+		while (*redir_head != NULL)
+		{
+			next = (*redir_head)->next;
+			ft_memdel((*redir_head)->redir_data->file);
+			ft_memdel((*redir_head)->redir_data);
+			ft_memdel((*redir_head));
+			(*redir_head) = next;
+		}
+	}
+	ft_memdel((*redir_head));
+	printf("redirs cleared\n");
+}
+
+t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num)
 {
 	t_command	*new_cmd;
 	size_t		i;
@@ -72,13 +96,13 @@ t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id)
 	// 	i++;
 	// }
 	// new_cmd->cmd[i] = NULL;
+	new_cmd->num = num;
 	new_cmd->cmd_path = ft_strdup(cmd_path);
 	new_cmd->token_id = id;
 	return (new_cmd);
 }
 
-
-t_list	*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id)
+t_list	*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num)
 {
 	t_list		*cmd_lst;
 	t_command	*new_cmd;
@@ -91,7 +115,7 @@ t_list	*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id)
 	// 	new_cmd->cmd = NULL;
 	// }
 	// else
-		new_cmd = ft_create_command(cmd_path, cmd_args, id);
+		new_cmd = ft_create_command(cmd_path, cmd_args, id, num);
 	if (new_cmd == NULL)
 		return (NULL);
 	cmd_lst = (t_list *)malloc(sizeof(t_list) * 1);

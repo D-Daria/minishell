@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 00:59:14 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 18:47:21 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ typedef struct s_parser {
 }			t_parser; // заменить на t_command ?
 
 typedef struct s_data {
+	int			fd_read;
 	int			fd_pipe[2];
 	int			fd_in; // файл для записи
 	int			fd_out; // файл для чтения
@@ -76,6 +77,7 @@ typedef struct s_data {
 	char		*builtins[8];
 	size_t		pipes_number;
 	t_parser	*parser_ptr;
+	t_list		*redirs;
 	t_list		*tokens;
 	t_list		*last_token;
 	t_list		*commands;
@@ -96,7 +98,7 @@ size_t	ft_split_len(char **str);
 void	debug_print_double_arr(char **arr);
 void	ft_print_list_of_tokens(t_data *data);
 void	debug_print_commands_list(t_data *data);
-// void	debug_print_commands_list(t_command *head);
+void	debug_print_redirections(t_data *data);
 
 //read_user_cmd.c
 void    ft_read_user_cmd(t_data *data_ptr);
@@ -114,10 +116,11 @@ void		ft_commands(t_data *data);
 
 /*commands_utils.c*/
 void		ft_get_paths(t_parser *parser);
-t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id);
-t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id);
+t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num);
+t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 void		ft_free_commands(t_list **cmd_head);
 char		*ft_access_paths(t_parser *parser, char *cmd);
+void		ft_free_redirs(t_list **redir_head);
 
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
@@ -129,10 +132,10 @@ void		ft_execute(t_data *data);
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);
 void		ft_token_error(t_list *cmd, int id);
-int			ft_close_all(t_data *data, int fd_read, const char *error);
+int			ft_close_all(t_data *data, const char *error);
 
 /*redirection.c*/
-int			ft_check_files(t_data *data, t_list *cmd, int *fd_read, int id);
-void		ft_redirect(t_data *data, int *fd_read, t_list *cmd, int id);
+int			ft_check_files(t_data *data, t_list *cmd, int id);
+void		ft_redirect(t_data *data, int id);
 
 #endif

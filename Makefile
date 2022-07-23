@@ -13,7 +13,7 @@ D_FILES_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.d, $(SRCS_MF)))
 LIBFT = ./libft/libft.a
 LIB_INC = -L./libft/ -lft
 
-MEM_LIB = -L./Memd/ -lmemd
+# MEM_LIB = -L./Memd/ -lmemd
 
 detected_OS := $(shell uname)
 

@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/22 18:42:33 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:17:34 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,46 +35,58 @@ static void	ft_get_cmd(t_list **token, char ***cmd)
 	ft_memdel(str_spaced);
 }
 
-/*
-static void	ft_get_args(t_data *data, t_list **token, int id)
+t_list	*ft_new_redir_lst(char *file, int id, int num)
 {
-	t_parser	*parser;
-	char		**cmd;
-	char		*cmd_path;
-	t_list		*new_cmd;
+	t_list	*redir_lst;
+	t_redir *redir;
 
-	parser = data->parser_ptr;
-	cmd = NULL;
-	cmd_path = ft_access_paths(parser, (*token)->content->token);
-	if (!cmd_path)
-	{
-		printf("token: %s\n", (*token)->content->token);
-		ft_check_file((*token)->content->token, &id, &cmd_path);
-	}
-	if ((*token)->next == NULL || id < WORD)
-	{
-		cmd = (char **)malloc(sizeof(char *) * 2);
-		if (cmd == NULL)
-			return ;
-		cmd[0] = ft_strdup((*token)->content->token);
-		cmd[1] = NULL;
-	}
-	else
-		ft_get_cmd(token, &cmd);
-	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id);
-	ft_lstadd_back(&data->commands, new_cmd);
-	new_cmd = NULL; printf("cmd cleared\n");
-	ft_free_split(cmd);
-	ft_memdel(cmd_path);
+	redir = (t_redir *)ft_calloc(sizeof(t_redir), 1);
+	if (!redir)
+		return (NULL);
+	redir->num = num;
+	redir->file = ft_strdup(file);
+	redir->id = id;
+	redir_lst = (t_list *)ft_calloc(sizeof(t_list), 1);
+	if (!redir_lst)
+		return (NULL);
+	redir_lst->redir_data = redir;
+	redir_lst->next = NULL;
+	return (redir_lst);
 }
-*/
 
-/*	TODO
-	учесть сигналы в дочерних процессах
-	
-*/
+// void	ft_init_redirs(t_data *data)
+// {
+// 	// t_list	*cmd_redirs;
+// 	t_list	*cmd;
+// 	t_list	*cmd_prev;
+// 	t_list	*new_redir;
+// 	int		num;
+// 	int		id;
+// 	char	*file;
 
-static void	ft_get_args(t_data *data, t_list **token, int id)
+// 	cmd = data->commands;
+// 	cmd_prev = NULL;
+// 	while (cmd)
+// 	{
+// 		printf("cmd_num: %d\n", cmd->cmd_data->num);
+// 		printf("cmd_id: %d\n", cmd->cmd_data->token_id);
+// 		printf("file: %d\n", cmd->cmd_data->token_id);
+// 		id = cmd->cmd_data->token_id;
+// 		file = cmd->cmd_data->token_id;
+// 		num = cmd->cmd_data->num;
+// 		if (cmd_prev && cmd_prev->cmd_data->num == cmd->cmd_data->num)
+// 		{
+// 			new_redir = ft_new_redir_lst(file, id, num);
+// 			ft_lstadd_back(&data->redirs, new_redir);
+// 			ft_lstdelone
+// 		}
+// 		if (cmd->cmd_data->token_id == WORD)
+// 			cmd_prev = cmd;
+// 		cmd = cmd->next;
+// 	}
+// }
+/*
+static void	ft_get_args(t_data *data, t_list **token, int id, int num)
 {
 	char		**cmd;
 	char		*cmd_path;
@@ -89,22 +101,59 @@ static void	ft_get_args(t_data *data, t_list **token, int id)
 	}
 	if (id < PIPE) // определяем редирект с файлом или heredoc с ограничителем
 	{
-		// cmd = (char **)malloc(sizeof(char *) * 2);
-		// if (cmd == NULL)
-		// 	return ;
 		if ((*token)->next)
 		{
 			(*token) = (*token)->next;
 			cmd_path = ft_strdup((*token)->content->token);
-			// cmd[0] = ft_strdup((*token)->content->token);
 		}
-		// else
-		// 	cmd[0] = ft_strdup((*token)->content->token);
-		// cmd[1] = NULL;
 	}
-	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id);
+	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
 	ft_lstadd_back(&data->commands, new_cmd);
 	new_cmd = NULL; printf("cmd cleared\n");
+	ft_free_split(cmd);
+	ft_memdel(cmd_path);
+}
+*/
+
+static void	ft_get_args(t_data *data, t_list **token, int id, int num)
+{
+	char		**cmd;
+	char		*cmd_path;
+	t_list		*new_cmd;
+	t_list		*new_redir;
+
+	cmd = NULL;
+	cmd_path = NULL;
+	new_redir = NULL;
+	new_cmd = NULL;
+	if (id == WORD) // определяем -> file, builtin, simple command
+	{
+		cmd_path = ft_access_paths(data->parser_ptr, (*token)->content->token);
+		ft_get_cmd(token, &cmd);
+		new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
+		ft_lstadd_back(&data->commands, new_cmd);
+		new_cmd = NULL;
+	}
+	else if (id < PIPE) // определяем редирект с файлом или heredoc с ограничителем
+	{
+		if ((*token)->next && (*token)->next->content->token_id == WORD)
+		{
+			// (*token) = (*token)->next;
+			// cmd_path = ft_strdup((*token)->next->content->token);
+			new_redir = ft_new_redir_lst((*token)->next->content->token, id, num);
+			ft_lstadd_back(&data->redirs, new_redir);
+			new_redir = NULL;
+		}
+		else
+		{
+			new_redir = ft_new_redir_lst((*token)->content->token, id, num);
+			ft_lstadd_back(&data->redirs, new_redir);
+			new_redir = NULL;
+		}
+	}
+	// new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
+	// ft_lstadd_back(&data->commands, new_cmd);
+	// new_cmd = NULL; printf("cmd cleared\n");
 	ft_free_split(cmd);
 	ft_memdel(cmd_path);
 }
@@ -113,19 +162,20 @@ void	ft_process_tokens(t_data *data)
 {
 	t_list		*current;
 	int			id;
+	int			num;
 
+	num = 0;
 	current = data->tokens;
 	while (current)
 	{
 		id = current->content->token_id;
 		if (id == WORD)
-			ft_get_args(data, &current, WORD);
+			ft_get_args(data, &current, WORD, ++num);
 		if (!current)
 			break;
 		id = current->content->token_id;
 		if (id >= L1_REDIRECT && id < PIPE)
-			ft_get_args(data, &current, id);
-		printf("current->token: %s\n", current->content->token);
+			ft_get_args(data, &current, id, num);
 		if (!current)
 			break;
 		else
@@ -137,11 +187,14 @@ void	ft_process_tokens(t_data *data)
 void	ft_commands(t_data *data)
 {
 	data->commands = NULL;
+	data->redirs = NULL;
 	// ft_print_list_of_tokens(data);
 	ft_get_paths(data->parser_ptr);
 	if (data->parser_ptr->paths == NULL)
 		ft_error_exit("error getting paths\n");
 	ft_process_tokens(data);
 	ft_free_split(data->parser_ptr->paths);
+	// debug_print_commands_list(data);
+	debug_print_redirections(data);
 	printf("data->parser_ptr->paths cleared\n");
 }

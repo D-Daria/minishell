@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 16:16:16 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 13:17:46 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/23 19:02:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,73 +42,114 @@ static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
 }
 */
 
-static	void	ft_check_redirs(t_data *data)
+void	ft_execute_single_cmd(t_data *data, t_list *cmd, t_list *redirs)
 {
-	t_list	*cmd;
-	t_list	*prev;
-	char	*path;
 	int		id;
+	t_list	*crnt_redir;
 
-	cmd = data->commands;
-	prev = NULL;
-	while (cmd)
+	printf("execute single\n");
+	if (redirs)
 	{
-		id = cmd->cmd_data->token_id;
-		path = cmd->cmd_data->cmd_path;
-		if (id == R1_REDIRECT && path)
+		crnt_redir = redirs;
+		while (crnt_redir && crnt_redir->redir_data->num == cmd->cmd_data->num)
 		{
-			if (prev)
-				close(data->fd_in);
-			data->fd_in = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0666);
+			printf("not command\n");
+			id = crnt_redir->redir_data->id;
+			if (ft_check_files(data, crnt_redir, id) == -1)
+				ft_perror(cmd);
+			ft_redirect(data, id);
+			id = close(data->fd_in);
+			printf("ret: %d\n", id);
+			crnt_redir = crnt_redir->next;
 		}
-		if (id == R2_REDIRECT && path)
-		{
-			if (prev)
-				close(data->fd_in);
-			data->fd_in = open(cmd->cmd_data->cmd_path, O_WRONLY | O_APPEND | O_CREAT, 0666);
-		}
-		if (id == L1_REDIRECT && path)
-		{
-			if (prev)
-				close(data->fd_out);
-			data->fd_out = open(path, O_RDONLY);
-		}
-		prev = cmd;
-		cmd = cmd->next;
 	}
+	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
+		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
+	ft_perror(cmd);
+	exit(0);
 }
 
-static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
+/*
+static void	ft_execute_child(t_data *data, int *fd_read, t_list **cmd)
 {
 	t_list	*tmp;
 	int		id;
 
 	tmp = NULL;
 	id = 0;
+	if (!(*cmd))
+		ft_perror((*cmd));
+	if ((*cmd)->next == NULL)
+		ft_execute_single_cmd(data, (*cmd), fd_read);
+	dup2(*fd_read, STDIN_FILENO); // read_in
+	if ((*cmd)->next && (*cmd)->next->cmd_data->token_id == WORD)
+		dup2(data->fd_pipe[1], STDOUT_FILENO);
+	if ((*cmd)->next && (*cmd)->next->cmd_data->token_id != WORD)
+	{
+		tmp = (*cmd);
+		(*cmd) = (*cmd)->next;
+	}
+	// printf("cmd_path: %s\n", (*cmd)->cmd_data->cmd_path);
+	while ((*cmd) && (*cmd)->cmd_data->token_id != WORD)
+	{
+		printf("next command is redirect\n");
+		id = (*cmd)->cmd_data->token_id;
+		ft_check_files(data, (*cmd), fd_read, id);
+		ft_redirect(data, fd_read, (*cmd), id);
+		close(data->fd_in);
+		(*cmd) = (*cmd)->next;
+	}
+	close(data->fd_pipe[0]);
+	if (access(tmp->cmd_data->cmd_path, X_OK) == 0)
+		execve(tmp->cmd_data->cmd_path, tmp->cmd_data->cmd, data->envp);
+	ft_perror(tmp);
+	exit(0);
+}
+*/
+
+/*	TODO
+	учесть сигналы в дочерних процессах
+*/
+
+
+static void	ft_execute_child(t_data *data, t_list *cmd)
+{
+	// t_list	*redir;
+	// int		id;
+
 	if (!cmd)
 		ft_perror(cmd);
-	dup2(*fd_read, STDIN_FILENO); // read_in
-	if (cmd->next && cmd->next->cmd_data->token_id == WORD)
-		dup2(data->fd_pipe[1], STDOUT_FILENO);
-	// tmp = cmd;
-	// while (tmp->next && tmp->next->cmd_data->token_id != WORD)
+	if (cmd->next == NULL)
+		ft_execute_single_cmd(data, cmd, data->redirs);
+	// dup2(data->fd_read, STDIN_FILENO); // read_in
+	// if (cmd->next)
+	// 	dup2(data->fd_pipe[1], STDOUT_FILENO);
+	// if (data->redirs)
 	// {
-	// 	printf("next command is redirect\n");
-	// 	tmp = tmp->next;
-	// 	id = tmp->cmd_data->token_id;
-	// 	ft_check_files(data, tmp, fd_read, id);
-	// 	ft_redirect(data, fd_read, tmp, id);
-	// 	close(data->fd_in);
+	// 	printf("is redirect\n");
+	// 	redir = data->redirs;
+	// 	while (redir && redir->redir_data->num == cmd->cmd_data->num)
+	// 	{
+	// 		printf("several redirects\n");
+	// 		id = redir->redir_data->id;
+	// 		if (ft_check_files(data, redir, id) == -1)
+	// 			ft_perror(cmd);
+	// 		ft_redirect(data, id);
+	// 		id = close(data->fd_in);
+	// 		printf("ret: %d\n", id);
+	// 		redir = redir->next;
+	// 	}
 	// }
-	close(data->fd_pipe[0]);
-	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
-		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
-	ft_perror(cmd);
-	if (cmd->next != NULL)
-		exit(0);
+	// close(data->fd_in);
+	// close(data->fd_pipe[0]);
+	// if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
+	// 	execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
+	// ft_perror(cmd);
+	// exit(0);
 }
 
-int	ft_pipe(t_data *data, int *fd_read)
+
+int	ft_pipe(t_data *data)
 {
 	t_list		*cmd;
 	pid_t		pid;
@@ -122,20 +163,21 @@ int	ft_pipe(t_data *data, int *fd_read)
 		//else
 		pid = fork();
 		if (pid < 0)
-			return (ft_close_all(data, *fd_read, "perror"));
+			return (ft_close_all(data, "perror"));
 		else if (pid == 0)
 		{
 			// if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
 			// {
 				printf("execute simple command: %s\n", cmd->cmd_data->cmd_path);
-				ft_execute_child(data, fd_read, cmd); // simple command
-			// }
+				ft_execute_child(data, cmd); // simple command
+				// printf("cmd after execution: %s\n", cmd->cmd_data->cmd_path);
+				// }
 		}
 		else
 		{
 			waitpid(pid, &data->status, 0);
 			printf("status: %d\n", WEXITSTATUS(data->status));
-			*fd_read = data->fd_pipe[0];
+			data->fd_read = data->fd_pipe[0];
 			close(data->fd_pipe[1]);
 			// ft_close_all(data, fd_read, NULL);
 		}
@@ -146,12 +188,12 @@ int	ft_pipe(t_data *data, int *fd_read)
 
 void	ft_execute(t_data *data)
 {
-	int	fd_read;
+	// int	fd_read;
 
 	data->fd_pipe[0] = -1;
 	data->fd_pipe[1] = -1;
 	debug_print_commands_list(data);
-	fd_read = STDIN_FILENO;
-	ft_pipe(data, &fd_read);
-	ft_close_all(data, fd_read, NULL);
+	data->fd_read = STDIN_FILENO;
+	ft_pipe(data);
+	ft_close_all(data, NULL);
 }
