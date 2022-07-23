@@ -1,0 +1,17 @@
+error
+not_compile_on_linux
+
+libft/libft.a
+libft/srcs/libft/*.o
+libft/srcs/libft/*.d
+libft/srcs/get_next_line/*.o
+libft/srcs/get_next_line/*.d
+objs/
+minishell
+.vscode/
+.DS_Store
+/libft/.DS_Store
+/libft/includes/.DS_Store
+/libft/srcs/.DS_Store
+/libft/srcs/libft/.DS_Store
+/libft/srcs/get_next_line/.DS_Store
