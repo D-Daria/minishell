@@ -1,5 +1,6 @@
 test.sh
 
+Memd
 mem_leaks/
 *.mem
 libft/libft.a
