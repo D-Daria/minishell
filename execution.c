@@ -44,49 +44,49 @@ static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
 }
 */
 
-static	void	ft_check_redirs(t_data *data)
-{
-	t_list	*cmd;
-	t_list	*prev;
-	char	*path;
-	int		id;
+// static	void	ft_check_redirs(t_data *data)
+// {
+// 	t_list	*cmd;
+// 	t_list	*prev;
+// 	char	*path;
+// 	int		id;
 
-	cmd = data->commands;
-	prev = NULL;
-	while (cmd)
-	{
-		id = cmd->cmd_data->token_id;
-		path = cmd->cmd_data->cmd_path;
-		if (id == R1_REDIRECT && path)
-		{
-			if (prev)
-				close(data->fd_in);
-			data->fd_in = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0666);
-		}
-		if (id == R2_REDIRECT && path)
-		{
-			if (prev)
-				close(data->fd_in);
-			data->fd_in = open(cmd->cmd_data->cmd_path, O_WRONLY | O_APPEND | O_CREAT, 0666);
-		}
-		if (id == L1_REDIRECT && path)
-		{
-			if (prev)
-				close(data->fd_out);
-			data->fd_out = open(path, O_RDONLY);
-		}
-		prev = cmd;
-		cmd = cmd->next;
-	}
-}
+// 	cmd = data->commands;
+// 	prev = NULL;
+// 	while (cmd)
+// 	{
+// 		id = cmd->cmd_data->token_id;
+// 		path = cmd->cmd_data->cmd_path;
+// 		if (id == R1_REDIRECT && path)
+// 		{
+// 			if (prev)
+// 				close(data->fd_in);
+// 			data->fd_in = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0666);
+// 		}
+// 		if (id == R2_REDIRECT && path)
+// 		{
+// 			if (prev)
+// 				close(data->fd_in);
+// 			data->fd_in = open(cmd->cmd_data->cmd_path, O_WRONLY | O_APPEND | O_CREAT, 0666);
+// 		}
+// 		if (id == L1_REDIRECT && path)
+// 		{
+// 			if (prev)
+// 				close(data->fd_out);
+// 			data->fd_out = open(path, O_RDONLY);
+// 		}
+// 		prev = cmd;
+// 		cmd = cmd->next;
+// 	}
+// }
 
 static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
 {
-	t_list	*tmp;
-	int		id;
+	// t_list	*tmp;
+	// int		id;
 
-	tmp = NULL;
-	id = 0;
+	// tmp = NULL;
+	// id = 0;
 	if (!cmd)
 		ft_perror(cmd);
 	dup2(*fd_read, STDIN_FILENO); // read_in

@@ -22,10 +22,12 @@ void	ft_free_list(t_list **list)
 	printf("Лист очищен\n");
 }
 
-// void	ft_expand_dollar_question(t_data *data, char *str, size_t *i)
-// {
-
-// }
+void	ft_expand_dollar_question(t_data *data)
+{
+	data->expand_dollar = ft_itoa(data->status);
+	if (!data->expand_dollar)
+		ft_error_exit("malloc_error in ft_itoa\n");
+}
 
 void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 {
@@ -37,11 +39,12 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 		free (data->expand_dollar);
 		data->expand_dollar = NULL;
 	}
-	// if (str[(*i) + 1] == '?')
-	// {	
-	// 	ft_expand_dollar_question(data, str, (*i) + 1);
-	// 	return ;
-	// }
+	if (str[(*i) + 1] == '?')
+	{	
+		ft_expand_dollar_question(data);
+		*i += 2;
+		return ;
+	}
 	start = *i + 1;
 	*i = *i + 1;
 	if (str[*i] != '_' && ft_isalnum((int)str[*i]) == 0)
