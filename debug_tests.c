@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:48 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 17:38:19 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 22:54:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,37 @@ void	debug_print_commands_list(t_data *data)
 	i = 0;
 	while (cmd_lst)
 	{
-		printf(YELLOW);
-		printf("list #%d\n", i + 1);
-		printf(BREAK);
-		printf("num: %d\n", cmd_lst->cmd_data->num);
+		printf("%slist #%d%s\n",YELLOW, i + 1, BREAK);
 		printf("cmd: ");
 		debug_print_double_arr(cmd_lst->cmd_data->cmd);
-		printf("cmd_path: ");
-		printf("%s\n", cmd_lst->cmd_data->cmd_path);
-		printf("cmd_id: ");
-		printf("%d\n", cmd_lst->cmd_data->token_id);
+		printf("cmd_path: %s\n", cmd_lst->cmd_data->cmd_path);
+		if (cmd_lst->cmd_data->cmd_redir_in)
+		{
+			printf("redir_in: %s\n", "TRUE");
+			debug_print_redirections(cmd_lst->cmd_data->cmd_redir_in);
+		}
+		else
+			printf("redir_in: %s\n", "FALSE");
+		if (cmd_lst->cmd_data->cmd_redir_out)
+		{
+			printf("redir_out: %s\n", "TRUE");
+			debug_print_redirections(cmd_lst->cmd_data->cmd_redir_out);
+		}
+		else
+			printf("redir_out: %s\n", "FALSE");
+		printf("num: %d\n", cmd_lst->cmd_data->cmd_num);
+		printf("cmd_id: %d\n", cmd_lst->cmd_data->cmd_id);
 		i++;
 		cmd_lst = cmd_lst->next;
 		printf("\n");
 	}
 }
 
-void	debug_print_redirections(t_data *data)
+void	debug_print_redirections(t_list *redirs)
 {
-	t_list	*redirs;
+	t_list	*redir;
 
-	redirs = data->redirs;
+	redir = redirs;
 	if (!redirs)
 		printf("No redirections\n");
 	while (redirs)
@@ -68,6 +78,7 @@ void	debug_print_redirections(t_data *data)
 		printf(GREEN"redirs\n"BREAK);
 		printf("num: %d\n", redirs->redir_data->num);
 		printf("file: %s\n", redirs->redir_data->file);
+		printf("fd: %d\n", redirs->redir_data->fd);
 		printf("id: %d\n", redirs->redir_data->id);
 		redirs = redirs->next;
 	}

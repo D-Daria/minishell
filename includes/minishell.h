@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 18:47:21 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 23:26:19 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <signal.h>
 # include <stddef.h>
 # include <fcntl.h>
+# include <dirent.h> //opendir closedir
 
 // #include "../Memd/mem.h"
 
@@ -64,10 +65,12 @@ typedef struct s_parser {
 }			t_parser; // заменить на t_command ?
 
 typedef struct s_data {
-	int			fd_read;
+	int			fd_in;
 	int			fd_pipe[2];
-	int			fd_in; // файл для записи
-	int			fd_out; // файл для чтения
+	int			in_tmp;
+	int			out_tmp;
+	// int			fd_in;	// файл для чтения
+	// int			fd_out; // файл для записи
 	char		*last_user_cmd;
 	char		**envp;
 	char		**path_by_launch;
@@ -82,6 +85,8 @@ typedef struct s_data {
 	t_list		*last_token;
 	t_list		*commands;
 }				t_data;
+
+void	ft_sigint_handler(int signum);
 
 /*ft_exec_test.c*/
 int		ft_exec_test(t_data *data);
@@ -98,7 +103,7 @@ size_t	ft_split_len(char **str);
 void	debug_print_double_arr(char **arr);
 void	ft_print_list_of_tokens(t_data *data);
 void	debug_print_commands_list(t_data *data);
-void	debug_print_redirections(t_data *data);
+void debug_print_redirections(t_list *redirs);
 
 //read_user_cmd.c
 void    ft_read_user_cmd(t_data *data_ptr);
@@ -131,11 +136,14 @@ void		ft_execute(t_data *data);
 
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);
-void		ft_token_error(t_list *cmd, int id);
 int			ft_close_all(t_data *data, const char *error);
+void		ft_perror_redir(t_data *data, t_list *redir);
+void		ft_file_error(t_data *data, char *file, int process);
+void		ft_token_error(t_data *data, int id, int process);
 
 /*redirection.c*/
-int			ft_check_files(t_data *data, t_list *cmd, int id);
-void		ft_redirect(t_data *data, int id);
+int			ft_open_files(t_data *data, t_list *redir, int id, int process);
+void		ft_redirect(t_list *cmd, t_data *data);
+void		ft_process_redirs(t_data *data);
 
 #endif

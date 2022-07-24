@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 17:47:55 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 20:59:42 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	ft_free_commands(t_list	**cmd_head)
 			next = (*cmd_head)->next;
 			ft_free_split((*cmd_head)->cmd_data->cmd);
 			ft_memdel((*cmd_head)->cmd_data->cmd_path);
+			(*cmd_head)->cmd_data->cmd_redir_in = NULL;
+			(*cmd_head)->cmd_data->cmd_redir_out = NULL;
 			ft_memdel((*cmd_head)->cmd_data);
 			ft_memdel((*cmd_head));
 			(*cmd_head) = next;
@@ -85,20 +87,9 @@ t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num)
 	}
 	else
 		new_cmd->cmd = NULL;
-	// i = ft_split_len(cmd_args);
-	// new_cmd->cmd = (char **)malloc(sizeof(char *) * (i + 1));
-	// if (new_cmd->cmd == NULL)
-	// 	return (NULL);
-	// i = 0;
-	// while (cmd_args[i])
-	// {
-	// 	new_cmd->cmd[i] = ft_strdup(cmd_args[i]);
-	// 	i++;
-	// }
-	// new_cmd->cmd[i] = NULL;
-	new_cmd->num = num;
+	new_cmd->cmd_num = num;
 	new_cmd->cmd_path = ft_strdup(cmd_path);
-	new_cmd->token_id = id;
+	new_cmd->cmd_id = id;
 	return (new_cmd);
 }
 

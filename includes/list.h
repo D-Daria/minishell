@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 14:54:01 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 17:03:24 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 21:33:10 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,21 @@ typedef struct s_list t_list;
 typedef struct s_redir t_redir;
 
 typedef struct s_redir {
-	int				id;
-	char			*file;
-	int				num;
-}					t_redir;
+	int		num;
+	int		id;
+	char	*file;
+	int		fd;
+}			t_redir;
 
 typedef struct s_command {
-	int		num;
-	char	**cmd;			/* команда с аргументами ("ls" "-l" "-a" "-p") */
+	int		cmd_num;
+	char	**cmd;		/* команда с аргументами ("ls" "-l" "-a" "-p") */
 	char	*cmd_path;	/* путь к команде ("/bin/ls") или имя файла [0]: file */
-	int		token_id;	/* id токена (redirect; here_doc) */
+	int		cmd_id;		/* id токена (redirect; here_doc) */
+	// t_redir	*cmd_redir_in;
+	// t_redir	*cmd_redir_out;
+	t_list	*cmd_redir_in;
+	t_list	*cmd_redir_out;
 }			t_command;
 
 typedef struct s_content_for_list {

@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/07/23 17:50:49 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 13:58:32 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_commands(&data);
 		ft_execute(&data);
 		ft_free_list(&data.tokens);
-		ft_free_commands(&data.commands);
 		ft_free_redirs(&data.redirs);
+		ft_free_commands(&data.commands);
 		printf("pipes=%zu\n", data.pipes_number);
 	}
 	ft_free_data_ptr(&data);
