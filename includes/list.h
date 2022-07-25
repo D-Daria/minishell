@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 14:54:01 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/24 21:33:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 13:11:28 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ typedef struct s_redir {
 typedef struct s_command {
 	int		cmd_num;
 	char	**cmd;		/* команда с аргументами ("ls" "-l" "-a" "-p") */
-	char	*cmd_path;	/* путь к команде ("/bin/ls") или имя файла [0]: file */
+	char	*cmd_path;	/* путь к команде ("/bin/ls") */
 	int		cmd_id;		/* id токена (redirect; here_doc) */
+	int		pipe_fd[2];
 	// t_redir	*cmd_redir_in;
 	// t_redir	*cmd_redir_out;
 	t_list	*cmd_redir_in;

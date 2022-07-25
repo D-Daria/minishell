@@ -6,24 +6,11 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:09:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/24 13:37:49 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 14:33:20 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_free_data_ptr(t_data *data_ptr)
-{
-	ft_free_list(&data_ptr->tokens);
-	ft_free_redirs(&data_ptr->redirs);
-	ft_free_commands(&data_ptr->commands);
-	if (data_ptr->parser_ptr)
-		ft_memdel(data_ptr->parser_ptr);
-	if (data_ptr->path_by_launch)
-		ft_free_split(data_ptr->path_by_launch);
-	if (data_ptr->last_user_cmd)
-		ft_memdel(data_ptr->last_user_cmd);
-}
 
 int	ft_throw_system_error(const char *str)
 {

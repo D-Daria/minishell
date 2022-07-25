@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:48 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/24 22:54:18 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 12:35:40 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	debug_print_commands_list(t_data *data)
 		printf("cmd: ");
 		debug_print_double_arr(cmd_lst->cmd_data->cmd);
 		printf("cmd_path: %s\n", cmd_lst->cmd_data->cmd_path);
+		printf("num: %d\n", cmd_lst->cmd_data->cmd_num);
+		printf("cmd_id: %d\n", cmd_lst->cmd_data->cmd_id);
 		if (cmd_lst->cmd_data->cmd_redir_in)
 		{
 			printf("redir_in: %s\n", "TRUE");
@@ -58,8 +60,6 @@ void	debug_print_commands_list(t_data *data)
 		}
 		else
 			printf("redir_out: %s\n", "FALSE");
-		printf("num: %d\n", cmd_lst->cmd_data->cmd_num);
-		printf("cmd_id: %d\n", cmd_lst->cmd_data->cmd_id);
 		i++;
 		cmd_lst = cmd_lst->next;
 		printf("\n");
