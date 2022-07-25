@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 14:51:26 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:55:22 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,34 @@ void	ft_process_tokens(t_data *data)
 	}
 }
 
+static void ft_get_heredoc(t_data *data)
+{
+	t_list	*cmd;
+	t_list	*redir;
+	int		id;
+
+	cmd = data->commands;
+	id = 0;
+	while (cmd)
+	{
+		redir = data->redirs;
+		while (redir)
+		{
+			if (cmd->cmd_data->cmd_num == redir->redir_data->num)
+			{
+				if (redir->redir_data->id == L2_HEREDOC)
+				{
+					cmd->cmd_data->is_redir = 1;
+					cmd->cmd_data->heredoc = redir;
+					break ;
+				}
+			}
+			redir = redir->next;
+		}
+		cmd = cmd->next;
+	}
+}
+
 static void	ft_set_cmd_redirs(t_data *data)
 {
 	int		id;
@@ -95,16 +123,18 @@ static void	ft_set_cmd_redirs(t_data *data)
 		{
 			if (cmd->cmd_data->cmd_num == redir->redir_data->num)
 			{
+				cmd->cmd_data->is_redir = 1;
 				id = redir->redir_data->id;
 				if (id == R1_REDIRECT || id == R2_REDIRECT)
-					cmd->cmd_data->cmd_redir_out = redir;
-				else if (id == L1_REDIRECT || id == L2_HEREDOC)
-					cmd->cmd_data->cmd_redir_in = redir;
+					cmd->cmd_data->redir_out = redir;
+				else if (id == L1_REDIRECT)
+					cmd->cmd_data->redir_in = redir;
 			}
 			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
+	ft_get_heredoc(data);
 }
 
 //начинаем разбивать токены на простые и встроенные команды (simple commands, builtins)

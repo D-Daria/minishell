@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 14:52:05 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:59:14 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void		ft_commands(t_data *data);
 
 /*commands_utils.c*/
 void		ft_get_paths(t_parser *parser);
-t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num);
+t_command	*ft_create_command(char **cmd_args);
 t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_cmd(t_list ****token, char ***cmd);
@@ -148,5 +148,6 @@ t_list		*ft_new_redir_lst(char *file, int id, int num);
 
 /*redirection_utils.c*/
 int			ft_open_files(t_data *data, t_list *redir, int id, int process);
+void		ft_process_redirs(t_data *data);
 
 #endif

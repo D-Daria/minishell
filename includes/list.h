@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 14:54:01 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 13:11:28 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:52:44 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ typedef struct s_command {
 	int		pipe_fd[2];
 	// t_redir	*cmd_redir_in;
 	// t_redir	*cmd_redir_out;
-	t_list	*cmd_redir_in;
-	t_list	*cmd_redir_out;
+	int		is_redir;
+	t_list	*heredoc;
+	t_list	*redir_in;
+	t_list	*redir_out;
 }			t_command;
 
 typedef struct s_content_for_list {

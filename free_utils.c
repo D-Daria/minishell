@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:32:49 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 14:33:23 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:29:43 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ void	ft_free_commands(t_list	**cmd_head)
 			next = (*cmd_head)->next;
 			ft_free_split((*cmd_head)->cmd_data->cmd);
 			ft_memdel((*cmd_head)->cmd_data->cmd_path);
-			(*cmd_head)->cmd_data->cmd_redir_in = NULL;
-			(*cmd_head)->cmd_data->cmd_redir_out = NULL;
+			(*cmd_head)->cmd_data->redir_in = NULL;
+			(*cmd_head)->cmd_data->redir_out = NULL;
+			(*cmd_head)->cmd_data->heredoc = NULL;
 			ft_memdel((*cmd_head)->cmd_data);
 			ft_memdel((*cmd_head));
 			(*cmd_head) = next;

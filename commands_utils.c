@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 14:51:29 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:51:10 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 	ft_memdel(str_spaced);
 }
 
-t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num)
+t_command	*ft_create_command(char **args)
 {
 	t_command	*new_cmd;
 	size_t		i;
@@ -43,25 +43,22 @@ t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id, int num)
 	new_cmd = (t_command *)ft_calloc(sizeof(t_command), 1);
 	if (new_cmd == NULL)
 		return (NULL);
-	if (cmd_args)
+	if (args)
 	{
-		i = ft_split_len(cmd_args);
+		i = ft_split_len(args);
 		new_cmd->cmd = (char **)malloc(sizeof(char *) * (i + 1));
 		if (new_cmd->cmd == NULL)
 			return (NULL);
 		i = 0;
-		while (cmd_args[i])
+		while (args[i])
 		{
-			new_cmd->cmd[i] = ft_strdup(cmd_args[i]);
+			new_cmd->cmd[i] = ft_strdup(args[i]);
 			i++;
 		}
 		new_cmd->cmd[i] = NULL;
 	}
 	else
 		new_cmd->cmd = NULL;
-	new_cmd->cmd_num = num;
-	new_cmd->cmd_path = ft_strdup(cmd_path);
-	new_cmd->cmd_id = id;
 	return (new_cmd);
 }
 
@@ -70,17 +67,12 @@ t_list	*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num)
 	t_list		*cmd_lst;
 	t_command	*new_cmd;
 
-	// if (id < WORD)
-	// {
-	// 	new_cmd = (t_command *)malloc(sizeof(t_command) * 1);
-	// 	new_cmd->token_id = id;
-	// 	new_cmd->cmd_path = NULL;
-	// 	new_cmd->cmd = NULL;
-	// }
-	// else
-		new_cmd = ft_create_command(cmd_path, cmd_args, id, num);
+	new_cmd = ft_create_command(cmd_args);
 	if (new_cmd == NULL)
 		return (NULL);
+	new_cmd->cmd_num = num;
+	new_cmd->cmd_path = ft_strdup(cmd_path);
+	new_cmd->cmd_id = id;
 	cmd_lst = (t_list *)malloc(sizeof(t_list) * 1);
 	if (cmd_lst == NULL)
 		return (NULL);
