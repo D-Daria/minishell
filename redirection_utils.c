@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:17:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 19:03:12 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/26 21:39:24 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,28 @@ t_list	*ft_new_redir_lst(char *file, int id, int num)
 	return (redir_lst);
 }
 
-// void	ft_process_heredoc(t_data *data, t_list *redir, int *fd)
-// {
-// 	char	*line;
-// 	char	*lim;
+int	ft_process_heredoc(t_list *redir)
+{
+	char	*line;
+	char	*lim;
+	int		fd;
 
-// 	lim = redir->redir_data->file;
-	
-// 	line = readline("> ");
-// 	while (ft_strcmp(line, lim))
-// 	{
-// 		if (line)
-			
-// 	}
-// }
+	lim = redir->redir_data->file;
+	fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	line = readline("> ");
+	while (ft_strcmp(line, lim))
+	{
+		if (!line)
+			break ;
+		line = ft_strjoin(line, "\n");
+		write(fd, line, ft_strlen(line));
+		ft_memdel(line);
+		line = readline("> ");
+	}
+	close(fd);
+	fd = open("here_doc", O_RDONLY);
+	return (fd);
+}
 
 int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 {
@@ -61,8 +69,8 @@ int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 		fd = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	else if (id == R2_REDIRECT)
 		fd = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0666);
-	// else if (id == L2_HEREDOC)
-	// 	ft_process_heredoc(data, redir, &fd);
+	else if (id == L2_HEREDOC)
+		fd = ft_process_heredoc(redir);
 	if (fd == -1 && is_process)
 		ft_file_error(data, file_name, is_process);
 	return (fd);

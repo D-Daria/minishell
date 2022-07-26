@@ -79,8 +79,10 @@ void	ft_add_this_str_to_word(t_data *data, size_t *i, size_t *st)
 	if (tmp2 == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 	data->last_token->content->token = ft_strjoin(tmp, tmp2);
-	free(tmp2);
-	free(tmp);
+	ft_memdel(tmp);
+	ft_memdel(tmp2);
+	// free(tmp2);
+	// free(tmp);
 	if (data->last_token->content->token == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 }

@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:32:49 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:29:43 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/26 21:48:33 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	ft_free_redirs(t_list **redir_head)
 
 void	ft_free_data_ptr(t_data *data_ptr)
 {
+	ft_memdel(data_ptr->last_user_cmd);
 	ft_free_list(&data_ptr->tokens);
 	ft_free_redirs(&data_ptr->redirs);
 	ft_free_commands(&data_ptr->commands);
@@ -73,6 +74,4 @@ void	ft_free_data_ptr(t_data *data_ptr)
 		ft_memdel(data_ptr->parser_ptr);
 	if (data_ptr->path_by_launch)
 		ft_free_split(data_ptr->path_by_launch);
-	if (data_ptr->last_user_cmd)
-		ft_memdel(data_ptr->last_user_cmd);
 }

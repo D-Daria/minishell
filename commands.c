@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:55:22 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 23:04:46 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	ft_process_tokens(t_data *data)
 	}
 }
 
-static void ft_get_heredoc(t_data *data)
+void ft_get_heredoc(t_data *data)
 {
 	t_list	*cmd;
 	t_list	*redir;
@@ -129,12 +129,14 @@ static void	ft_set_cmd_redirs(t_data *data)
 					cmd->cmd_data->redir_out = redir;
 				else if (id == L1_REDIRECT)
 					cmd->cmd_data->redir_in = redir;
+				else if (id == L2_HEREDOC)
+					cmd->cmd_data->heredoc = redir;
 			}
 			redir = redir->next;
 		}
 		cmd = cmd->next;
 	}
-	ft_get_heredoc(data);
+	// ft_get_heredoc(data);
 }
 
 //начинаем разбивать токены на простые и встроенные команды (simple commands, builtins)

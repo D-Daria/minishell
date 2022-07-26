@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:08:37 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 18:06:05 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/26 22:04:13 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,17 +48,34 @@ static void	ft_redir_out(t_data *data, t_list *cmd)
 	}
 }
 
+static void	ft_heredoc(t_data *data, t_list *cmd)
+{
+	t_list	*heredoc;
+	int		id;
+
+	heredoc = NULL;
+	id = 0;
+	heredoc = cmd->cmd_data->heredoc;
+	if (heredoc->redir_data->fd < 0)
+		ft_file_error(data, heredoc->redir_data->file, 1);
+	id = heredoc->redir_data->id;
+	if (id == L2_HEREDOC)
+	{
+		dup2(heredoc->redir_data->fd, STDIN_FILENO);
+		close(heredoc->redir_data->fd);
+	}
+	if (access("here_doc", F_OK) == 0)
+		unlink("here_doc");
+}
+
 void	ft_redirect(t_list *cmd, t_data *data)
 {
 	if (!cmd)
 		return ;
-	printf("ft_redirect\n");
 	if (cmd->cmd_data->redir_in)
-	{
 		ft_redir_in(data, cmd);
-	}
 	if (cmd->cmd_data->redir_out)
-	{
 		ft_redir_out(data, cmd);
-	}
+	if (cmd->cmd_data->heredoc)
+		ft_heredoc(data, cmd);
 }

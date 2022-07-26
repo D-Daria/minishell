@@ -84,14 +84,13 @@ int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
 		if (*pid < 0)
 			return (ft_throw_system_error("fork"));
 		else if (*pid == 0)
-		{
-			printf("parent pid: %d - child pid : %d\n", getppid(), getpid());
 			ft_execute_child(data, &cmd, &prev);
-		}
 		else
 		{
 			if (prev)
 				ft_close_pipes(prev);
+			if (access("here_doc", F_OK) == 0)
+				unlink("here_doc");
 			prev = cmd;
 			cmd = cmd->next;
 		}
