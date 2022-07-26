@@ -1,5 +1,6 @@
 test.sh
 
+a.out
 Memd
 mem_leaks/
 *.mem
