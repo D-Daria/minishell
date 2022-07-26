@@ -5,155 +5,124 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/17 16:16:16 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 19:28:10 by mrhyhorn         ###   ########.fr       */
+/*   Created: 2022/07/26 22:29:51 by mrhyhorn          #+#    #+#             */
+/*   Updated: 2022/07/26 22:29:53 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-/*
-static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
+void	ft_execve(t_data *data, t_list *cmd)
 {
-	if (!cmd)
-		ft_perror(cmd);
-	if (cmd->cmd_data->token_id == WORD)
-	{
-		dup2(*fd_read, STDIN_FILENO);
-		if (cmd->next && cmd->next->cmd_data->token_id == WORD)
-			dup2(data->fd_pipe[1], STDOUT_FILENO);
-		else
-			
-		close(data->fd_pipe[0]);
-	}
-	if (cmd->cmd_data->token_id != WORD)
-	{
-		if (cmd->next && cmd->next->cmd_data->token_id == FILE)
-		{
-			ft_check_files(data, cmd, fd_read);
-			ft_redirect(data, fd_read, cmd, cmd->cmd_data->token_id);
-		}
-	}
-	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
-		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
-	else
-		ft_perror(cmd);
-	if (cmd->next != NULL)
-		exit(0);
-}
-*/
-
-// static	void	ft_check_redirs(t_data *data)
-// {
-// 	t_list	*cmd;
-// 	t_list	*prev;
-// 	char	*path;
-// 	int		id;
-
-// 	cmd = data->commands;
-// 	prev = NULL;
-// 	while (cmd)
-// 	{
-// 		id = cmd->cmd_data->token_id;
-// 		path = cmd->cmd_data->cmd_path;
-// 		if (id == R1_REDIRECT && path)
-// 		{
-// 			if (prev)
-// 				close(data->fd_in);
-// 			data->fd_in = open(path, O_WRONLY | O_TRUNC | O_CREAT, 0666);
-// 		}
-// 		if (id == R2_REDIRECT && path)
-// 		{
-// 			if (prev)
-// 				close(data->fd_in);
-// 			data->fd_in = open(cmd->cmd_data->cmd_path, O_WRONLY | O_APPEND | O_CREAT, 0666);
-// 		}
-// 		if (id == L1_REDIRECT && path)
-// 		{
-// 			if (prev)
-// 				close(data->fd_out);
-// 			data->fd_out = open(path, O_RDONLY);
-// 		}
-// 		prev = cmd;
-// 		cmd = cmd->next;
-// 	}
-// }
-
-static void	ft_execute_child(t_data *data, int *fd_read, t_list *cmd)
-{
-	// t_list	*tmp;
-	// int		id;
-
-	// tmp = NULL;
-	// id = 0;
-	if (!cmd)
-		ft_perror(cmd);
-	dup2(*fd_read, STDIN_FILENO); // read_in
-	if (cmd->next && cmd->next->cmd_data->token_id == WORD)
-		dup2(data->fd_pipe[1], STDOUT_FILENO);
-	// tmp = cmd;
-	// while (tmp->next && tmp->next->cmd_data->token_id != WORD)
-	// {
-	// 	printf("next command is redirect\n");
-	// 	tmp = tmp->next;
-	// 	id = tmp->cmd_data->token_id;
-	// 	ft_check_files(data, tmp, fd_read, id);
-	// 	ft_redirect(data, fd_read, tmp, id);
-	// 	close(data->fd_in);
-	// }
-	close(data->fd_pipe[0]);
 	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
 		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
 	ft_perror(cmd);
-	if (cmd->next != NULL)
-		exit(0);
+	exit(0);
 }
 
-int	ft_pipe(t_data *data, int *fd_read)
+void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 {
-	t_list		*cmd;
-	pid_t		pid;
+	pid_t	pid;
+	
+	printf("execute single\n");
+	pid = fork();
+	if (pid < 0)
+		exit(ft_throw_system_error("fork"));
+	else if (pid == 0)
+	{
+		printf("parent pid: %d - child pid : %d\n", getppid(), getpid());
+		signal(SIGINT, &ft_sigint_handler);//ctr+C передаю в обработчик
+		if (cmd->cmd_data->is_redir)
+			ft_redirect(cmd, data);
+		ft_execve(data, cmd);
+	}
+	else
+	{
+		waitpid(pid, &data->status, 0);
+		printf("execute_single_status: %d\n", WEXITSTATUS(data->status));
+	}
+}
+
+void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
+{
+	if ((*prev))
+	{
+		dup2((*prev)->cmd_data->pipe_fd[0], STDIN_FILENO);
+		close((*prev)->cmd_data->pipe_fd[0]);
+		close((*prev)->cmd_data->pipe_fd[1]);
+	}
+	if ((*cmd)->next)
+	{
+		close((*cmd)->cmd_data->pipe_fd[0]);
+		dup2((*cmd)->cmd_data->pipe_fd[1], STDOUT_FILENO);
+		close((*cmd)->cmd_data->pipe_fd[1]);
+	}
+	if ((*cmd)->cmd_data->is_redir)
+		ft_redirect((*cmd), data);
+	ft_execve(data, (*cmd));
+}
+
+static void	ft_close_pipes(t_list *prev)
+{
+	close(prev->cmd_data->pipe_fd[0]);
+	close(prev->cmd_data->pipe_fd[1]);
+}
+
+void	ft_wait_children(t_data *data)
+{
+	t_list	*cmd;
 
 	cmd = data->commands;
 	while (cmd)
 	{
-		if (pipe(data->fd_pipe) < 0)
-			return (ft_throw_system_error("fork"));
-		// if builtin -> ft_execute_builtin
-		//else
-		pid = fork();
-		if (pid < 0)
-			return (ft_close_all(data, *fd_read, "perror"));
-		else if (pid == 0)
-		{
-			// if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
-			// {
-				printf("execute simple command: %s\n", cmd->cmd_data->cmd_path);
-				ft_execute_child(data, fd_read, cmd); // simple command
-			// }
-		}
-		else
-		{
-			waitpid(pid, &data->status, 0);
-			printf("status: %d\n", WEXITSTATUS(data->status));
-			*fd_read = data->fd_pipe[0];
-			close(data->fd_pipe[1]);
-			// ft_close_all(data, fd_read, NULL);
-		}
+		waitpid(0, &data->status, 0);
+		printf("status: %d\n", WEXITSTATUS(data->status));
 		cmd = cmd->next;
 	}
+	ft_close_all(data, NULL);
+}
+
+int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
+{
+	while (cmd)
+	{
+		if (cmd->next)
+		{
+			if (pipe(cmd->cmd_data->pipe_fd) < 0)
+				return (ft_throw_system_error("pipe"));
+		}
+		*pid = fork();
+		if (*pid < 0)
+			return (ft_throw_system_error("fork"));
+		else if (*pid == 0)
+			ft_execute_child(data, &cmd, &prev);
+		else
+		{
+			if (prev)
+				ft_close_pipes(prev);
+			if (access("here_doc", F_OK) == 0)
+				unlink("here_doc");
+			prev = cmd;
+			cmd = cmd->next;
+		}
+	}
+	ft_wait_children(data);
 	return (0);
 }
 
 void	ft_execute(t_data *data)
 {
-	int	fd_read;
+	t_list	*cmd;
+	t_list	*prev;
+	int		pid;
 
-	data->fd_pipe[0] = -1;
-	data->fd_pipe[1] = -1;
+	cmd = data->commands;
+	prev = NULL;
+	if (data->redirs)
+		ft_process_redirs(data);
 	debug_print_commands_list(data);
-	fd_read = STDIN_FILENO;
-	ft_pipe(data, &fd_read);
-	ft_close_all(data, fd_read, NULL);
+	if (cmd && data->pipes_number > 0)
+		ft_pipe(data, cmd, prev, &pid);
+	else if (cmd)
+		ft_execute_single_cmd(data, data->commands);
 }
