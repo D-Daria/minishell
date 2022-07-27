@@ -52,7 +52,7 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 	n = 0;
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
-		(*cmd)[n] = ft_strdup((***token)->content->token);//check malloc
+		(*cmd)[n] = (***token)->content->token;
 		(***token) = (***token)->next;
 		n++;
 	}
