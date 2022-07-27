@@ -102,9 +102,9 @@ void	debug_print_commands_list(t_data *data)
 
 void	debug_print_redirections(t_list *redirs)
 {
-	t_list	*redir;
+	// t_list	*redir;
 
-	redir = redirs;
+	// redir = redirs;
 	if (!redirs)
 		printf("No redirections\n");
 	while (redirs)

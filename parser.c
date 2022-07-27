@@ -24,7 +24,7 @@ void	ft_free_list(t_list **list)
 
 void	ft_expand_dollar_question(t_data *data)
 {
-	data->expand_dollar = ft_itoa(data->status);
+	data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
 	if (!data->expand_dollar)
 		ft_error_exit("malloc_error in ft_itoa\n");
 }

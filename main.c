@@ -75,8 +75,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_list(&data.tokens);
 		ft_free_redirs(&data.redirs);
 		ft_free_commands(&data.commands);
-		printf("pipes=%zu\n", data.pipes_number);
 	}
-	ft_free_data_ptr(&data);
+	// ft_free_data_ptr(&data);
 	return (0);
 }

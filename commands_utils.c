@@ -12,27 +12,51 @@
 
 #include "minishell.h"
 
+// void	ft_get_cmd(t_list ****token, char ***cmd)
+// {
+// 	char		*join;
+// 	char		*space;
+// 	char		*str_spaced;
+
+// 	str_spaced = NULL;
+// 	while ((***token) && (***token)->content->token_id == WORD)
+// 	{
+// 		if ((***token)->content->token == NULL)
+// 			break ;
+// 		space = ft_strjoin(" ", str_spaced);
+// 		ft_memdel(str_spaced);
+// 		join = ft_strjoin((***token)->content->token, space);
+// 		ft_memdel(space);
+// 		str_spaced = ft_strdup(join);
+// 		ft_memdel(join);
+// 		(***token) = (***token)->next;
+// 	}
+// 	*cmd = ft_strrev_split(str_spaced, ' ');
+// 	ft_memdel(str_spaced);
+// }
+
 void	ft_get_cmd(t_list ****token, char ***cmd)
 {
-	char		*join;
-	char		*space;
-	char		*str_spaced;
+	size_t	n;
+	t_list	*tmp;
 
-	str_spaced = NULL;
+
+	tmp = ***token;
+	n = 0;
+	while (tmp && (tmp)->content->token_id == WORD)
+	{
+		(tmp) = (tmp)->next;
+		n++;
+	}
+	*cmd = (char **)malloc(sizeof(char *) * n + 1);
+	n = 0;
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
-		if ((***token)->content->token == NULL)
-			break ;
-		space = ft_strjoin(" ", str_spaced);
-		ft_memdel(str_spaced);
-		join = ft_strjoin((***token)->content->token, space);
-		ft_memdel(space);
-		str_spaced = ft_strdup(join);
-		ft_memdel(join);
+		(*cmd)[n] = ft_strdup((***token)->content->token);//check malloc
 		(***token) = (***token)->next;
+		n++;
 	}
-	*cmd = ft_strrev_split(str_spaced, ' ');
-	ft_memdel(str_spaced);
+	(*cmd)[n] = NULL;
 }
 
 t_command	*ft_create_command(char **args)

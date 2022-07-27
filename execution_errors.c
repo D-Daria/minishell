@@ -15,9 +15,9 @@
 int	ft_close_all(t_data *data, const char *error)
 {
 	t_list	*redir;
-	int		ret;
+	// int		ret;
 
-	ret = 0;
+	// ret = 0;
 	redir = data->redirs;
 	while (redir)
 	{
