@@ -79,12 +79,12 @@ int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 
 void	ft_process_redirs(t_data *data)
 {
-	t_list	*prev;
+	// t_list	*prev;
 	t_list	*redir;
 	int		id;
 
 	redir = data->redirs;
-	prev = NULL;
+	// prev = NULL;
 	while (redir)
 	{
 		id = redir->redir_data->id;

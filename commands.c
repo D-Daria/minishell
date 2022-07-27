@@ -21,8 +21,8 @@ static void ft_fill_command(t_data *data, t_list ***token, int id, int num)
 	cmd = NULL;
 	cmd_path = NULL;
 	new_cmd = NULL;
-	cmd_path = ft_access_paths(data->parser_ptr, (**token)->content->token);
 	ft_get_cmd(&(token), &cmd);
+	cmd_path = ft_access_paths(data->parser_ptr, *cmd);
 	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
 	ft_lstadd_back(&data->commands, new_cmd);
 	new_cmd = NULL;
@@ -84,10 +84,10 @@ void ft_get_heredoc(t_data *data)
 {
 	t_list	*cmd;
 	t_list	*redir;
-	int		id;
+	// int		id;
 
 	cmd = data->commands;
-	id = 0;
+	// id = 0;
 	while (cmd)
 	{
 		redir = data->redirs;
