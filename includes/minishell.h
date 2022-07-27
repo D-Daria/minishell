@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 00:59:14 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/25 17:59:14 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,11 @@
 # include <signal.h>
 # include <stddef.h>
 # include <fcntl.h>
+# include <dirent.h> //opendir closedir
 
 // #include "../Memd/mem.h"
 
-# define PROMPT	"[mrhyshield]-> "
+# define PROMPT	"[minishell]-> "
 
 /*COLORS*/
 # define RED	"\033[0;31m"
@@ -64,9 +65,12 @@ typedef struct s_parser {
 }			t_parser; // заменить на t_command ?
 
 typedef struct s_data {
-	int			fd_pipe[2];
-	int			fd_in; // файл для записи
-	int			fd_out; // файл для чтения
+	// int			fd_in;
+	// int			fd_pipe[2];
+	// int			in_tmp;
+	// int			out_tmp;
+	// int			fd_in;	// файл для чтения
+	// int			fd_out; // файл для записи
 	char		*last_user_cmd;
 	char		**envp;
 	char		**path_by_launch;
@@ -76,27 +80,31 @@ typedef struct s_data {
 	char		*builtins[8];
 	size_t		pipes_number;
 	t_parser	*parser_ptr;
+	t_list		*redirs;
 	t_list		*tokens;
 	t_list		*last_token;
 	t_list		*commands;
 }				t_data;
 
-/*ft_exec_test.c*/
-int		ft_exec_test(t_data *data);
+void	ft_sigint_handler(int signum);
 
-/*ft_utils.c*/
-void	ft_free_data_ptr(t_data *data_ptr);
+/*utils.c*/
 void	ft_error_exit(const char *error);
 void	ft_free_3darray(char ***arr);
 int		ft_throw_system_error(const char *str);
 char	**ft_strrev_split(char *str, char c);
 size_t	ft_split_len(char **str);
 
-/*ft_debug.c*/ //tests
+/*free_utils.c*/
+void	ft_free_commands(t_list **cmd_head);
+void	ft_free_redirs(t_list **redir_head);
+void	ft_free_data_ptr(t_data *data_ptr);
+
+/*debug.c*/ //tests
 void	debug_print_double_arr(char **arr);
 void	ft_print_list_of_tokens(t_data *data);
 void	debug_print_commands_list(t_data *data);
-// void	debug_print_commands_list(t_command *head);
+void 	debug_print_redirections(t_list *redirs);
 
 //read_user_cmd.c
 void    ft_read_user_cmd(t_data *data_ptr);
@@ -114,10 +122,10 @@ void		ft_commands(t_data *data);
 
 /*commands_utils.c*/
 void		ft_get_paths(t_parser *parser);
-t_command	*ft_create_command(char *cmd_path, char **cmd_args, int id);
-t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id);
-void		ft_free_commands(t_list **cmd_head);
+t_command	*ft_create_command(char **cmd_args);
+t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 char		*ft_access_paths(t_parser *parser, char *cmd);
+void		ft_get_cmd(t_list ****token, char ***cmd);
 
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
@@ -128,11 +136,18 @@ void		ft_execute(t_data *data);
 
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);
-void		ft_token_error(t_list *cmd, int id);
-int			ft_close_all(t_data *data, int fd_read, const char *error);
+int			ft_close_all(t_data *data, const char *error);
+void		ft_perror_redir(t_data *data, t_list *redir);
+void		ft_file_error(t_data *data, char *file, int process);
+void		ft_token_error(t_data *data, int id, int process);
 
 /*redirection.c*/
-int			ft_check_files(t_data *data, t_list *cmd, int *fd_read, int id);
-void		ft_redirect(t_data *data, int *fd_read, t_list *cmd, int id);
+void		ft_redirect(t_list *cmd, t_data *data);
+void		ft_process_redirs(t_data *data);
+t_list		*ft_new_redir_lst(char *file, int id, int num);
+
+/*redirection_utils.c*/
+int			ft_open_files(t_data *data, t_list *redir, int id, int process);
+void		ft_process_redirs(t_data *data);
 
 #endif

@@ -5,16 +5,14 @@ OBJS_DIR =	objs
 
 SRCS_MF =	main.c debug_tests.c parser.c reading_cmds.c\
 			utils.c commands.c commands_utils.c execution.c\
-			execution_errors.c redirection.c builtins.c
+			execution_errors.c redirection.c builtins.c\
+			redirection_utils.c free_utils.c
 
 OBJS_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.o, $(SRCS_MF)))
 D_FILES_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.d, $(SRCS_MF)))
 
 LIBFT = ./libft/libft.a
 LIB_INC = -L./libft/ -lft
-
-MEM_LIB = 
-# -L./Memd/ -lmemd
 
 detected_OS := $(shell uname)
 

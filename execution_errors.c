@@ -6,97 +6,119 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:29:08 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 01:00:31 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/24 23:36:04 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_close_all(t_data *data, int fd_read, const char *error)
+int	ft_close_all(t_data *data, const char *error)
 {
-	int	ret;
+	t_list	*redir;
+	int		ret;
 
 	ret = 0;
-	(void)fd_read;
-	if (data->fd_in)
-		ret = close(data->fd_in);
-	if (data->fd_out)
-		ret = close(data->fd_out);
-	printf("ret1: %d\n", ret);
-	ret = close(data->fd_pipe[0]);
-	printf("ret2: %d\n", ret);
-	ret = close(data->fd_pipe[1]);
-	// printf("ret3: %d\n", ret);
-	// ret = close(fd_read);
-	// printf("ret4: %d\n", ret);
+	redir = data->redirs;
+	while (redir)
+	{
+		if (redir->redir_data->fd)
+			close(redir->redir_data->fd);
+		redir = redir->next;
+	}
 	if (error)
 		perror(error);
 	return (1);
 }
 
-void	ft_token_error(t_list *cmd, int id)
+void	ft_token_error(t_data *data, int id, int process)
 {
 	char	*token;
 
 	token = NULL;
-	printf("token error\n");
-	if (cmd->cmd_data->token_id >= L1_REDIRECT &&
-		cmd->cmd_data->token_id <= PIPE)
-	{
-		if (id == L1_REDIRECT)
-			token = "'<'";
-		else if (id == L2_HEREDOC)
-			token = "'<<'";
-		else if (id == R1_REDIRECT)
-			token = "'>'";
-		else if (id == R2_REDIRECT)
-			token = "'>>'";
-		ft_putstr_fd("syntax error near unexpected token ", STDERR_FILENO);
-		ft_putstr_fd(token, STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
+	if (id == L1_REDIRECT)
+		token = "'<'";
+	else if (id == L2_HEREDOC)
+		token = "'<<'";
+	else if (id == R1_REDIRECT)
+		token = "'>'";
+	else if (id == R2_REDIRECT)
+		token = "'>>'";
+	ft_putstr_fd("syntax error near unexpected token ", STDERR_FILENO);
+	ft_putstr_fd(token, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	if (process)
 		exit(258);
-	}
+	else
+		data->status = 258;
 }
 
-// void	ft_file_error(t_data *data, char *file_name)
-// {
-// 	ft_putstr_fd(strerror(errno), STDERR_FILENO);
-// 	ft_putstr_fd(" : ", STDERR_FILENO);
-// 	ft_putstr_fd(file_name, STDERR_FILENO);
-// 	ft_putstr_fd("\n", STDERR_FILENO);
-// 	ft_close_all(data, *fd_read, NULL);
-// 	exit(1);
-// }
+void	ft_file_error(t_data *data, char *file, int process)
+{
+	int	fd;
+
+	fd = open(file, O_WRONLY);
+	if (fd == -1)
+	{
+		ft_putstr_fd(RED, STDERR_FILENO);
+		perror(file);
+		ft_putstr_fd(BREAK, STDERR_FILENO);
+	}
+	else
+		close(fd);
+	if (process)
+		exit(1);
+	else
+		data->status = 1;
+}
+
+void	ft_perror_redir(t_data *data, t_list *redir)
+{
+	if (!redir)
+		return ;
+	if (redir->redir_data->file == NULL)
+		ft_token_error(data, redir->redir_data->id, 0);
+	else if (!data->commands && redir->redir_data->file)
+		ft_file_error(data, redir->redir_data->file, 0);
+	else
+		data->status = 0;
+}
 
 void	ft_perror(t_list *cmd)
 {
+	int		fd;
+	DIR		*directory;
 	char	*path;
-	char	**cmd_args;
 
 	printf("perror\n");
-	cmd_args = cmd->cmd_data->cmd;
-	path = cmd->cmd_data->cmd_path; /* путь к исполняемой команде || файл */
-	if (!path && cmd->cmd_data->token_id < WORD)
-		ft_token_error(cmd, cmd->cmd_data->token_id);
-	if (cmd_args && path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+	path = NULL;
+	fd = 0;
+	if (!cmd)
+		return ;
+	path = cmd->cmd_data->cmd_path;
+	directory = opendir(path);
+	fd = open(path, O_WRONLY);
+	printf("fd: %d\n", fd);
+	if (fd == -1 && directory)
 	{
-		perror(cmd->cmd_data->cmd_path);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putendl_fd(": is a directory", 2);
+	}
+	else if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+	{
+		perror(cmd->cmd_data->cmd_path); //permission denied
 		exit(126);
 	}
-	if (cmd_args && path && (ft_strchr(cmd->cmd_data->cmd_path, '/')))
+	else if (cmd->cmd_data->cmd && path && (ft_strchr(cmd->cmd_data->cmd_path, '/')))
 		perror(cmd->cmd_data->cmd[0]);
-	else if (cmd->cmd_data->token_id == WORD)
+	else
 	{
 		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		if (cmd->next == NULL)
-			exit(127);
 	}
-	else
-	{
-		ft_putstr_fd(cmd->cmd_data->cmd_path, STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
-		if (cmd->next == NULL)
-			exit(127);
-	}
+	if (directory)
+		closedir(directory);
+	if (fd)
+		close(fd);
+	if (cmd->next == NULL)
+		exit(127);
 }
