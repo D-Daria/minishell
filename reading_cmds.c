@@ -53,7 +53,6 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		rl_replace_line("", 0);
 		data_ptr->last_user_cmd = NULL;
 	}
-	ft_memdel(now_user_cmd);
-	// free(now_user_cmd);
-	free(rl_buffer);
+	free (now_user_cmd);
+	free (rl_buffer);
 }
