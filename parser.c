@@ -24,7 +24,7 @@ void	ft_free_list(t_list **list)
 
 void	ft_expand_dollar_question(t_data *data)
 {
-	data->expand_dollar = ft_itoa(data->status);
+	data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
 	if (!data->expand_dollar)
 		ft_error_exit("malloc_error in ft_itoa\n");
 }
@@ -82,8 +82,10 @@ void	ft_add_this_str_to_word(t_data *data, size_t *i, size_t *st)
 	if (tmp2 == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 	data->last_token->content->token = ft_strjoin(tmp, tmp2);
-	free(tmp2);
-	free(tmp);
+	ft_memdel(tmp);
+	ft_memdel(tmp2);
+	// free(tmp2);
+	// free(tmp);
 	if (data->last_token->content->token == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 }
@@ -263,6 +265,7 @@ void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
 	str = data->last_user_cmd;
 	if (data->last_token->content->token_id == WORD)
 		ft_add_this_str_to_word(data, i, st);
+	// ft_reverse_token_word(data);
 	if (data->last_token->content->token_id == WORD && *data->last_token->content->token == '\0')
 	{
 		//надо удалить последний элемент из списка. Список односвязынй.

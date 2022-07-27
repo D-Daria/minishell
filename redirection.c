@@ -6,46 +6,76 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:08:37 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/23 01:00:11 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/26 22:04:13 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_redirect(t_data *data, int *fd_read, t_list *cmd, int id)
+static void	ft_redir_in(t_data *data, t_list *cmd)
 {
-	(void)fd_read;
-	(void)cmd;
-	if (id == R1_REDIRECT)
+	t_list	*redir_in;
+	int		id;
+
+	redir_in = NULL;
+	id = 0;
+	redir_in = cmd->cmd_data->redir_in;
+	if (redir_in->redir_data->fd < 0)
+		ft_file_error(data, redir_in->redir_data->file, 1);
+	id = redir_in->redir_data->id;
+	if (id == L1_REDIRECT)
 	{
-		// printf("data->fd: %d\n", data->fd);
-		dup2(data->fd_in, STDOUT_FILENO);
+		dup2(redir_in->redir_data->fd, STDIN_FILENO);
+		close(redir_in->redir_data->fd);
 	}
 }
 
-int	ft_check_files(t_data *data, t_list *cmd, int *fd_read, int id)
+static void	ft_redir_out(t_data *data, t_list *cmd)
 {
-	char	*file_name;
+	t_list	*redir_out;
+	int		id;
 
-	if (cmd->cmd_data->cmd_path == NULL)
-		return (-1);
-	file_name = cmd->cmd_data->cmd_path;
-	printf("file_name: %s\n", file_name);
-	if (id == L1_REDIRECT)
-		data->fd_out = open(file_name, O_RDONLY);
-	else if (id == R1_REDIRECT)
-		data->fd_in = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, 0666);
-	else if (id == R2_REDIRECT)
-		data->fd_in = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0666);
-	// printf("data->fd: %d\n", data->fd);
-	if (data->fd_in == -1 || data->fd_out == -1)
+	redir_out = NULL;
+	id = 0;
+	redir_out = cmd->cmd_data->redir_out;
+	if (redir_out->redir_data->fd < 0)
+		ft_file_error(data, redir_out->redir_data->file, 1);
+	id = redir_out->redir_data->id;
+	if (id == R1_REDIRECT || id == R2_REDIRECT)
 	{
-		ft_putstr_fd(strerror(errno), STDERR_FILENO);
-		ft_putstr_fd(" : ", STDERR_FILENO);
-		ft_putstr_fd(file_name, STDERR_FILENO);
-		ft_putstr_fd("\n", STDERR_FILENO);
-		ft_close_all(data, *fd_read, NULL);
-		exit(1);
+		dup2(redir_out->redir_data->fd, STDOUT_FILENO);
+		close(redir_out->redir_data->fd);
 	}
-	return (1);
+}
+
+static void	ft_heredoc(t_data *data, t_list *cmd)
+{
+	t_list	*heredoc;
+	int		id;
+
+	heredoc = NULL;
+	id = 0;
+	heredoc = cmd->cmd_data->heredoc;
+	if (heredoc->redir_data->fd < 0)
+		ft_file_error(data, heredoc->redir_data->file, 1);
+	id = heredoc->redir_data->id;
+	if (id == L2_HEREDOC)
+	{
+		dup2(heredoc->redir_data->fd, STDIN_FILENO);
+		close(heredoc->redir_data->fd);
+	}
+	if (access("here_doc", F_OK) == 0)
+		unlink("here_doc");
+}
+
+void	ft_redirect(t_list *cmd, t_data *data)
+{
+	if (!cmd)
+		return ;
+	if (cmd->cmd_data->redir_in)
+		ft_redir_in(data, cmd);
+	if (cmd->cmd_data->redir_out)
+		ft_redir_out(data, cmd);
+	if (cmd->cmd_data->heredoc)
+		ft_heredoc(data, cmd);
 }
