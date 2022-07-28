@@ -26,7 +26,8 @@ void	debug_print_double_arr(char **arr)
 		}
 	}
 	else
-		printf("%s\n", NULL);
+		printf("(null");
+		//printf("%s\n", NULL);
 }
 
 void	debug_print_commands_list(t_data *data)
