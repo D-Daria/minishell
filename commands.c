@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/26 22:39:42 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 15:04:39 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ static void ft_fill_command(t_data *data, t_list ***token, int id, int num)
 	cmd = NULL;
 	cmd_path = NULL;
 	new_cmd = NULL;
-	cmd_path = ft_access_paths(data->parser_ptr, (**token)->content->token);
 	ft_get_cmd(&(token), &cmd);
+	cmd_path = ft_access_paths(data->parser_ptr, *cmd);
 	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
 	ft_lstadd_back(&data->commands, new_cmd);
 	new_cmd = NULL;
@@ -77,6 +77,32 @@ void	ft_process_tokens(t_data *data)
 			break;
 		else
 			current = current->next;
+	}
+}
+
+void ft_get_heredoc(t_data *data)
+{
+	t_list	*cmd;
+	t_list	*redir;
+
+	cmd = data->commands;
+	while (cmd)
+	{
+		redir = data->redirs;
+		while (redir)
+		{
+			if (cmd->cmd_data->cmd_num == redir->redir_data->num)
+			{
+				if (redir->redir_data->id == L2_HEREDOC)
+				{
+					cmd->cmd_data->is_redir = 1;
+					cmd->cmd_data->heredoc = redir;
+					break ;
+				}
+			}
+			redir = redir->next;
+		}
+		cmd = cmd->next;
 	}
 }
 
