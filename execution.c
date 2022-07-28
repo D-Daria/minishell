@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 22:29:51 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/28 15:13:19 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 15:29:44 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ void	ft_wait_children(t_data *data)
 
 int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
 {
+	printf("in pipe\n");
 	while (cmd)
 	{
 		if (cmd->next)
