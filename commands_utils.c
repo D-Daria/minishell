@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:51:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 15:06:26 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 		(tmp) = (tmp)->next;
 		n++;
 	}
-	*cmd = (char **)malloc(sizeof(char *) * n + 1);
+	*cmd = (char **)malloc(sizeof(char *) * (n + 1));
 	n = 0;
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
