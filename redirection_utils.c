@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:17:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/26 21:39:24 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 20:22:24 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,26 +79,19 @@ int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 
 void	ft_process_redirs(t_data *data)
 {
-	// t_list	*prev;
 	t_list	*redir;
 	int		id;
 
+	printf("process redirs\n");
 	redir = data->redirs;
-	// prev = NULL;
 	while (redir)
 	{
 		id = redir->redir_data->id;
 		if (redir->redir_data->file == NULL)
-		{
 			ft_perror_redir(data, redir);
-			break;
-		}
 		redir->redir_data->fd = ft_open_files(data, redir, id, 0);
 		if (redir->redir_data->fd < 0)
-		{
 			ft_perror_redir(data, redir);
-			break;
-		}
 		redir = redir->next;
 	}
 }

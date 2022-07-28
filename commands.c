@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/28 15:04:39 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 21:17:46 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,11 @@ static void	ft_set_cmd_redirs(t_data *data)
 			{
 				cmd->cmd_data->is_redir = 1;
 				id = redir->redir_data->id;
+				if (id == L1_REDIRECT)
+					cmd->cmd_data->redir_in = redir;
 				if (id == R1_REDIRECT || id == R2_REDIRECT)
 					cmd->cmd_data->redir_out = redir;
-				else if (id == L1_REDIRECT)
-					cmd->cmd_data->redir_in = redir;
-				else if (id == L2_HEREDOC)
+				if (id == L2_HEREDOC)
 					cmd->cmd_data->heredoc = redir;
 			}
 			redir = redir->next;
@@ -141,7 +141,7 @@ void	ft_commands(t_data *data)
 {
 	data->commands = NULL;
 	data->redirs = NULL;
-	// ft_print_list_of_tokens(data);
+	ft_print_list_of_tokens(data);
 	ft_get_paths(data->parser_ptr);
 	if (data->parser_ptr->paths == NULL)
 		ft_error_exit("error getting paths\n");

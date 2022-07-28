@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:29:08 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/24 23:36:04 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 21:03:50 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ void	ft_file_error(t_data *data, char *file, int process)
 {
 	int	fd;
 
-	fd = open(file, O_WRONLY);
+	fd = open(file, O_RDONLY);
+	printf("fd: %d\n", fd);
 	if (fd == -1)
 	{
 		ft_putstr_fd(RED, STDERR_FILENO);
@@ -73,14 +74,19 @@ void	ft_file_error(t_data *data, char *file, int process)
 
 void	ft_perror_redir(t_data *data, t_list *redir)
 {
+	int	num;
+
 	if (!redir)
 		return ;
+	num = redir->redir_data->num;
 	if (redir->redir_data->file == NULL)
 		ft_token_error(data, redir->redir_data->id, 0);
 	else if (!data->commands && redir->redir_data->file)
 		ft_file_error(data, redir->redir_data->file, 0);
+	else if (num == 0 && redir->redir_data->file)
+		ft_file_error(data, redir->redir_data->file, 0);
 	else
-		data->status = 0;
+		data->status = 1;
 }
 
 void	ft_perror(t_list *cmd)
@@ -89,7 +95,8 @@ void	ft_perror(t_list *cmd)
 	DIR		*directory;
 	char	*path;
 
-	printf("perror\n");
+	printf(RED"perror\n");
+	printf(BREAK);
 	path = NULL;
 	fd = 0;
 	if (!cmd)
