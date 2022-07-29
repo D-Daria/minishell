@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 14:37:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 15:38:42 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ void	ft_commands(t_data *data)
 	token = NULL;
 	prev = NULL;
 	// ft_print_list_of_tokens(data);
-	ft_get_paths(data->parser_ptr);
+	ft_get_paths(data, data->parser_ptr);
 	if (data->parser_ptr->paths == NULL)
 		ft_error_exit("error getting paths\n");
 	ft_process_tokens(data, token, prev);

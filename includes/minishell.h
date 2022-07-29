@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 13:07:16 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 17:03:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void		ft_free_list(t_list **list);
 void		ft_commands(t_data *data);
 
 /*commands_utils.c*/
-void		ft_get_paths(t_parser *parser);
+void		ft_get_paths(t_data *data, t_parser *parser);
 t_command	*ft_create_command(char **cmd_args);
 t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 char		*ft_access_paths(t_parser *parser, char *cmd);
@@ -126,8 +126,9 @@ void		ft_get_cmd(t_list ****token, char ***cmd);
 char    *ft_getenv(t_data *data, char *var);
 
 /*builtins.c*/
-void		ft_set_builtins(t_data *parser);
-int			ft_is_builtin(t_data *data, char *cmd);
+void		ft_set_builtins(t_data *data);
+int			ft_is_builtin(t_data *data, t_list *cmd_lst);
+void		ft_execute_builtin(t_data *data, t_list *cmd);
 
 /*execution.c*/
 void		ft_execute(t_data *data);
