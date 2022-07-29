@@ -80,6 +80,8 @@ typedef struct s_data {
 	t_list		*envplist;
 }				t_data;
 
+typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
+
 void	ft_sigint_handler(int signum);
 
 /*utils.c*/
@@ -128,6 +130,14 @@ char    *ft_getenv(t_data *data, char *var);
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
 int			ft_is_builtin(t_data *data, char *cmd);
+void		ft_echo(t_data *data, t_list *cmd);
+void		ft_cd(t_data *data, t_list *cmd);
+void		ft_pwd(t_data *data, t_list *cmd);
+void		ft_export(t_data *data, t_list *cmd);
+void		ft_unset(t_data *data, t_list *cmd);
+void		ft_env(t_data *data, t_list *cmd);
+void		ft_exit(t_data *data, t_list *cmd);
+int			ft_processing_builtin(t_data *data, t_list *cmd);
 
 /*execution.c*/
 void		ft_execute(t_data *data);
@@ -147,5 +157,6 @@ t_list		*ft_new_redir_lst(char *file, int id, int num);
 /*redirection_utils.c*/
 int			ft_open_files(t_data *data, t_list *redir, int id, int process);
 void		ft_process_redirs(t_data *data);
+
 
 #endif

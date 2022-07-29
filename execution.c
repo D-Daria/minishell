@@ -96,6 +96,11 @@ int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
 	{
 		if (pipe(cmd->cmd_data->pipe_fd) < 0)
 			return (ft_throw_system_error("pipe"));
+		if (ft_processing_builtin(data, cmd) >= 0)
+		{
+			cmd = cmd->next;
+			continue ;
+		}
 		*pid = fork();
 		if (*pid < 0)
 			return (ft_throw_system_error("fork"));
@@ -132,8 +137,8 @@ void	ft_execute(t_data *data)
 	printf("data->status: %d\n", data->status);
 	if (data->status > 0)
 		return ;
-	if (cmd && data->pipes_number > 0)
+	// if (cmd && data->pipes_number > 0)
 		ft_pipe(data, cmd, prev, &pid);
-	else if (cmd)
-		ft_execute_single_cmd(data, data->commands);
+	// else if (cmd)
+	// 	ft_execute_single_cmd(data, data->commands);
 }

@@ -61,6 +61,7 @@ void	ft_init(t_data *data_ptr, char **envp)
 		exit(-1);
 	}
 	ft_create_envplist(data_ptr, envp);
+	ft_set_builtins(data_ptr);
 	data_ptr->envp = envp;
 	// ft_find_path_by_launch(envp, data_ptr);
 }
