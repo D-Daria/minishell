@@ -61,11 +61,21 @@ void	ft_export(t_data *data, t_list *cmd)
 void	ft_unset(t_data *data, t_list *cmd)
 {
 	printf(" UNSET\n\n");
+	
 }
 
 void	ft_env(t_data *data, t_list *cmd)
 {
-	printf(" ENV\n\n");
+	t_list	*ptr;
+
+	if (!data->envplist || !cmd)
+		return ;
+	ptr = data->envplist;
+	while (ptr)
+	{
+		printf("%s\n", ptr->envp_str);
+		ptr = ptr->next;
+	}
 }
 
 void	ft_exit(t_data *data, t_list *cmd)
