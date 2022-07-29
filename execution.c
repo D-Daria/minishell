@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 22:29:51 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/28 21:23:32 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 14:31:14 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,10 @@
 
 void	ft_execve(t_data *data, t_list *cmd)
 {
-	int ret;
-
-	ret = 0;
-	printf("ft_execve\n");
 	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
 	{
-		printf("is accessed\n");
-		ret = execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
-		printf("ret: %d\n", ret);
-		if (ret == -1)
-		{
-			printf("execve failed");
-			ft_perror(cmd);
-		}
+		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
+		ft_perror(cmd);
 	}
 	ft_perror(cmd);
 	exit(0);
@@ -42,7 +32,6 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 		exit(ft_throw_system_error("fork"));
 	else if (pid == 0)
 	{
-		printf("parent pid: %d - child pid : %d\n", getppid(), getpid());
 		signal(SIGINT, &ft_sigint_handler);//ctr+C передаю в обработчик
 		if (cmd->cmd_data->is_redir)
 			ft_redirect(cmd, data);
@@ -52,6 +41,7 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 	{
 		waitpid(pid, &data->status, 0);
 		printf("execute_single_status: %d\n", WEXITSTATUS(data->status));
+		data->status = WEXITSTATUS(data->status);
 	}
 }
 
@@ -97,7 +87,7 @@ void	ft_wait_children(t_data *data)
 		printf("status: %d\n", WEXITSTATUS(data->status));
 		cmd = cmd->next;
 	}
-	ft_close_all(data, NULL);
+	ft_close_all(data);
 }
 
 int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
@@ -133,12 +123,15 @@ void	ft_execute(t_data *data)
 	t_list	*prev;
 	int		pid;
 
+	data->status = -1;
 	cmd = data->commands;
 	prev = NULL;
 	if (data->redirs)
 		ft_process_redirs(data);
-	printf("data->status: %d\n", data->status);
 	debug_print_commands_list(data);
+	printf("data->status: %d\n", data->status);
+	if (data->status > 0)
+		return ;
 	if (cmd && data->pipes_number > 0)
 		ft_pipe(data, cmd, prev, &pid);
 	else if (cmd)

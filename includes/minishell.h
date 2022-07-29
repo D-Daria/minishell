@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:59:14 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 13:07:16 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include <stddef.h>
 # include <fcntl.h>
 # include <dirent.h> //opendir closedir
-
-// #include "../Memd/mem.h"
 
 # define PROMPT	"[minishell]-> "
 
@@ -65,12 +63,6 @@ typedef struct s_parser {
 }			t_parser; // заменить на t_command ?
 
 typedef struct s_data {
-	// int			fd_in;
-	// int			fd_pipe[2];
-	// int			in_tmp;
-	// int			out_tmp;
-	// int			fd_in;	// файл для чтения
-	// int			fd_out; // файл для записи
 	char		*last_user_cmd;
 	char		**envp;
 	char		**path_by_launch;
@@ -79,6 +71,7 @@ typedef struct s_data {
 	int			status;
 	char		*builtins[8];
 	size_t		pipes_number;
+	size_t		cmds_number;
 	t_parser	*parser_ptr;
 	t_list		*redirs;
 	t_list		*tokens;
@@ -136,7 +129,7 @@ void		ft_execute(t_data *data);
 
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);
-int			ft_close_all(t_data *data, const char *error);
+int			ft_close_all(t_data *data);
 void		ft_perror_redir(t_data *data, t_list *redir);
 void		ft_file_error(t_data *data, char *file, int process);
 void		ft_token_error(t_data *data, int id, int process);

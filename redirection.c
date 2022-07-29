@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:08:37 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/28 21:02:03 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 12:42:20 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ static void	ft_redir_out(t_data *data, t_list *cmd)
 	t_list	*redir_out;
 	int		id;
 
-	(void)data;
 	redir_out = NULL;
 	id = 0;
 	redir_out = cmd->cmd_data->redir_out;

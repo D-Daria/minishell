@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:09:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 14:33:20 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 22:26:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,32 +25,6 @@ void	ft_error_exit(const char *str_error)
 	//redirect error to STDERROR
 	ft_putstr_fd(str_error, STDERR_FILENO);
 	exit(EXIT_FAILURE);
-}
-
-char	**ft_strrev_split(char *str, char c)
-{
-	int		i;
-	int		j;
-	int		len;
-	char	**str_rev;
-	char	**splitted;
-
-	splitted = ft_split(str, c);
-	i = ft_split_len(splitted);
-	str_rev = (char **)malloc(sizeof(char *) * (i + 1));
-	if (str_rev == NULL)
-		return (NULL);
-	len = i;
-	j = i;
-	i = 0;
-	while (i < j)
-	{
-		str_rev[i++] = ft_strdup(splitted[len - 1]);
-		len--;
-	}
-	str_rev[i] = NULL;
-	ft_free_split(splitted);
-	return (str_rev);
 }
 
 size_t	ft_split_len(char **str)
