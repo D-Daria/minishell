@@ -73,7 +73,7 @@ typedef struct s_data {
 	// int			fd_out; // файл для записи
 	char		*last_user_cmd;
 	char		**envp;
-	char		**path_by_launch;
+	// char		**path_by_launch;
 	int			stopshell;
 	char		*expand_dollar;
 	int			status;
@@ -84,6 +84,7 @@ typedef struct s_data {
 	t_list		*tokens;
 	t_list		*last_token;
 	t_list		*commands;
+	t_list		*envplist;
 }				t_data;
 
 void	ft_sigint_handler(int signum);
@@ -103,6 +104,7 @@ void	ft_free_data_ptr(t_data *data_ptr);
 /*debug.c*/ //tests
 void	debug_print_double_arr(char **arr);
 void	ft_print_list_of_tokens(t_data *data);
+void	ft_print_envplist(t_data *data);
 void	debug_print_commands_list(t_data *data);
 void 	debug_print_redirections(t_list *redirs);
 

@@ -12,27 +12,47 @@
 
 #include "minishell.h"
 
-void	ft_find_path_by_launch(char **envp, t_data *data_ptr)
+// void	ft_find_path_by_launch(char **envp, t_data *data_ptr)
+// {
+// 	int i;
+
+// 	i = 0;
+// 	while (envp[i])
+// 	{
+// 		if ((ft_strncmp(envp[i], "PATH=", 5)) == 0)
+// 		{
+// 			data_ptr->path_by_launch = ft_split((envp[i] + 5), ':');
+// 			if (!data_ptr->path_by_launch)
+// 			{
+// 				ft_free_data_ptr(data_ptr);
+// 				printf("Malloc error in ft_find_path_by_launch\n");
+// 				exit(-1);
+// 			}
+// 			return ;
+// 		}
+// 		i++;
+// 	}
+// }
+
+void	ft_create_envplist(t_data *data_ptr, char **envp)
 {
-	int i;
+	t_list	*new;
+	int		i;
+
+	if (!envp)
+		ft_error_exit("envp==NULL in ft_create_envplist\n");
 
 	i = 0;
 	while (envp[i])
 	{
-		if ((ft_strncmp(envp[i], "PATH=", 5)) == 0)
-		{
-			data_ptr->path_by_launch = ft_split((envp[i] + 5), ':');
-			if (!data_ptr->path_by_launch)
-			{
-				ft_free_data_ptr(data_ptr);
-				printf("Malloc error in ft_find_path_by_launch\n");
-				exit(-1);
-			}
-			return ;
-		}
+		new = ft_calloc(1, sizeof(t_list));//check calloc
+		new->envp_str = ft_strdup(envp[i]);//check malloc
+		ft_lstadd_back(&data_ptr->envplist, new);
 		i++;
 	}
+	ft_print_envplist(data_ptr);
 }
+
 void	ft_init(t_data *data_ptr, char **envp)
 {
 	data_ptr->parser_ptr = ft_calloc(1, sizeof(t_parser));
@@ -41,8 +61,9 @@ void	ft_init(t_data *data_ptr, char **envp)
 		printf("Malloc error. Minishell has been stopped\n");
 		exit(-1);
 	}
+	ft_create_envplist(data_ptr, envp);
 	data_ptr->envp = envp;
-	ft_find_path_by_launch(envp, data_ptr);
+	// ft_find_path_by_launch(envp, data_ptr);
 }
 
 void	ft_sigint_handler(int signum)
