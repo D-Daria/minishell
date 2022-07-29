@@ -40,28 +40,73 @@ void	ft_set_builtins(t_data *parser)
 
 void	ft_echo(t_data *data, t_list *cmd)
 {
+	(void)data;
+	(void)cmd;
+
 	printf(" ECHO\n\n");
 }
 
 void	ft_cd(t_data *data, t_list *cmd)
 {
+	(void)data;
+	(void)cmd;
+
 	printf(" CD\n\n");
 }
 
 void	ft_pwd(t_data *data, t_list *cmd)
 {
+	(void)data;
+	(void)cmd;
+
 	printf(" PWD\n\n");
 }
 
 void	ft_export(t_data *data, t_list *cmd)
 {
-	printf(" EXPORT\n\n");
+	(void)data;
+	(void)cmd;
+
+	printf("EXPORT\n\n");
+}
+
+void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
+{
+	if ((*prev) == NULL)//переменная нашлась в первой строке, удалить этот list
+		data->envplist = (*var)->next;
+	else 
+		(*prev)->next = (*var)->next;
+	free ((*var)->envp_str);
+	free (*var);
 }
 
 void	ft_unset(t_data *data, t_list *cmd)
 {
-	printf(" UNSET\n\n");
-	
+	char	**tmp_cmd;
+	t_list	*current_env;
+	t_list	*prev_env;
+
+	tmp_cmd = (cmd->cmd_data->cmd) + 1;
+	if (!(*tmp_cmd))
+		return ;
+	while (*tmp_cmd)
+	{
+		current_env = data->envplist;
+		prev_env = NULL;
+		while (current_env)
+		{
+			if (ft_strncmp(current_env->envp_str, *tmp_cmd, \
+				ft_strlen(*tmp_cmd)) == 0 && \
+				(current_env->envp_str)[ft_strlen(*tmp_cmd)] == '=')
+			{
+				ft_delete_env_var(data, &prev_env, &current_env);
+				break ;
+			}
+			prev_env = current_env;
+			current_env = current_env->next;
+		}
+		tmp_cmd += 1;
+	}
 }
 
 void	ft_env(t_data *data, t_list *cmd)
@@ -80,7 +125,9 @@ void	ft_env(t_data *data, t_list *cmd)
 
 void	ft_exit(t_data *data, t_list *cmd)
 {
-	printf(" EXIT\n\n");
+	(void)data;
+	(void)cmd;
+	printf("\nEXIT\n\n");
 }
 
 void	ft_start_builtin(t_data *data, t_list *cmd, int i)
@@ -107,7 +154,6 @@ int	ft_processing_builtin(t_data *data, t_list *cmd)
 	ret = ft_is_builtin(data, *cmd->cmd_data->cmd);
 	if (ret == -1)
 		return (-1);
-	printf("\nBUILTIN ");
 	ft_start_builtin(data, cmd,ret);
 	return (ret);
 }
