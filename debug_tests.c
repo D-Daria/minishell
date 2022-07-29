@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/05 15:52:48 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:56:35 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/28 21:36:02 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,17 @@ void	debug_print_commands_list(t_data *data)
 		printf("is_redir: %d\n", cmd_lst->cmd_data->is_redir);
 		if (cmd_lst->cmd_data->redir_in)
 		{
-			printf(GREEN"redir_in: %s\n"BREAK, "TRUE");
-			redir = cmd_lst->cmd_data->redir_in;
-			while (redir && redir->redir_data->id == L1_REDIRECT && redir->redir_data->num == cmd_lst->cmd_data->cmd_num)
-			{
-				printf("num: %d\n", redir->redir_data->num);
-				printf("file: %s\n", redir->redir_data->file);
-				printf("fd: %d\n", redir->redir_data->fd);
-				printf("id: %d\n", redir->redir_data->id);
-				redir = redir->next;
-			}
+			printf(GREEN "redir_in: %s\n" BREAK, "TRUE");
+			debug_print_redirections(cmd_lst->cmd_data->redir_in);
+			// redir = cmd_lst->cmd_data->redir_in;
+			// while (redir && redir->redir_data->id == L1_REDIRECT && redir->redir_data->num == cmd_lst->cmd_data->cmd_num)
+			// {
+			// 	printf("num: %d\n", redir->redir_data->num);
+			// 	printf("file: %s\n", redir->redir_data->file);
+			// 	printf("fd: %d\n", redir->redir_data->fd);
+			// 	printf("id: %d\n", redir->redir_data->id);
+			// 	redir = redir->next;
+			// }
 		}
 		else
 			printf("redir_in: %s\n", "FALSE");
@@ -82,15 +83,16 @@ void	debug_print_commands_list(t_data *data)
 		if (cmd_lst->cmd_data->heredoc)
 		{
 			printf(GREEN"heredoc: %s\n"BREAK, "TRUE");
-			redir = cmd_lst->cmd_data->heredoc;
-			while (redir && redir->redir_data->id == L2_HEREDOC && redir->redir_data->num == cmd_lst->cmd_data->cmd_num)
-			{
-				printf("num: %d\n", redir->redir_data->num);
-				printf("file: %s\n", redir->redir_data->file);
-				printf("fd: %d\n", redir->redir_data->fd);
-				printf("id: %d\n", redir->redir_data->id);
-				redir = redir->next;
-			}
+			debug_print_redirections(cmd_lst->cmd_data->heredoc);
+			// redir = cmd_lst->cmd_data->heredoc;
+			// while (redir && redir->redir_data->id == L2_HEREDOC && redir->redir_data->num == cmd_lst->cmd_data->cmd_num)
+			// {
+			// 	printf("num: %d\n", redir->redir_data->num);
+			// 	printf("file: %s\n", redir->redir_data->file);
+			// 	printf("fd: %d\n", redir->redir_data->fd);
+			// 	printf("id: %d\n", redir->redir_data->id);
+			// 	redir = redir->next;
+			// }
 		}
 		else
 			printf("heredoc: %s\n", "FALSE");

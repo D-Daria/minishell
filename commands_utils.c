@@ -6,34 +6,11 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/25 17:51:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 13:59:26 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void	ft_get_cmd(t_list ****token, char ***cmd)
-// {
-// 	char		*join;
-// 	char		*space;
-// 	char		*str_spaced;
-
-// 	str_spaced = NULL;
-// 	while ((***token) && (***token)->content->token_id == WORD)
-// 	{
-// 		if ((***token)->content->token == NULL)
-// 			break ;
-// 		space = ft_strjoin(" ", str_spaced);
-// 		ft_memdel(str_spaced);
-// 		join = ft_strjoin((***token)->content->token, space);
-// 		ft_memdel(space);
-// 		str_spaced = ft_strdup(join);
-// 		ft_memdel(join);
-// 		(***token) = (***token)->next;
-// 	}
-// 	*cmd = ft_strrev_split(str_spaced, ' ');
-// 	ft_memdel(str_spaced);
-// }
 
 void	ft_get_cmd(t_list ****token, char ***cmd)
 {
@@ -48,7 +25,7 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 		(tmp) = (tmp)->next;
 		n++;
 	}
-	*cmd = (char **)malloc(sizeof(char *) * n + 1);
+	*cmd = (char **)malloc(sizeof(char *) * (n + 1));
 	n = 0;
 	while ((***token) && (***token)->content->token_id == WORD)
 	{

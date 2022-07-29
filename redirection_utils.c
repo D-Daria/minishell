@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:17:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/26 21:39:24 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 14:17:21 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	ft_process_heredoc(t_list *redir)
 	lim = redir->redir_data->file;
 	fd = open("here_doc", O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	line = readline("> ");
-	while (ft_strcmp(line, lim))
+	while (line)
 	{
-		if (!line)
+		if (ft_strcmp(line, lim) == 0)
 			break ;
 		line = ft_strjoin(line, "\n");
 		write(fd, line, ft_strlen(line));
@@ -79,26 +79,23 @@ int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 
 void	ft_process_redirs(t_data *data)
 {
-	// t_list	*prev;
 	t_list	*redir;
 	int		id;
+	int		num;
 
+	printf("process redirs\n");
 	redir = data->redirs;
-	// prev = NULL;
 	while (redir)
 	{
 		id = redir->redir_data->id;
-		if (redir->redir_data->file == NULL)
-		{
+		num = redir->redir_data->num;
+		if (num == -1)
 			ft_perror_redir(data, redir);
-			break;
-		}
+		if (redir->redir_data->file == NULL && num >= 0)
+			ft_perror_redir(data, redir);
 		redir->redir_data->fd = ft_open_files(data, redir, id, 0);
 		if (redir->redir_data->fd < 0)
-		{
 			ft_perror_redir(data, redir);
-			break;
-		}
 		redir = redir->next;
 	}
 }
