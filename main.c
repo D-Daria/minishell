@@ -50,9 +50,6 @@ void	ft_create_envplist(t_data *data_ptr, char **envp)
 		ft_lstadd_back(&data_ptr->envplist, new);
 		i++;
 	}
-	// ft_print_envplist(data_ptr);
-	printf("ft_getenv=%s\n", ft_getenv(data_ptr, "TERM"));
-    // ft_print_envplist(data_ptr);
 }
 
 void	ft_init(t_data *data_ptr, char **envp)
@@ -85,6 +82,7 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&data, sizeof(t_data));
 	ft_init(&data, envp);
+	printf("ft_getenv=%s\n", ft_getenv(&data, "TERM"));
 	signal(SIGINT, &ft_sigint_handler);//ctr+C передаю в обработчик
 	signal(SIGQUIT, SIG_IGN);//ctr+backslash игнорирую
 	while (data.stopshell == 0)
