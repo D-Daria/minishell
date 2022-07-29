@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 14:43:03 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 14:37:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 18:56:59 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void	ft_commands(t_data *data)
 		ft_error_exit("error getting paths\n");
 	ft_process_tokens(data, token, prev);
 	ft_free_split(data->parser_ptr->paths);
-	debug_print_redirections(data->redirs);
+	// debug_print_redirections(data->redirs);
 	if (data->commands && data->redirs)
 		ft_set_cmd_redirs(data);
 	printf("data->parser_ptr->paths cleared\n");
