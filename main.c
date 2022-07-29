@@ -83,8 +83,8 @@ int	main(int argc, char **argv, char **envp)
 	ft_bzero(&data, sizeof(t_data));
 	ft_init(&data, envp);
 	printf("ft_getenv=%s\n", ft_getenv(&data, "TERM"));
-	signal(SIGINT, &ft_sigint_handler);//ctr+C передаю в обработчик
-	signal(SIGQUIT, SIG_IGN);//ctr+backslash игнорирую
+	signal(SIGINT, &ft_sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	while (data.stopshell == 0)
 	{
 		ft_read_user_cmd(&data);
