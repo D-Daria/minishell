@@ -48,6 +48,7 @@ typedef struct s_list
 	t_redir				*redir_data;
 	t_command			*cmd_data;
 	t_content_for_list	*content;
+	char				*envp_str;
 	struct s_list		*next;
 }						t_list;
 

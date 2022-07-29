@@ -72,6 +72,6 @@ void	ft_free_data_ptr(t_data *data_ptr)
 	ft_free_commands(&data_ptr->commands);
 	if (data_ptr->parser_ptr)
 		ft_memdel(data_ptr->parser_ptr);
-	if (data_ptr->path_by_launch)
-		ft_free_split(data_ptr->path_by_launch);
+	// if (data_ptr->path_by_launch)
+	// 	ft_free_split(data_ptr->path_by_launch);
 }

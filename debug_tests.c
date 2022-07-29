@@ -26,7 +26,7 @@ void	debug_print_double_arr(char **arr)
 		}
 	}
 	else
-		printf("(null");
+		printf("(null)");
 		//printf("%s\n", NULL);
 }
 
@@ -134,6 +134,26 @@ void	ft_print_list_of_tokens(t_data *data)
 		printf("[	");
 		printf("token={%s}   id=%d", ptr->content->token, ptr->content->token_id);
 		printf("	]\n");
+		ptr = ptr->next;
+	}
+	printf("Лист распечатан\n\n");
+}
+
+void	ft_print_envplist(t_data *data)
+{	
+	t_list	*ptr;
+
+	printf("Печатаю лист envp:\n");
+	if (!data->envplist)
+	{
+		printf("	list пустой!\n");
+		return ;
+	}
+	ptr = data->envplist;
+	int i = 0;
+	while (ptr)
+	{
+		printf("envp[%d]={%s}\n", i++, ptr->envp_str);
 		ptr = ptr->next;
 	}
 	printf("Лист распечатан\n\n");
