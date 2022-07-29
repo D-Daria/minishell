@@ -50,7 +50,9 @@ void	ft_create_envplist(t_data *data_ptr, char **envp)
 		ft_lstadd_back(&data_ptr->envplist, new);
 		i++;
 	}
-	ft_print_envplist(data_ptr);
+	// ft_print_envplist(data_ptr);
+	printf("ft_getenv=%s\n", ft_getenv(data_ptr, "TERM"));
+    // ft_print_envplist(data_ptr);
 }
 
 void	ft_init(t_data *data_ptr, char **envp)

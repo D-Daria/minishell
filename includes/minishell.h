@@ -129,6 +129,9 @@ t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_cmd(t_list ****token, char ***cmd);
 
+//utils_envp.c
+char    *ft_getenv(t_data *data, char *var);
+
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
 int			ft_is_builtin(t_data *data, char *cmd);

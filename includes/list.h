@@ -52,9 +52,4 @@ typedef struct s_list
 	struct s_list		*next;
 }						t_list;
 
-// typedef struct s_envplist {
-// 	char				*str;
-// 	struct s_envplist	*next;
-// }		t_envplist;
-
 #endif
