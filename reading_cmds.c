@@ -10,7 +10,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 	if (rl_buffer == NULL)
 	{
 		printf("ctr+D:--->exit\n");
-		ft_free_data_ptr(data_ptr);
+		// ft_free_data_ptr(data_ptr);
 		exit(0);
 	}
 	if (rl_buffer && *rl_buffer)
@@ -18,9 +18,9 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		now_user_cmd = ft_strtrim(rl_buffer, " ");
 		if (!now_user_cmd)
 		{
-			free (rl_buffer);
+			// free (rl_buffer);
 			printf("malloc error in ft_read_userstring\n");
-			ft_free_data_ptr(data_ptr);
+			// ft_free_data_ptr(data_ptr);
 			exit(-1);
 		}
 		if (*now_user_cmd == '\0')
@@ -35,14 +35,14 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		}
 
 		if (ft_strcmp(now_user_cmd, data_ptr->last_user_cmd) != 0)
-			add_history(now_user_cmd);	
+			add_history(now_user_cmd);
 		data_ptr->last_user_cmd = ft_strdup(now_user_cmd);
 		if (!data_ptr->last_user_cmd)
 		{
-			free(now_user_cmd);
-			free (rl_buffer);
+			// free(now_user_cmd);
+			// free (rl_buffer);
 			printf("malloc error in ft_read_userstring\n");
-			ft_free_data_ptr(data_ptr);
+			// ft_free_data_ptr(data_ptr);
 			exit(-1);
 		}
 	}
@@ -52,6 +52,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		data_ptr->last_user_cmd = NULL;
+		
 	}
 	ft_memdel(now_user_cmd);
 	// free(now_user_cmd);

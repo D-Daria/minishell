@@ -128,10 +128,15 @@ void	ft_export(t_data *data, t_list *cmd)
 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
 	if (!(*tmp_cmd))
 		return (ft_export_without_args(data));
-	if (ft_strchr(*tmp_cmd, (int)'=') == NULL)
-		return ;
 	while (*tmp_cmd)
 	{
+		//ft_parse_cmd_check_errors(); tmp_cmd += 1; break ; (при ошибке)
+		if (ft_strchr(*tmp_cmd, (int)'=') == NULL)
+		{
+			//ft_add_to_declare_list();
+			tmp_cmd += 1;
+			continue ;
+		}
 		ft_get_length_init_flag(*tmp_cmd, &length, data);
 		current_env = data->envplist;
 		while (current_env)
@@ -145,6 +150,7 @@ void	ft_export(t_data *data, t_list *cmd)
 			current_env = current_env->next;
 		}
 		ft_check_flag_add_envplist(data, *tmp_cmd);
+		//check_flag_add_to_declare_list()
 		tmp_cmd += 1;
 	}
 }
@@ -159,27 +165,59 @@ void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 	free (*var);
 }
 
+// void	ft_unset(t_data *data, t_list *cmd)
+// {
+// 	char	**tmp_cmd;
+// 	t_list	*current_env;
+// 	t_list	*prev_env;
+
+// 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
+// 	if (!(*tmp_cmd))
+// 		return ;
+// 	while (*tmp_cmd)
+// 	{
+// 		current_env = data->envplist;
+// 		prev_env = NULL;
+// 		while (current_env)
+// 		{
+// 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, \
+// 				ft_strlen(*tmp_cmd)) == 0 && \
+// 				((current_env->envp_str)[ft_strlen(*tmp_cmd)] == '=' \
+// 				|| (current_env->envp_str)[ft_strlen(*tmp_cmd)] == '\0'))
+// 			{
+// 				ft_delete_env_var(data, &prev_env, &current_env);
+// 				break ;
+// 			}
+// 			prev_env = current_env;
+// 			current_env = current_env->next;
+// 		}
+// 		tmp_cmd += 1;
+// 	}
+// }
+
 void	ft_unset(t_data *data, t_list *cmd)
 {
 	char	**tmp_cmd;
 	t_list	*current_env;
 	t_list	*prev_env;
+	size_t	length;
 
 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
 	if (!(*tmp_cmd))
 		return ;
 	while (*tmp_cmd)
 	{
+		//ft_parse_cmd_check_errors(); tmp_cmd += 1; break ; (при ошибке)
 		current_env = data->envplist;
 		prev_env = NULL;
 		while (current_env)
 		{
-			if (ft_strncmp(current_env->envp_str, *tmp_cmd, \
-				ft_strlen(*tmp_cmd)) == 0 && \
-				((current_env->envp_str)[ft_strlen(*tmp_cmd)] == '=' \
-				|| (current_env->envp_str)[ft_strlen(*tmp_cmd)] == '\0'))
+			ft_get_length_init_flag(current_env->envp_str, &length, data);
+			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
+				&& ((*tmp_cmd)[length] == '\0'))
 			{
 				ft_delete_env_var(data, &prev_env, &current_env);
+				//ft_delete_var_in_declare_list();
 				break ;
 			}
 			prev_env = current_env;
