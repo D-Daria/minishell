@@ -19,12 +19,13 @@ void	ft_free_list(t_list **list)
 		(*list) = NULL;
 		(*list) = tmp;
 	}
-	printf("Лист очищен\n");
+	// printf("Лист очищен\n");
 }
 
 void	ft_expand_dollar_question(t_data *data)
 {
-	data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
+	// data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
+	data->expand_dollar = ft_itoa(data->status);
 	if (!data->expand_dollar)
 		ft_error_exit("malloc_error in ft_itoa\n");
 }
@@ -35,10 +36,7 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 	char *str_after_dollar;
 
 	if (data->expand_dollar)
-	{
-		free (data->expand_dollar);
-		data->expand_dollar = NULL;
-	}
+		ft_memdel(data->expand_dollar);
 	if (str[(*i) + 1] == '?')
 	{	
 		ft_expand_dollar_question(data);
@@ -84,8 +82,6 @@ void	ft_add_this_str_to_word(t_data *data, size_t *i, size_t *st)
 	data->last_token->content->token = ft_strjoin(tmp, tmp2);
 	ft_memdel(tmp);
 	ft_memdel(tmp2);
-	// free(tmp2);
-	// free(tmp);
 	if (data->last_token->content->token == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 }

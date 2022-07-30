@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 17:03:18 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/30 15:19:59 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <stddef.h>
 # include <fcntl.h>
 # include <dirent.h> //opendir closedir
+# include <termios.h>
 
 # define PROMPT	"[minishell]-> "
 
@@ -53,6 +54,7 @@
 # define WORD 6
 
 typedef struct stat	t_stat;
+typedef struct termios t_termios;
 
 typedef struct s_parser {
 	char	***cmds;
@@ -80,13 +82,14 @@ typedef struct s_data {
 	t_list		*envplist;
 }				t_data;
 
+typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
+
 void	ft_sigint_handler(int signum);
 
 /*utils.c*/
 void	ft_error_exit(const char *error);
 void	ft_free_3darray(char ***arr);
 int		ft_throw_system_error(const char *str);
-char	**ft_strrev_split(char *str, char c);
 size_t	ft_split_len(char **str);
 
 /*free_utils.c*/
@@ -129,9 +132,25 @@ char    *ft_getenv(t_data *data, char *var);
 void		ft_set_builtins(t_data *data);
 int			ft_is_builtin(t_data *data, t_list *cmd_lst);
 void		ft_execute_builtin(t_data *data, t_list *cmd);
+int			ft_processing_builtin(t_data *data, t_list *cmd);
+
+/*builtins_utils.c*/
+void		ft_set_builtins(t_data *data);
+void		ft_start_builtin(t_data *data, t_list *cmd, int i);
+int			ft_is_builtin(t_data *data, t_list *cmd_lst);
+
+void		ft_echo(t_data *data, t_list *cmd);
+void		ft_cd(t_data *data, t_list *cmd);
+void		ft_pwd(t_data *data, t_list *cmd);
+void		ft_export(t_data *data, t_list *cmd);
+void		ft_unset(t_data *data, t_list *cmd);
+void		ft_env(t_data *data, t_list *cmd);
+void		ft_exit(t_data *data, t_list *cmd);
 
 /*execution.c*/
 void		ft_execute(t_data *data);
+void		ft_execve(t_data *data, t_list *cmd);
+void		ft_get_status(t_data *data);
 
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);
