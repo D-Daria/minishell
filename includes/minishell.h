@@ -78,6 +78,7 @@ typedef struct s_data {
 	t_list		*last_token;
 	t_list		*commands;
 	t_list		*envplist;
+	int			flag;
 }				t_data;
 
 typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
