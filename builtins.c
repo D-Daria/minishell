@@ -62,97 +62,12 @@ void	ft_pwd(t_data *data, t_list *cmd)
 	printf(" PWD\n\n");
 }
 
-void	ft_export_without_args(t_data *data)
-{
-	printf("\nNO args\n\n");
-	/*sort,print envplist*/
-}
-
-void	ft_parse_cmd_to_find_env_var()
-{
-
-}
-
 void	ft_get_length_init_flag(char *cmd, size_t *length, t_data *data)
 {
-	data->flag = 0;
+	data->ready_create_new_var = 0;
 	*length = 0;
 	while (cmd[*length] != '=' && cmd[*length])
 		*length +=1;
-}
-
-
-void	ft_check_flag_add_envplist(t_data *data, char *new_str)
-{
-	t_list	*new;
-
-	if (data->flag == 1)
-		return ;
-	new = ft_calloc(1, sizeof(t_list));//check calloc
-	new->envp_str = ft_strdup(new_str);//check malloc
-	ft_lstadd_front(&data->envplist, new);
-		printf("ADD_LIST\n");
-
-	/*если envplist=NULL; ft_lstadd_front() справится?*/
-}
-
-void	ft_change_var_change_flag(t_list **current_env, char *new, t_data *data)
-{
-	char	*old;
-
-	data->flag = 1;
-	old = (*current_env)->envp_str;
-	(*current_env)->envp_str = ft_strdup(new);//malloc
-	free (old);
-	printf("CHANGE\n");
-}
-
-void	ft_export(t_data *data, t_list *cmd)
-{
-	printf("\nEXPORT\n\n");
-	/*check, var не должна начинаться с цифры, ещё...
-	сорт по первой букве, сначала большие, потом мелкие,
-	как по номеру в ascii
-	В declare_список экспортируются 
-	переменные без знака '=' (после команды export z, перем z войдёт в 
-	declare_список, и не войдёт в список из команды env,
-	позже, после команды z=123, изменяются оба списка!)
-	в то же время, после команды export z=, переменная z=''войдет в оба.
-	т.е.
-	сначала заполнять declare_список(сортировать), а когда надо, из него
-	переносить переменные и в env_список*/
-	char	**tmp_cmd;
-	size_t	length;
-	t_list	*current_env;
-
-	tmp_cmd = (cmd->cmd_data->cmd) + 1;
-	if (!(*tmp_cmd))
-		return (ft_export_without_args(data));
-	while (*tmp_cmd)
-	{
-		//ft_parse_cmd_check_errors(); tmp_cmd += 1; break ; (при ошибке)
-		if (ft_strchr(*tmp_cmd, (int)'=') == NULL)
-		{
-			//ft_add_to_declare_list();
-			tmp_cmd += 1;
-			continue ;
-		}
-		ft_get_length_init_flag(*tmp_cmd, &length, data);
-		current_env = data->envplist;
-		while (current_env)
-		{
-			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
-				&& ((current_env->envp_str)[length] == '=' ))
-			{
-				ft_change_var_change_flag(&current_env, *tmp_cmd, data);
-				break ;
-			}
-			current_env = current_env->next;
-		}
-		ft_check_flag_add_envplist(data, *tmp_cmd);
-		//check_flag_add_to_declare_list()
-		tmp_cmd += 1;
-	}
 }
 
 void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
@@ -164,36 +79,6 @@ void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 	free ((*var)->envp_str);
 	free (*var);
 }
-
-// void	ft_unset(t_data *data, t_list *cmd)
-// {
-// 	char	**tmp_cmd;
-// 	t_list	*current_env;
-// 	t_list	*prev_env;
-
-// 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
-// 	if (!(*tmp_cmd))
-// 		return ;
-// 	while (*tmp_cmd)
-// 	{
-// 		current_env = data->envplist;
-// 		prev_env = NULL;
-// 		while (current_env)
-// 		{
-// 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, \
-// 				ft_strlen(*tmp_cmd)) == 0 && \
-// 				((current_env->envp_str)[ft_strlen(*tmp_cmd)] == '=' \
-// 				|| (current_env->envp_str)[ft_strlen(*tmp_cmd)] == '\0'))
-// 			{
-// 				ft_delete_env_var(data, &prev_env, &current_env);
-// 				break ;
-// 			}
-// 			prev_env = current_env;
-// 			current_env = current_env->next;
-// 		}
-// 		tmp_cmd += 1;
-// 	}
-// }
 
 void	ft_unset(t_data *data, t_list *cmd)
 {

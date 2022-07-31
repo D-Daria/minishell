@@ -27,6 +27,7 @@
 # include <stddef.h>
 # include <fcntl.h>
 # include <dirent.h> //opendir closedir
+# include <stdbool.h>
 
 # define PROMPT	"[minishell]-> "
 
@@ -78,7 +79,7 @@ typedef struct s_data {
 	t_list		*last_token;
 	t_list		*commands;
 	t_list		*envplist;
-	int			flag;
+	bool		ready_create_new_var;
 }				t_data;
 
 typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
@@ -140,6 +141,11 @@ void		ft_env(t_data *data, t_list *cmd);
 void		ft_exit(t_data *data, t_list *cmd);
 int			ft_processing_builtin(t_data *data, t_list *cmd);
 
+/*builtin_export.c*/
+int    		ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length);
+void    	ft_find_env_var(char *var, size_t l, t_data *data);
+void		ft_check_flag_add_envplist(t_data *data, char *new_str);
+void		ft_export(t_data *data, t_list *cmd);
 /*execution.c*/
 void		ft_execute(t_data *data);
 
