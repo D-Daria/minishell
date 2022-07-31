@@ -143,6 +143,7 @@ void		ft_unset(t_data *data, t_list *cmd);
 void		ft_env(t_data *data, t_list *cmd);
 void		ft_exit(t_data *data, t_list *cmd);
 int			ft_processing_builtin(t_data *data, t_list *cmd);
+void		ft_get_length_var(char *cmd, size_t *length);
 
 /*builtin_export.c*/
 int    		ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length);

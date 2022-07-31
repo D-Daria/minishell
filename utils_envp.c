@@ -27,24 +27,42 @@ void    ft_create_lstnew(t_list **l_new, char *str_new)
         ft_error_exit("malloc_error in ft_create_lstnew\n");
 }
 
+void    ft_sorting_find_prev_list(t_list **prev, char *s_new, t_data *data)
+{
+	t_list	*current;
+	char	*new_var;
+	char	*old_var;
+	size_t	len_new;
+	size_t	len_old;
+
+	ft_get_length_var(s_new, &len_new);
+	new_var = ft_substr(s_new, 0, len_new);
+	old_var = NULL;
+	current = data->sorted_envplist;
+	while (current)
+	{
+		ft_get_length_var(current->envp_str, &len_old);
+		old_var = ft_substr(current->envp_str, 0, len_old);
+		if (ft_strcmp(new_var, old_var) < 0)
+			break ;
+		*prev = current;
+		current = current->next;
+	}
+	free (old_var);
+	free (new_var);
+}
+
 void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)
 {
 	t_list	*l_new;
 	t_list	*tmp;
-	t_list	*current;
+	// t_list	*current;
 	t_list	*prev;
 
     if (data->add_new_var_sortlist == 0)
 		return ;
-	current = data->sorted_envplist;
 	prev = NULL;
-	while (current)
-	{
-		if (ft_strcmp(s_new, current->envp_str) < 0)
-			break ;
-		prev = current;
-		current = current->next;
-	}
+	ft_sorting_find_prev_list(&prev, s_new, data);
     ft_create_lstnew(&l_new, s_new);
 	//-------------------------
 	if (!prev)
