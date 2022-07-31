@@ -12,31 +12,47 @@
 
 #include "minishell.h"
 
-// void	ft_find_path_by_launch(char **envp, t_data *data_ptr)
+// void	ft_create_envplist(t_data *data_ptr, char **envp)
 // {
-// 	int i;
+// 	t_list	*new;
+// 	int		i;
+
+// 	if (!envp)
+// 		ft_error_exit("envp==NULL in ft_create_envplist\n");
 
 // 	i = 0;
 // 	while (envp[i])
 // 	{
-// 		if ((ft_strncmp(envp[i], "PATH=", 5)) == 0)
-// 		{
-// 			data_ptr->path_by_launch = ft_split((envp[i] + 5), ':');
-// 			if (!data_ptr->path_by_launch)
-// 			{
-// 				ft_free_data_ptr(data_ptr);
-// 				printf("Malloc error in ft_find_path_by_launch\n");
-// 				exit(-1);
-// 			}
-// 			return ;
-// 		}
+// 		new = ft_calloc(1, sizeof(t_list));//check calloc
+// 		new->envp_str = ft_strdup(envp[i]);//check malloc
+// 		ft_lstadd_back(&data_ptr->envplist, new);
 // 		i++;
 // 	}
 // }
 
+void	ft_add_to_sorted_list(t_data *d, t_list **prev, char *s_new)
+{
+	t_list	*l_new;
+	t_list	*tmp;
+
+	l_new = ft_calloc(1, sizeof(t_list));
+	l_new->envp_str = ft_strdup(s_new);
+	//-------------------------
+	if (!(*prev))
+	{
+		ft_lstadd_front(&(d->sorted_envplist), l_new);
+		return ;
+	}
+	tmp = (*prev)->next;
+	(*prev)->next = l_new;
+	l_new->next = tmp;
+}
+
 void	ft_create_envplist(t_data *data_ptr, char **envp)
 {
 	t_list	*new;
+	t_list	*current;
+	t_list	*prev;
 	int		i;
 
 	if (!envp)
@@ -48,9 +64,46 @@ void	ft_create_envplist(t_data *data_ptr, char **envp)
 		new = ft_calloc(1, sizeof(t_list));//check calloc
 		new->envp_str = ft_strdup(envp[i]);//check malloc
 		ft_lstadd_back(&data_ptr->envplist, new);
+		//-----------------------------------
+		current = data_ptr->sorted_envplist;
+		prev = NULL;
+		while (current)
+		{
+			if (ft_strcmp(envp[i], current->envp_str) < 0)
+			{
+				break ;
+			}
+			prev = current;
+			current = current->next;
+		}
+		ft_add_to_sorted_list(data_ptr, &prev, envp[i]);
 		i++;
 	}
 }
+
+// void	ft_create_sorted_envplist(t_data *data)
+// {
+// 	t_list	*sort;
+// 	t_list	*env;
+
+// 	sort = data->sorted_envplist;
+// 	env = data->envplist;
+// 	while (env)
+// 	{
+// 		//
+// 		ft_calloc(1, sizeof(t_list));
+// 		while (sort)
+// 		{
+// 			if ()
+// 			{
+// 				/* code */
+// 			}
+			
+// 			sort = sort->next;
+// 		}
+// 		env = env->next;
+// 	}
+// }
 
 void	ft_init(t_data *data_ptr, char **envp)
 {
@@ -61,9 +114,9 @@ void	ft_init(t_data *data_ptr, char **envp)
 		exit(-1);
 	}
 	ft_create_envplist(data_ptr, envp);
+	// ft_create_sorted_envplist(data_ptr);
 	ft_set_builtins(data_ptr);
 	data_ptr->envp = envp;
-	// ft_find_path_by_launch(envp, data_ptr);
 }
 
 void	ft_sigint_handler(int signum)

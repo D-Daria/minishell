@@ -79,7 +79,9 @@ typedef struct s_data {
 	t_list		*last_token;
 	t_list		*commands;
 	t_list		*envplist;
+	t_list		*sorted_envplist;
 	bool		ready_create_new_var;
+	bool		envp_list_is_changed;
 }				t_data;
 
 typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);

@@ -2,7 +2,21 @@
 
 void	ft_export_without_args(t_data *data)
 {
-	printf("\nNO args\n\n");
+	t_list	*current;
+
+	printf("NO args\n\n");
+
+		current = data->sorted_envplist;
+		while (current)
+		{
+			// while ()
+			// {
+
+			// }
+			printf("declare x \"%s\"\n", current->envp_str);
+			current = current->next;
+		}
+		return ;
 	/*sort,print envplist*/
 }
 
@@ -59,7 +73,7 @@ void    ft_find_env_var(char *var, size_t l, t_data *data)
 		if (ft_strncmp(env->envp_str, var, l) == 0)
 		{
             shift = env->envp_str + l;
-            if (ft_strcmp(shift, var) == 0)
+            if (ft_strcmp(shift, var + l) == 0)
             {
                 printf("var уже в списке envplist, делаю return\n");
                 data->ready_create_new_var = 0;
