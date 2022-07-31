@@ -80,16 +80,12 @@ void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 	free (*var);
 }
 
-void	ft_unset(t_data *data, t_list *cmd)
+void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
 {
-	char	**tmp_cmd;
 	t_list	*current_env;
 	t_list	*prev_env;
 	size_t	length;
 
-	tmp_cmd = (cmd->cmd_data->cmd) + 1;
-	if (!(*tmp_cmd))
-		return ;
 	while (*tmp_cmd)
 	{
 		current_env = data->envplist;
@@ -101,7 +97,6 @@ void	ft_unset(t_data *data, t_list *cmd)
 				&& ((*tmp_cmd)[length] == '\0'))
 			{
 				ft_delete_env_var(data, &prev_env, &current_env);
-				//ft_delete_var_in_declare_list();
 				break ;
 			}
 			prev_env = current_env;
@@ -109,6 +104,43 @@ void	ft_unset(t_data *data, t_list *cmd)
 		}
 		tmp_cmd += 1;
 	}
+}
+
+void	ft_delete_if_found_in_sortlist(char **tmp_cmd, t_data *data)
+{
+	t_list	*current_env;
+	t_list	*prev_env;
+	size_t	length;
+
+	while (*tmp_cmd)
+	{
+		current_env = data->sorted_envplist;
+		prev_env = NULL;
+		while (current_env)
+		{
+			ft_get_length_init_flag(current_env->envp_str, &length, data);
+			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
+				&& ((*tmp_cmd)[length] == '\0'))
+			{
+				ft_delete_env_var(data, &prev_env, &current_env);
+				break ;
+			}
+			prev_env = current_env;
+			current_env = current_env->next;
+		}
+		tmp_cmd += 1;
+	}
+}
+
+void	ft_unset(t_data *data, t_list *cmd)
+{
+	char	**tmp_cmd;
+
+	tmp_cmd = (cmd->cmd_data->cmd) + 1;
+	if (!(*tmp_cmd))
+		return ;
+	ft_delete_if_found_in_envplist(tmp_cmd, data);
+	ft_delete_if_found_in_sortlist(tmp_cmd, data);
 }
 
 void	ft_env(t_data *data, t_list *cmd)
