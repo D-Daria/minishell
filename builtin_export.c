@@ -3,21 +3,19 @@
 void	ft_export_without_args(t_data *data)
 {
 	t_list	*current;
+	size_t	i;
 
 	printf("NO args\n\n");
-
-		current = data->sorted_envplist;
-		while (current)
-		{
-			// while ()
-			// {
-
-			// }
-			printf("declare x \"%s\"\n", current->envp_str);
-			current = current->next;
-		}
-		return ;
-	/*sort,print envplist*/
+	current = data->sorted_envplist;
+	while (current)
+	{
+		printf("declare x ", current->envp_str);
+		i = 0;
+		while ((current->envp_str)[i] != '=')
+			printf("%c", (current->envp_str)[i++]);
+		printf("=\"%s\"\n", current->envp_str + i + 1);			
+		current = current->next;
+	}
 }
 
 int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
