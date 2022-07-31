@@ -24,13 +24,18 @@ void	ft_export_without_args(t_data *data)
 	}
 }
 
-void	ft_change_var(t_list **lst, char *new, t_data *data)
+void	ft_change_var(t_list **lst, char *new, t_data *data, char name_list)
 {
 	char	*old;
 
-	data->ready_create_new_var = 0;
+	if (name_list == 's')
+		data->add_new_var_sortlist = 0;
+	else if (name_list == 'e')
+		data->add_new_var_envplist = 0;
 	old = (*lst)->envp_str;
 	(*lst)->envp_str = ft_strdup(new);//malloc
+	if ((*lst)->envp_str == NULL)
+		ft_error_exit("malloc_error in ft_change_var\n");
 	free (old);
 	//-------------------
 
@@ -43,6 +48,7 @@ void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
     char    *shift;
 
     env = data->envplist;
+	data->add_new_var_envplist = 1;
     while (env)
 	{
 		if (ft_strncmp(env->envp_str, var, l) == 0)
@@ -50,10 +56,10 @@ void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
             shift = env->envp_str + l;
             if (ft_strcmp(shift, var + l) == 0)
             {
-                data->ready_create_new_var = 0;
+                data->add_new_var_envplist = 0;
                 return ;
             }
-	    	ft_change_var(&env, var, data);
+	    	ft_change_var(&env, var, data, 'e');
 			break ;
 		}
 		env = env->next;
@@ -66,6 +72,7 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
     char    *shift;
 
     lst = data->sorted_envplist;
+	data->add_new_var_sortlist = 1;
     while (lst)
 	{
 		if (ft_strncmp(lst->envp_str, var, l) == 0)
@@ -73,10 +80,10 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
             shift = lst->envp_str + l;
             if (ft_strcmp(shift, var + l) == 0)
             {
-                data->ready_create_new_var = 0;
+                data->add_new_var_sortlist = 0;
                 return ;
             }
-	    	ft_change_var(&lst, var, data);
+	    	ft_change_var(&lst, var, data, 's');
 			break ;
 		}
 		lst = lst->next;
@@ -87,7 +94,7 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
 {
     size_t  i;
 
-    data->ready_create_new_var = 0;
+	(void)data;
     if (!ft_isalpha((int)*var) && *var != '_')
     {
         printf("export: переменная «%s» начинается не с буквы и не с '_'\n", var);
@@ -98,7 +105,6 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
     {
         if (var[i] == '=')
         {
-			data->ready_create_new_var = 1;
             *length = i + 1;
             printf("ok\n");
             return (1);
@@ -113,15 +119,6 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
 	// *length = i;
 
     return (0);
-}
-
-void	ft_adding_to_lists_if_flag(t_data *data, char *new_str)
-{
-	if (data->ready_create_new_var == 0)
-		return ;
-	ft_adding_var_to_envplist(data, new_str);
-	ft_adding_var_to_sortlist(data, new_str);
-	/*если envplist=NULL; ft_lstadd_front() справится?*/
 }
 
 void	ft_export(t_data *data, t_list *cmd)
@@ -141,13 +138,12 @@ void	ft_export(t_data *data, t_list *cmd)
 		{
 			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
-			ft_adding_to_lists_if_flag(data, *tmp_cmd);
+			ft_adding_var_to_envplist_if_flag(data, *tmp_cmd);
+			ft_adding_var_to_sortlist_if_flag(data, *tmp_cmd);
 		}
 		else if (ret == 0)
 		{
 			printf("в переменной нет '='\n");
-			// 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
-			// ft_adding_var_to_sortlist(data, *tmp_cmd);
 
 		}
 		tmp_cmd += 1;

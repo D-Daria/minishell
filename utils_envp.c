@@ -27,13 +27,15 @@ void    ft_create_lstnew(t_list **l_new, char *str_new)
         ft_error_exit("malloc_error in ft_create_lstnew\n");
 }
 
-void	ft_adding_var_to_sortlist(t_data *data, char *s_new)
+void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)
 {
 	t_list	*l_new;
 	t_list	*tmp;
 	t_list	*current;
 	t_list	*prev;
 
+    if (data->add_new_var_sortlist == 0)
+		return ;
 	current = data->sorted_envplist;
 	prev = NULL;
 	while (current)
@@ -55,10 +57,12 @@ void	ft_adding_var_to_sortlist(t_data *data, char *s_new)
 	l_new->next = tmp;
 }
 
-void    ft_adding_var_to_envplist(t_data *data, char *s_new)
+void    ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new)
 {
     t_list  *new;
 
+    if (data->add_new_var_envplist == 0)
+		return ;
     ft_create_lstnew(&new, s_new);
 	ft_lstadd_back(&data->envplist, new);
 }

@@ -62,9 +62,8 @@ void	ft_pwd(t_data *data, t_list *cmd)
 	printf(" PWD\n\n");
 }
 
-void	ft_get_length_init_flag(char *cmd, size_t *length, t_data *data)
+void	ft_get_length(char *cmd, size_t *length)
 {
-	data->ready_create_new_var = 0;
 	*length = 0;
 	while (cmd[*length] != '=' && cmd[*length])
 		*length +=1;
@@ -92,7 +91,7 @@ void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
 		prev_env = NULL;
 		while (current_env)
 		{
-			ft_get_length_init_flag(current_env->envp_str, &length, data);
+			ft_get_length(current_env->envp_str, &length);
 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
 				&& ((*tmp_cmd)[length] == '\0'))
 			{
@@ -118,7 +117,7 @@ void	ft_delete_if_found_in_sortlist(char **tmp_cmd, t_data *data)
 		prev_env = NULL;
 		while (current_env)
 		{
-			ft_get_length_init_flag(current_env->envp_str, &length, data);
+			ft_get_length(current_env->envp_str, &length);
 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
 				&& ((*tmp_cmd)[length] == '\0'))
 			{

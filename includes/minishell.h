@@ -80,7 +80,8 @@ typedef struct s_data {
 	t_list		*commands;
 	t_list		*envplist;
 	t_list		*sorted_envplist;
-	bool		ready_create_new_var;
+	bool		add_new_var_envplist;
+	bool		add_new_var_sortlist;
 	bool		envp_list_is_changed;
 }				t_data;
 
@@ -128,8 +129,8 @@ void		ft_get_cmd(t_list ****token, char ***cmd);
 
 //utils_envp.c
 char    	*ft_getenv(t_data *data, char *var);
-void		ft_adding_var_to_sortlist(t_data *data, char *s_new);
-void   		ft_adding_var_to_envplist(t_data *data, char *s_new);
+void		ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new);
+void   		ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new);
 
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
