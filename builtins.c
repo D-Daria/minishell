@@ -92,7 +92,6 @@ void	ft_unset(t_data *data, t_list *cmd)
 		return ;
 	while (*tmp_cmd)
 	{
-		//ft_parse_cmd_check_errors(); tmp_cmd += 1; break ; (при ошибке)
 		current_env = data->envplist;
 		prev_env = NULL;
 		while (current_env)

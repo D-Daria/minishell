@@ -90,9 +90,7 @@ void	ft_sigint_handler(int signum);
 
 /*utils.c*/
 void	ft_error_exit(const char *error);
-void	ft_free_3darray(char ***arr);
 int		ft_throw_system_error(const char *str);
-char	**ft_strrev_split(char *str, char c);
 size_t	ft_split_len(char **str);
 
 /*free_utils.c*/
@@ -129,7 +127,9 @@ char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_cmd(t_list ****token, char ***cmd);
 
 //utils_envp.c
-char    *ft_getenv(t_data *data, char *var);
+char    	*ft_getenv(t_data *data, char *var);
+void		ft_adding_var_to_sortlist(t_data *data, char *s_new);
+void   		ft_adding_var_to_envplist(t_data *data, char *s_new);
 
 /*builtins.c*/
 void		ft_set_builtins(t_data *parser);
@@ -166,6 +166,5 @@ t_list		*ft_new_redir_lst(char *file, int id, int num);
 /*redirection_utils.c*/
 int			ft_open_files(t_data *data, t_list *redir, int id, int process);
 void		ft_process_redirs(t_data *data);
-
 
 #endif

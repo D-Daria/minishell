@@ -27,8 +27,7 @@ endif
 
 OPFLAGS = -O2
 CC = cc
-CFLAGS = 
-# -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 SANIT_FLAGS = cc -fsanitize=address $(CFLAGS)
 
 #colors

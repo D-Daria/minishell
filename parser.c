@@ -58,10 +58,7 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 		*i = (*i) + 1;
 	str_after_dollar = ft_substr(str, start, *i - start);
 	if (!str_after_dollar)
-	{
-		printf("ft_expand_dollar: malloc error\n");
-		exit (EXIT_FAILURE);
-	}
+		ft_error_exit("ft_expand_dollar: malloc error\n");
 	char *tmp = getenv(str_after_dollar);
 	if (tmp == NULL)
 		data->expand_dollar = NULL;
@@ -185,16 +182,10 @@ t_list	*ft_calloc_new_token(void)
 
 	lstcontent = (t_content_for_list *)ft_calloc(1, sizeof(t_content_for_list));
 	if (!lstcontent)
-	{
-		printf("malloc error in ft_malloc_content_list\n");
-		exit(EXIT_FAILURE);
-	}
+		ft_error_exit("malloc error in ft_malloc_content_list\n");
 	list = ft_lstnew(lstcontent);
 	if (!list)
-	{
-		printf("malloc error in ft_malloc_content_list\n");
-		exit(EXIT_FAILURE);
-	}
+		ft_error_exit("malloc error in ft_malloc_content_list\n");
 	return (list);
 }
 

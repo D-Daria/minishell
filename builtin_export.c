@@ -9,12 +9,77 @@ void	ft_export_without_args(t_data *data)
 	current = data->sorted_envplist;
 	while (current)
 	{
-		printf("declare x ", current->envp_str);
+		printf("declare x ");
 		i = 0;
-		while ((current->envp_str)[i] != '=')
+		while ((current->envp_str)[i] && (current->envp_str)[i] != '=')
 			printf("%c", (current->envp_str)[i++]);
+		if (!(current->envp_str)[i])
+		{
+			printf("\n");
+			current = current->next;
+			continue ;
+		}
 		printf("=\"%s\"\n", current->envp_str + i + 1);			
 		current = current->next;
+	}
+}
+
+void	ft_change_var(t_list **lst, char *new, t_data *data)
+{
+	char	*old;
+
+	data->ready_create_new_var = 0;
+	old = (*lst)->envp_str;
+	(*lst)->envp_str = ft_strdup(new);//malloc
+	free (old);
+	//-------------------
+
+	printf("CHANGE\n");
+}
+
+void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
+{
+    t_list	*env;
+    char    *shift;
+
+    env = data->envplist;
+    while (env)
+	{
+		if (ft_strncmp(env->envp_str, var, l) == 0)
+		{
+            shift = env->envp_str + l;
+            if (ft_strcmp(shift, var + l) == 0)
+            {
+                data->ready_create_new_var = 0;
+                return ;
+            }
+	    	ft_change_var(&env, var, data);
+			break ;
+		}
+		env = env->next;
+	}
+}
+
+void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
+{
+    t_list	*lst;
+    char    *shift;
+
+    lst = data->sorted_envplist;
+    while (lst)
+	{
+		if (ft_strncmp(lst->envp_str, var, l) == 0)
+		{
+            shift = lst->envp_str + l;
+            if (ft_strcmp(shift, var + l) == 0)
+            {
+                data->ready_create_new_var = 0;
+                return ;
+            }
+	    	ft_change_var(&lst, var, data);
+			break ;
+		}
+		lst = lst->next;
 	}
 }
 
@@ -33,7 +98,7 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
     {
         if (var[i] == '=')
         {
-            data->ready_create_new_var = 1;
+			data->ready_create_new_var = 1;
             *length = i + 1;
             printf("ok\n");
             return (1);
@@ -45,73 +110,23 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
         }
         i++;
     }
-    printf("в переменной нет '='\n");
+	// *length = i;
+
     return (0);
 }
 
-void	ft_change_var(t_list **current_env, char *new, t_data *data)
+void	ft_adding_to_lists_if_flag(t_data *data, char *new_str)
 {
-	char	*old;
-
-	data->ready_create_new_var = 0;
-	old = (*current_env)->envp_str;
-	(*current_env)->envp_str = ft_strdup(new);//malloc
-	free (old);
-	printf("CHANGE\n");
-}
-
-void    ft_find_env_var(char *var, size_t l, t_data *data)
-{
-    t_list	*env;
-    char    *shift;
-
-    env = data->envplist;
-    while (env)
-	{
-		if (ft_strncmp(env->envp_str, var, l) == 0)
-		{
-            shift = env->envp_str + l;
-            if (ft_strcmp(shift, var + l) == 0)
-            {
-                printf("var уже в списке envplist, делаю return\n");
-                data->ready_create_new_var = 0;
-                return ;
-            }
-	    	ft_change_var(&env, var, data);
-			break ;
-		}
-		env = env->next;
-	}
-}
-
-void	ft_check_flag_add_envplist(t_data *data, char *new_str)
-{
-	t_list	*new;
-
 	if (data->ready_create_new_var == 0)
 		return ;
-	new = ft_calloc(1, sizeof(t_list));//check calloc
-	new->envp_str = ft_strdup(new_str);//check malloc
-	ft_lstadd_front(&data->envplist, new);
-		printf("ADD_LIST\n");
-
+	ft_adding_var_to_envplist(data, new_str);
+	ft_adding_var_to_sortlist(data, new_str);
 	/*если envplist=NULL; ft_lstadd_front() справится?*/
 }
 
 void	ft_export(t_data *data, t_list *cmd)
 {
 	printf("\nEXPORT\n\n");
-	/*check, var не должна начинаться с цифры, ещё...
-	сорт по первой букве, сначала большие, потом мелкие,
-	как по номеру в ascii
-	В declare_список экспортируются 
-	переменные без знака '=' (после команды export z, перем z войдёт в 
-	declare_список, и не войдёт в список из команды env,
-	позже, после команды z=123, изменяются оба списка!)
-	в то же время, после команды export z=, переменная z=''войдет в оба.
-	т.е.
-	сначала заполнять declare_список(сортировать), а когда надо, из него
-	переносить переменные и в env_список*/
 	char	**tmp_cmd;
 	size_t	length;
 	int		ret;
@@ -124,8 +139,16 @@ void	ft_export(t_data *data, t_list *cmd)
 		ret = ft_check_varerrors_init_flag(*tmp_cmd, data, &length);
 		if (ret == 1)
 		{
-			ft_find_env_var(*tmp_cmd, length, data);
-			ft_check_flag_add_envplist(data, *tmp_cmd);
+			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
+			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
+			ft_adding_to_lists_if_flag(data, *tmp_cmd);
+		}
+		else if (ret == 0)
+		{
+			printf("в переменной нет '='\n");
+			// 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
+			// ft_adding_var_to_sortlist(data, *tmp_cmd);
+
 		}
 		tmp_cmd += 1;
 	}
