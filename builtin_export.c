@@ -117,7 +117,6 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
         i++;
     }
 	// *length = i;
-
     return (0);
 }
 

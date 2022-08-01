@@ -37,12 +37,16 @@ void    ft_sorting_find_prev_list(t_list **prev, char *s_new, t_data *data)
 
 	ft_get_length_var(s_new, &len_new);
 	new_var = ft_substr(s_new, 0, len_new);
+	if (new_var == NULL)
+		ft_error_exit("malloc_error\n");
 	old_var = NULL;
 	current = data->sorted_envplist;
 	while (current)
 	{
 		ft_get_length_var(current->envp_str, &len_old);
 		old_var = ft_substr(current->envp_str, 0, len_old);
+		if (old_var == NULL)
+			ft_error_exit("malloc_error\n");
 		if (ft_strcmp(new_var, old_var) < 0)
 			break ;
 		*prev = current;
@@ -56,7 +60,6 @@ void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)
 {
 	t_list	*l_new;
 	t_list	*tmp;
-	// t_list	*current;
 	t_list	*prev;
 
     if (data->add_new_var_sortlist == 0)
@@ -64,7 +67,6 @@ void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)
 	prev = NULL;
 	ft_sorting_find_prev_list(&prev, s_new, data);
     ft_create_lstnew(&l_new, s_new);
-	//-------------------------
 	if (!prev)
 	{
 		ft_lstadd_front(&(data->sorted_envplist), l_new);
