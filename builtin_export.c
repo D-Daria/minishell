@@ -42,31 +42,7 @@ void	ft_change_var(t_list **lst, char *new, t_data *data, char name_list)
 	printf("CHANGE %c_list\n", name_list);
 }
 
-// void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
-// {
-//     t_list	*env;
-//     char    *shift;
-
-//     env = data->envplist;
-// 	data->add_new_var_envplist = 1;
-//     while (env)
-// 	{
-// 		if (ft_strncmp(env->envp_str, var, l) == 0)
-// 		{
-//             shift = env->envp_str + l;
-//             if (ft_strcmp(shift, var + l) == 0)
-//             {
-//                 data->add_new_var_envplist = 0;
-//                 return ;
-//             }
-// 	    	ft_change_var(&env, var, data, 'e');
-// 			break ;
-// 		}
-// 		env = env->next;
-// 	}
-// }
-
-void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
+void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
 {
     t_list	*env;
     char    *shift;
@@ -76,11 +52,11 @@ void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
 
     env = data->envplist;
 	data->add_new_var_envplist = 1;
-	new_var = ft_substr(var, 0, l);
+	new_var = ft_substr(var, 0, l_var);
 	old_var = NULL;
     while (env)
 	{
-		ft_get_length_var(var, &len_old);
+		ft_get_length_var(env->envp_str, &len_old);
 		old_var = ft_substr(env->envp_str, 0, len_old);
 		if (ft_strcmp(new_var, old_var) == 0)
 		{
@@ -88,6 +64,8 @@ void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
             if (ft_strcmp(shift, var + len_old) == 0)
             {
                 data->add_new_var_envplist = 0;
+				free (new_var);
+				free (old_var);
                 return ;
             }
 	    	ft_change_var(&env, var, data, 'e');
@@ -95,23 +73,42 @@ void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
 		}
 		env = env->next;
 	}
+	free (new_var);
+	free (old_var);
 }
 
 void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 {
     t_list	*lst;
     char    *shift;
+	char	*new_var;
+	char	*old_var;
+	size_t	len_old;
 
+	printf("l=%zu\n", l);
     lst = data->sorted_envplist;
 	data->add_new_var_sortlist = 1;
+	new_var = ft_substr(var, 0, l);
+	old_var = NULL;
     while (lst)
 	{
-		if (ft_strncmp(lst->envp_str, var, l) == 0)
+		ft_get_length_var(lst->envp_str, &len_old);
+		old_var = ft_substr(lst->envp_str, 0, len_old);
+		if (ft_strcmp(old_var, new_var) == 0)
 		{
+			if (var[l] == '\0')
+			{
+				data->add_new_var_sortlist = 0;
+				free (old_var);
+				free (new_var);
+				return ;
+			}
             shift = lst->envp_str + l;
             if (ft_strcmp(shift, var + l) == 0)
             {
                 data->add_new_var_sortlist = 0;
+				free (old_var);
+				free (new_var);
                 return ;
             }
 	    	ft_change_var(&lst, var, data, 's');
@@ -119,6 +116,8 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 		}
 		lst = lst->next;
 	}
+	free (new_var);
+	free (old_var);
 }
 
 int    ft_check_varerrors(char *var, t_data *data, size_t *length)
@@ -146,7 +145,7 @@ int    ft_check_varerrors(char *var, t_data *data, size_t *length)
         }
         i++;
     }
-	// *length = i;
+	*length = i;
     return (0);
 }
 
@@ -173,7 +172,8 @@ void	ft_export(t_data *data, t_list *cmd)
 		else if (ret == 0)
 		{
 			printf("в переменной нет '='\n");
-
+			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
+			ft_adding_var_to_sortlist_if_flag(data, *tmp_cmd);
 		}
 		tmp_cmd += 1;
 	}
