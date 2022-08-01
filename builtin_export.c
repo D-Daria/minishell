@@ -37,9 +37,7 @@ void	ft_change_var(t_list **lst, char *new, t_data *data, char name_list)
 	if ((*lst)->envp_str == NULL)
 		ft_error_exit("malloc_error in ft_change_var\n");
 	free (old);
-	//-------------------
-
-	printf("CHANGE %c_list\n", name_list);
+	// printf("CHANGE %c_list\n", name_list);
 }
 
 void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
@@ -85,7 +83,6 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 	char	*old_var;
 	size_t	len_old;
 
-	printf("l=%zu\n", l);
     lst = data->sorted_envplist;
 	data->add_new_var_sortlist = 1;
 	new_var = ft_substr(var, 0, l);
@@ -151,7 +148,7 @@ int    ft_check_varerrors(char *var, t_data *data, size_t *length)
 
 void	ft_export(t_data *data, t_list *cmd)
 {
-	printf("\nEXPORT\n\n");
+	// printf("\nEXPORT\n\n");
 	char	**tmp_cmd;
 	size_t	length;
 	int		ret;
@@ -171,7 +168,7 @@ void	ft_export(t_data *data, t_list *cmd)
 		}
 		else if (ret == 0)
 		{
-			printf("в переменной нет '='\n");
+			// printf("в переменной нет '='\n");
 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
 			ft_adding_var_to_sortlist_if_flag(data, *tmp_cmd);
 		}

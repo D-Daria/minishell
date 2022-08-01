@@ -60,8 +60,6 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&data, sizeof(t_data));
 	ft_init(&data, envp);
-			printf("ft_getenv=%s\n", ft_getenv(&data, "TERM"));
-			printf("getenv(q)=%s\n", getenv("q"));
 	signal(SIGINT, &ft_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (data.stopshell == 0)

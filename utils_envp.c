@@ -75,7 +75,7 @@ void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)
 	tmp = prev->next;
 	prev->next = l_new;
 	l_new->next = tmp;
-	printf("ADD to SORT_LIST\n");
+	// printf("ADD to SORT_LIST\n");
 }
 
 void    ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new)
@@ -86,5 +86,5 @@ void    ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new)
 		return ;
     ft_create_lstnew(&new, s_new);
 	ft_lstadd_back(&data->envplist, new);
-	printf("ADD to ENVP_LIST\n");
+	// printf("ADD to ENVP_LIST\n");
 }
