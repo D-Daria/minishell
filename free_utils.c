@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:32:49 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/30 13:48:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/01 22:30:31 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,7 @@ void	ft_free_commands(t_list	**cmd_head)
 	t_list	*next;
 
 	if (*cmd_head == NULL)
-	{
-		// printf("commands are empty\n");
 		return ;
-	}
 	if (*cmd_head != NULL)
 	{
 		while (*cmd_head != NULL)
@@ -37,7 +34,6 @@ void	ft_free_commands(t_list	**cmd_head)
 		}
 	}
 	ft_memdel((*cmd_head));
-	// printf("commands cleared\n");
 }
 
 void	ft_free_redirs(t_list **redir_head)
@@ -45,10 +41,7 @@ void	ft_free_redirs(t_list **redir_head)
 	t_list	*next;
 
 	if (*redir_head == NULL)
-	{
-		// printf("redirs are empty\n");
 		return ;
-	}
 	if (*redir_head != NULL)
 	{
 		while (*redir_head != NULL)
@@ -61,17 +54,50 @@ void	ft_free_redirs(t_list **redir_head)
 		}
 	}
 	ft_memdel((*redir_head));
-	// printf("redirs cleared\n");
+}
+
+void	ft_free_tokenlist(t_list **list)
+{
+	t_list	*tmp;
+
+	if (*list == NULL)
+		return ;
+	while (*list != NULL)
+	{
+		tmp = (*list)->next;
+		free((*list)->content);
+		(*list)->content = NULL;
+		free ((*list));
+		(*list) = NULL;
+		(*list) = tmp;
+	}
+}
+
+void	ft_free_envplist_or_free_sortlist(t_list **list)
+{
+	t_list	*tmp;
+
+	if (*list == NULL)
+		return ;
+	while (*list != NULL)
+	{
+		tmp = (*list)->next;
+		free((*list)->envp_str);
+		(*list)->envp_str = NULL;
+		free (*list);
+		*list = NULL;
+		*list = tmp;
+	}
 }
 
 void	ft_free_data_ptr(t_data *data_ptr)
 {
 	ft_memdel(data_ptr->last_user_cmd);
-	ft_free_list(&data_ptr->tokens);
+	ft_free_tokenlist(&data_ptr->tokens);
 	ft_free_redirs(&data_ptr->redirs);
 	ft_free_commands(&data_ptr->commands);
 	if (data_ptr->parser_ptr)
 		ft_memdel(data_ptr->parser_ptr);
-	// if (data_ptr->path_by_launch)
-	// 	ft_free_split(data_ptr->path_by_launch);
+	ft_free_envplist_or_free_sortlist(&data_ptr->envplist);
+	ft_free_envplist_or_free_sortlist(&data_ptr->sorted_envplist);
 }

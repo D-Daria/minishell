@@ -83,7 +83,6 @@ void	ft_process_redirs(t_data *data)
 	int		id;
 	int		num;
 
-	printf("process redirs\n");
 	redir = data->redirs;
 	while (redir)
 	{

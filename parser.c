@@ -1,31 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/01 21:50:23 by sshield           #+#    #+#             */
+/*   Updated: 2022/08/01 22:15:09 by sshield          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_list(t_list **list)
-{
-	t_list	*tmp;
-
-	if (*list == NULL)
-	{
-		printf("Лист-->null, поэтому в ft_free_list, return сразу без очистки\n");
-		return ;
-	}
-	while (*list != NULL)
-	{
-		tmp = (*list)->next;
-		free((*list)->content);
-		(*list)->content = NULL;
-		free ((*list));
-		(*list) = NULL;
-		(*list) = tmp;
-	}
-	// printf("Лист очищен\n");
-}
-
 void	ft_expand_dollar_question(t_data *data)
 {
-	// data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
-	data->expand_dollar = ft_itoa(data->status);
+	data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
 	if (!data->expand_dollar)
 		ft_error_exit("malloc_error in ft_itoa\n");
 }
@@ -33,7 +22,7 @@ void	ft_expand_dollar_question(t_data *data)
 void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 {
 	unsigned int	start;
-	char *str_after_dollar;
+	char 			*str_after_dollar;
 
 	if (data->expand_dollar)
 		ft_memdel(data->expand_dollar);
@@ -56,11 +45,8 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 		*i = (*i) + 1;
 	str_after_dollar = ft_substr(str, start, *i - start);
 	if (!str_after_dollar)
-	{
-		printf("ft_expand_dollar: malloc error\n");
-		exit (EXIT_FAILURE);
-	}
-	char *tmp = getenv(str_after_dollar);
+		ft_error_exit("ft_expand_dollar: malloc error\n");
+	char *tmp = ft_getenv(data, str_after_dollar);
 	if (tmp == NULL)
 		data->expand_dollar = NULL;
 	else 
@@ -181,16 +167,10 @@ t_list	*ft_calloc_new_token(void)
 
 	lstcontent = (t_content_for_list *)ft_calloc(1, sizeof(t_content_for_list));
 	if (!lstcontent)
-	{
-		printf("malloc error in ft_malloc_content_list\n");
-		exit(EXIT_FAILURE);
-	}
+		ft_error_exit("malloc error in ft_malloc_content_list\n");
 	list = ft_lstnew(lstcontent);
 	if (!list)
-	{
-		printf("malloc error in ft_malloc_content_list\n");
-		exit(EXIT_FAILURE);
-	}
+		ft_error_exit("malloc error in ft_malloc_content_list\n");
 	return (list);
 }
 
@@ -292,10 +272,6 @@ void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
 
 void	ft_parser(t_data *data)
 {
-	// в парсер заходит строка неначинающаяся пробелом. (ft_strtrim)
-	//в парсер заходят непустые строки. Строки из одних пробелов тоже
-	//не заходят и не сохраняются в истории. Поэтому
-	//создаю первый элемент списка tokens.
 	char	*str;
 	size_t	i;
 	size_t	start_token;
@@ -305,7 +281,6 @@ void	ft_parser(t_data *data)
 	start_token = 0;
 	i = 0;
 	ft_find_token_word(data, &i, &start_token);
-	//цикл стартует со слова, если слова в команде нет, то в цикл не зайдем
 	while(str[i])
 	{
 		if (str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == ' ')

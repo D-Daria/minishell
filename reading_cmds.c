@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   reading_cmds.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/01 22:05:12 by sshield           #+#    #+#             */
+/*   Updated: 2022/08/01 22:27:29 by sshield          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <minishell.h>
 
 void    ft_read_user_cmd(t_data *data_ptr)
@@ -18,7 +30,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		now_user_cmd = ft_strtrim(rl_buffer, " ");
 		if (!now_user_cmd)
 		{
-			free (rl_buffer);
+			ft_memdel(rl_buffer);
 			printf("malloc error in ft_read_userstring\n");
 			ft_free_data_ptr(data_ptr);
 			exit(-1);
@@ -29,18 +41,18 @@ void    ft_read_user_cmd(t_data *data_ptr)
 			rl_on_new_line();
 			rl_replace_line("", 0);
 			data_ptr->last_user_cmd = NULL;
-			free(now_user_cmd);
-			free(rl_buffer);
+			ft_memdel(now_user_cmd);
+			ft_memdel(rl_buffer);
 			return ;
 		}
 
 		if (ft_strcmp(now_user_cmd, data_ptr->last_user_cmd) != 0)
-			add_history(now_user_cmd);	
+			add_history(now_user_cmd);
 		data_ptr->last_user_cmd = ft_strdup(now_user_cmd);
 		if (!data_ptr->last_user_cmd)
 		{
-			free(now_user_cmd);
-			free (rl_buffer);
+			ft_memdel(now_user_cmd);
+			ft_memdel(rl_buffer);
 			printf("malloc error in ft_read_userstring\n");
 			ft_free_data_ptr(data_ptr);
 			exit(-1);
@@ -52,8 +64,8 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		data_ptr->last_user_cmd = NULL;
+		
 	}
 	ft_memdel(now_user_cmd);
-	// free(now_user_cmd);
-	free(rl_buffer);
+	ft_memdel(rl_buffer);
 }

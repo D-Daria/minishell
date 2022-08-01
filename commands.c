@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 static void ft_fill_command(t_data *data, t_list ***token, int id, int num)

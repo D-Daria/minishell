@@ -1,5 +1,3 @@
-
-
 #include "minishell.h"
 
 int	ft_is_builtin(t_data *data, t_list *cmd_lst)
@@ -43,4 +41,17 @@ void	ft_set_builtins(t_data *data)
 	data->builtins[5] = "env";
 	data->builtins[6] = "exit";
 	data->builtins[7] = NULL;
+}
+
+int	ft_processing_builtin(t_data *data, t_list *cmd)
+{
+	int		ret;
+
+	if (!cmd)
+		return (-1);
+	ret = ft_is_builtin(data, cmd);
+	if (ret == -1)
+		return (-1);
+	ft_start_builtin(data, cmd, ret);
+	return (ret);
 }

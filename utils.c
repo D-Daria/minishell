@@ -22,7 +22,6 @@ void	ft_error_exit(const char *str_error)
 {
 	if (str_error == NULL)
 		exit(-1);
-	//redirect error to STDERROR
 	ft_putstr_fd(str_error, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }

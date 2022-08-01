@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 int	ft_close_all(t_data *data)

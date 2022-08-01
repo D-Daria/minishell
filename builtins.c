@@ -21,7 +21,6 @@ void	ft_echo(t_data *data, t_list *cmd_lst)
 
 	(void)data;
 	cmd = cmd_lst->cmd_data->cmd;
-	printf(" ECHO\n");
 	nl = 1;
 	i = 1;
 	if (ft_strcmp(cmd[1], "-n") == 0)
@@ -74,24 +73,18 @@ void	ft_pwd(t_data *data, t_list *cmd)
 	}
 }
 
-void	ft_export(t_data *data, t_list *cmd)
-{
-	(void)data;
-	(void)cmd;
-	printf(" EXPORT\n\n");
-}
-
-void	ft_unset(t_data *data, t_list *cmd)
-{
-	(void)data;
-	(void)cmd;
-	printf(" UNSET\n\n");
-}
-
 void	ft_env(t_data *data, t_list *cmd)
 {
-	(void)data;
-	(void)cmd;
+	t_list	*ptr;
+
+	if (!data->envplist || !cmd)
+		return ;
+	ptr = data->envplist;
+	while (ptr)
+	{
+		printf("%s\n", ptr->envp_str);
+		ptr = ptr->next;
+	}
 }
 
 void	ft_exit(t_data *data, t_list *cmd)
@@ -103,18 +96,4 @@ void	ft_exit(t_data *data, t_list *cmd)
 		exit(EXIT_FAILURE);
 	else
 		exit(127);
-}
-
-int	ft_processing_builtin(t_data *data, t_list *cmd)
-{
-	int		ret;
-
-	if (!cmd)
-		return (-1);
-	ret = ft_is_builtin(data, cmd);
-	if (ret == -1)
-		return (-1);
-	printf("\nBUILTIN\n");
-	ft_start_builtin(data, cmd, ret);
-	return (ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/30 15:19:59 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/01 22:14:17 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 # include <fcntl.h>
 # include <dirent.h> //opendir closedir
 # include <termios.h>
+# include <stdbool.h>
 
 # define PROMPT	"[minishell]-> "
 
@@ -62,12 +63,11 @@ typedef struct s_parser {
 	char	**paths;
 	char	**cmd_path;
 	size_t	n_commands;
-}			t_parser; // заменить на t_command ?
+}			t_parser;
 
 typedef struct s_data {
 	char		*last_user_cmd;
 	char		**envp;
-	// char		**path_by_launch;
 	int			stopshell;
 	char		*expand_dollar;
 	int			status;
@@ -80,15 +80,18 @@ typedef struct s_data {
 	t_list		*last_token;
 	t_list		*commands;
 	t_list		*envplist;
+	t_list		*sorted_envplist;
+	bool		add_new_var_envplist;
+	bool		add_new_var_sortlist;
 }				t_data;
 
-typedef  void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
+typedef void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
 
 void	ft_sigint_handler(int signum);
 
 /*utils.c*/
 void	ft_error_exit(const char *error);
-void	ft_free_3darray(char ***arr);
+// void	ft_free_3darray(char ***arr);
 int		ft_throw_system_error(const char *str);
 size_t	ft_split_len(char **str);
 
@@ -96,6 +99,7 @@ size_t	ft_split_len(char **str);
 void	ft_free_commands(t_list **cmd_head);
 void	ft_free_redirs(t_list **redir_head);
 void	ft_free_data_ptr(t_data *data_ptr);
+void	ft_free_tokenlist(t_list **list);
 
 /*debug.c*/ //tests
 void	debug_print_double_arr(char **arr);
@@ -107,13 +111,10 @@ void 	debug_print_redirections(t_list *redirs);
 //read_user_cmd.c
 void    ft_read_user_cmd(t_data *data_ptr);
 
-/*ft_reading_parser.c*/
+/*parser.c*/
 void		ft_parser(t_data *data_ptr);
-
-// now
 t_list		*ft_calloc_new_token(void);
 void		ft_parse_quotes(t_data *data, size_t *i, size_t *st);
-void		ft_free_list(t_list **list);
 
 /*commands.c*/
 void		ft_commands(t_data *data);
@@ -125,25 +126,26 @@ t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_cmd(t_list ****token, char ***cmd);
 
-//utils_envp.c
-char    *ft_getenv(t_data *data, char *var);
+//env_variables_utils.c
+char    	*ft_getenv(t_data *data, char *var);
+void		ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new);
+void   		ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new);
 
-/*builtins.c*/
-void		ft_set_builtins(t_data *data);
-int			ft_is_builtin(t_data *data, t_list *cmd_lst);
-void		ft_execute_builtin(t_data *data, t_list *cmd);
-int			ft_processing_builtin(t_data *data, t_list *cmd);
+/*builtin_export.c*/
+void		ft_export(t_data *data, t_list *cmd);
+
+/*builtin_unset.c*/
+void		ft_unset(t_data *data, t_list *cmd);
+void		ft_get_length_var(char *cmd, size_t *length);
 
 /*builtins_utils.c*/
-void		ft_set_builtins(t_data *data);
-void		ft_start_builtin(t_data *data, t_list *cmd, int i);
-int			ft_is_builtin(t_data *data, t_list *cmd_lst);
+void		ft_set_builtins(t_data *parser);
+int			ft_processing_builtin(t_data *data, t_list *cmd);
 
+/*builtins.c*/
 void		ft_echo(t_data *data, t_list *cmd);
 void		ft_cd(t_data *data, t_list *cmd);
 void		ft_pwd(t_data *data, t_list *cmd);
-void		ft_export(t_data *data, t_list *cmd);
-void		ft_unset(t_data *data, t_list *cmd);
 void		ft_env(t_data *data, t_list *cmd);
 void		ft_exit(t_data *data, t_list *cmd);
 

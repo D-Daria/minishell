@@ -1,4 +1,3 @@
-
 #include "minishell.h"
 
 void	ft_get_status(t_data *data)
