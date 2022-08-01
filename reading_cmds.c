@@ -11,7 +11,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 	{
 		printf("ctr+D:--->exit\n");
 		ft_free_data_ptr(data_ptr);
-		exit(0);
+		exit(EXIT_SUCCESS);
 	}
 	if (rl_buffer && *rl_buffer)
 	{

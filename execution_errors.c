@@ -1,14 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execution_errors.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/18 17:29:08 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 18:58:50 by mrhyhorn         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
 
@@ -41,9 +30,8 @@ void	ft_token_error(t_data *data, int id, int process)
 		token = "`>>'";
 	else if (id == PIPE)
 		token = "`|'";
-	ft_putstr_fd("syntax error near unexpected token ", STDERR_FILENO);
-	ft_putstr_fd(token, STDERR_FILENO);
-	ft_putstr_fd("\n", STDERR_FILENO);
+	ft_putstr_fd("minishell: syntax error near unexpected token ", STDERR_FILENO);
+	ft_putendl_fd(token, STDERR_FILENO);
 	if (process)
 		exit(258);
 	else
@@ -86,15 +74,16 @@ void	ft_perror_redir(t_data *data, t_list *redir)
 		ft_file_error(data, redir->redir_data->file, 0);
 }
 
-static void	ft_path_error(t_list *cmd, char *path)
+static void	ft_dir_error(t_list *cmd, char *path)
 {
 	int		fd;
 	DIR		*directory;
-	
+
 	directory = opendir(path);
 	fd = open(path, O_RDWR);
 	if (fd == -1 && directory)
 	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
 		if (directory)
@@ -103,9 +92,11 @@ static void	ft_path_error(t_list *cmd, char *path)
 			close(fd);
 		exit(1);
 	}
-	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+	else if (!directory && ft_strrchr(cmd->cmd_data->cmd[0], '/'))
 	{
-		perror(cmd->cmd_data->cmd_path); /*permission denied*/
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
+		ft_putstr_fd(": Not a directory\n", STDERR_FILENO);
 		exit(126);
 	}
 }
@@ -114,15 +105,18 @@ void	ft_perror(t_list *cmd)
 {
 	char	*path;
 	
-	printf(RED"perror"BREAK"\n");
-	if (!cmd)
-		return ;
 	path = cmd->cmd_data->cmd_path;
-	ft_path_error(cmd, path);
+	ft_dir_error(cmd, path);
+	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+	{
+		perror(cmd->cmd_data->cmd_path); /*permission denied*/
+		exit(126);
+	}
 	if (cmd->cmd_data->cmd && path && (ft_strchr(cmd->cmd_data->cmd_path, '/')))
 		perror(cmd->cmd_data->cmd[0]);
 	else
 	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
 		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 	}

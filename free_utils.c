@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:32:49 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/26 21:48:33 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/30 13:48:10 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_free_commands(t_list	**cmd_head)
 
 	if (*cmd_head == NULL)
 	{
-		printf("commands are empty\n");
+		// printf("commands are empty\n");
 		return ;
 	}
 	if (*cmd_head != NULL)
@@ -37,7 +37,7 @@ void	ft_free_commands(t_list	**cmd_head)
 		}
 	}
 	ft_memdel((*cmd_head));
-	printf("commands cleared\n");
+	// printf("commands cleared\n");
 }
 
 void	ft_free_redirs(t_list **redir_head)
@@ -46,7 +46,7 @@ void	ft_free_redirs(t_list **redir_head)
 
 	if (*redir_head == NULL)
 	{
-		printf("redirs are empty\n");
+		// printf("redirs are empty\n");
 		return ;
 	}
 	if (*redir_head != NULL)
@@ -61,7 +61,7 @@ void	ft_free_redirs(t_list **redir_head)
 		}
 	}
 	ft_memdel((*redir_head));
-	printf("redirs cleared\n");
+	// printf("redirs cleared\n");
 }
 
 void	ft_free_data_ptr(t_data *data_ptr)

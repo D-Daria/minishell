@@ -1,16 +1,16 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   execution.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/26 22:29:51 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 18:59:22 by mrhyhorn         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_get_status(t_data *data)
+{
+	printf("exit status: %d\n", WEXITSTATUS(data->status));
+	printf("stop status: %d\n", WSTOPSIG(data->status));
+	printf("if signaled: %d\n", WIFSIGNALED(data->status));
+	if (WIFSIGNALED(data->status))
+		data->status = 128 + SIGINT;
+	else
+		data->status = WEXITSTATUS(data->status);
+}
 
 void	ft_execve(t_data *data, t_list *cmd)
 {
@@ -20,33 +20,37 @@ void	ft_execve(t_data *data, t_list *cmd)
 		ft_perror(cmd);
 	}
 	ft_perror(cmd);
-	exit(0);
 }
 
 void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 {
 	pid_t	pid;
-	
+
+	if (ft_processing_builtin(data, cmd) >= 0)
+		return ;
 	pid = fork();
 	if (pid < 0)
 		exit(ft_throw_system_error("fork"));
 	else if (pid == 0)
 	{
-		signal(SIGINT, &ft_sigint_handler);//ctr+C передаю в обработчик
+		signal(SIGINT, &ft_sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		if (cmd->cmd_data->is_redir)
 			ft_redirect(cmd, data);
 		ft_execve(data, cmd);
+		exit(EXIT_SUCCESS);
 	}
 	else
 	{
 		waitpid(pid, &data->status, 0);
-		printf("execute_single_status: %d\n", WEXITSTATUS(data->status));
-		data->status = WEXITSTATUS(data->status);
+		ft_get_status(data);
 	}
 }
 
 void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 {
+	signal(SIGINT, &ft_sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 	if ((*prev))
 	{
 		dup2((*prev)->cmd_data->pipe_fd[0], STDIN_FILENO);
@@ -59,7 +63,7 @@ void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 		dup2((*cmd)->cmd_data->pipe_fd[1], STDOUT_FILENO);
 		close((*cmd)->cmd_data->pipe_fd[1]);
 	}
-	if (!(*prev) && !(*cmd)->next)
+	if (!(*prev) && !(*cmd)->next) //в случае > file | wc -l
 	{
 		dup2((*cmd)->cmd_data->pipe_fd[0], STDIN_FILENO);
 		close((*cmd)->cmd_data->pipe_fd[0]);
@@ -67,7 +71,9 @@ void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 	}
 	if ((*cmd)->cmd_data->is_redir)
 		ft_redirect((*cmd), data);
-	ft_execve(data, (*cmd));
+	if (ft_processing_builtin(data, (*cmd)) == -1)
+		ft_execve(data, (*cmd));
+	exit(EXIT_SUCCESS);
 }
 
 static void	ft_close_pipes(t_list *prev)
@@ -84,7 +90,7 @@ void	ft_wait_children(t_data *data)
 	while (cmd)
 	{
 		waitpid(0, &data->status, 0);
-		printf("status: %d\n", WEXITSTATUS(data->status));
+		ft_get_status(data);
 		cmd = cmd->next;
 	}
 	ft_close_all(data);
@@ -123,13 +129,13 @@ void	ft_execute(t_data *data)
 	t_list	*prev;
 	int		pid;
 
-	data->status = -1;
+	data->status = 0;
 	cmd = data->commands;
 	prev = NULL;
 	if (data->redirs)
 		ft_process_redirs(data);
+	ft_set_builtins(data);
 	debug_print_commands_list(data);
-	printf("data->status: %d\n", data->status);
 	if (data->status > 0)
 		return ;
 	if (cmd && data->pipes_number > 0)

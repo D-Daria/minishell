@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 13:59:26 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/07/29 15:44:45 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,14 +102,14 @@ char	*ft_access_paths(t_parser *parser, char *cmd)
 	return (NULL);
 }
 
-void	ft_get_paths(t_parser *parser)
+void	ft_get_paths(t_data *data, t_parser *parser)
 {
 	char	*env_path;
 	char	**path;
 	char	*join;
 	int		i;
 
-	env_path = getenv("PATH");
+	env_path = ft_getenv(data, "PATH");
 	path = ft_split(env_path, ':');
 	if (path == NULL)
 		return ;
