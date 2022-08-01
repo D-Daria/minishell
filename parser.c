@@ -59,7 +59,8 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 	str_after_dollar = ft_substr(str, start, *i - start);
 	if (!str_after_dollar)
 		ft_error_exit("ft_expand_dollar: malloc error\n");
-	char *tmp = getenv(str_after_dollar);
+	// char *tmp = getenv(str_after_dollar);
+	char *tmp = ft_getenv(data, str_after_dollar);
 	if (tmp == NULL)
 		data->expand_dollar = NULL;
 	else 
