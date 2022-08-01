@@ -33,28 +33,59 @@ void	ft_change_var(t_list **lst, char *new, t_data *data, char name_list)
 	else if (name_list == 'e')
 		data->add_new_var_envplist = 0;
 	old = (*lst)->envp_str;
-	(*lst)->envp_str = ft_strdup(new);//malloc
+	(*lst)->envp_str = ft_strdup(new);
 	if ((*lst)->envp_str == NULL)
 		ft_error_exit("malloc_error in ft_change_var\n");
 	free (old);
 	//-------------------
 
-	printf("CHANGE\n");
+	printf("CHANGE %c_list\n", name_list);
 }
+
+// void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
+// {
+//     t_list	*env;
+//     char    *shift;
+
+//     env = data->envplist;
+// 	data->add_new_var_envplist = 1;
+//     while (env)
+// 	{
+// 		if (ft_strncmp(env->envp_str, var, l) == 0)
+// 		{
+//             shift = env->envp_str + l;
+//             if (ft_strcmp(shift, var + l) == 0)
+//             {
+//                 data->add_new_var_envplist = 0;
+//                 return ;
+//             }
+// 	    	ft_change_var(&env, var, data, 'e');
+// 			break ;
+// 		}
+// 		env = env->next;
+// 	}
+// }
 
 void	ft_change_envplist_if_var_found(char *var, size_t l, t_data *data)
 {
     t_list	*env;
     char    *shift;
+	char	*new_var;
+	char	*old_var;
+	size_t	len_old;
 
     env = data->envplist;
 	data->add_new_var_envplist = 1;
+	new_var = ft_substr(var, 0, l);
+	old_var = NULL;
     while (env)
 	{
-		if (ft_strncmp(env->envp_str, var, l) == 0)
+		ft_get_length_var(var, &len_old);
+		old_var = ft_substr(env->envp_str, 0, len_old);
+		if (ft_strcmp(new_var, old_var) == 0)
 		{
-            shift = env->envp_str + l;
-            if (ft_strcmp(shift, var + l) == 0)
+            shift = env->envp_str + len_old;
+            if (ft_strcmp(shift, var + len_old) == 0)
             {
                 data->add_new_var_envplist = 0;
                 return ;
@@ -90,7 +121,7 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 	}
 }
 
-int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
+int    ft_check_varerrors(char *var, t_data *data, size_t *length)
 {
     size_t  i;
 
@@ -105,8 +136,7 @@ int    ft_check_varerrors_init_flag(char *var, t_data *data, size_t *length)
     {
         if (var[i] == '=')
         {
-            *length = i + 1;
-            printf("ok\n");
+            *length = i;
             return (1);
         }
         else if (!ft_isalnum((int)var[i]) && var[i] != '_') 
@@ -132,7 +162,7 @@ void	ft_export(t_data *data, t_list *cmd)
 		return (ft_export_without_args(data));
 	while (*tmp_cmd)
 	{
-		ret = ft_check_varerrors_init_flag(*tmp_cmd, data, &length);
+		ret = ft_check_varerrors(*tmp_cmd, data, &length);
 		if (ret == 1)
 		{
 			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
