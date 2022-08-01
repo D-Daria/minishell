@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/07/30 18:11:44 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/01 20:09:30 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	ft_sigint_handler(int signum)
 	t_termios	term;
 	int			res;
 
-	res = tcgetattr(0, &term);
+	res = tcgetattr(0, &term); /* чтобы не отображался ^C */
 	if (res < 0)
 	{
 		ft_throw_system_error("tcgetattr");

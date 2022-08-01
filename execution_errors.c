@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:29:08 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/30 14:49:07 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/01 20:08:23 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,6 @@ void	ft_perror(t_list *cmd)
 {
 	char	*path;
 	
-	printf(RED"perror"BREAK"\n");
 	path = cmd->cmd_data->cmd_path;
 	ft_dir_error(cmd, path);
 	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
