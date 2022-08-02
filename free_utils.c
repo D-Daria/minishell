@@ -98,6 +98,7 @@ void	ft_free_data_ptr(t_data *data_ptr)
 	ft_free_commands(&data_ptr->commands);
 	if (data_ptr->parser_ptr)
 		ft_memdel(data_ptr->parser_ptr);
+	ft_free_arr_env_vars(&data_ptr->current_arr_env_vars);
 	ft_free_envplist_or_free_sortlist(&data_ptr->envplist);
 	ft_free_envplist_or_free_sortlist(&data_ptr->sorted_envplist);
 }

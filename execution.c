@@ -15,7 +15,8 @@ void	ft_execve(t_data *data, t_list *cmd)
 {
 	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
 	{
-		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, data->envp);
+		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, \
+		data->current_arr_env_vars);
 		ft_perror(cmd);
 	}
 	ft_perror(cmd);

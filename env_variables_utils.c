@@ -93,8 +93,9 @@ void    ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new)
 {
     t_list  *new;
 
-    if (data->add_new_var_envplist == 0)
-		return ;
+    // if (data->add_new_var_envplist == 0)
+	// 	return ;
     ft_create_lstnew(&new, s_new);
 	ft_lstadd_back(&data->envplist, new);
+	data->amount_env_vars += 1;
 }
