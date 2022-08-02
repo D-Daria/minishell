@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 17:31:25 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 17:36:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 20:22:16 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,28 @@ void	ft_dup(t_list **cmd, t_list **prev)
 		dup2((*cmd)->cmd_data->pipe_fd[0], STDIN_FILENO);
 		close((*cmd)->cmd_data->pipe_fd[0]);
 		close((*cmd)->cmd_data->pipe_fd[1]);
+	}
+}
+
+void	ft_backup_dup(int *tmp_fd_in, int *tmp_fd_out, int type)
+{
+	if (type == 'b')
+	{
+		*tmp_fd_in = dup(STDIN_FILENO);
+		*tmp_fd_out = dup(STDOUT_FILENO);
+	}
+	else if (type == 'r')
+	{
+		if (*tmp_fd_in >= 0)
+		{
+			dup2(*tmp_fd_in, STDIN_FILENO);
+			close(*tmp_fd_in);
+		}
+		if (*tmp_fd_out >= 0)
+		{
+			dup2(*tmp_fd_out, STDOUT_FILENO);
+			close(*tmp_fd_out);
+		}
+		
 	}
 }

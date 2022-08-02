@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 15:10:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 17:35:40 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 20:29:55 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,31 +22,31 @@ void	ft_execve(t_data *data, t_list *cmd)
 	ft_perror(cmd);
 }
 
-void	ft_execute_single_cmd(t_data *data, t_list *cmd)
+void	ft_execute_single_cmd(t_data *data, t_list *cmd, int *pid)
 {
-	pid_t	pid;
 	int		is_builtin;
 
 	is_builtin = ft_processing_builtin(data, cmd);
-	if (is_builtin == 6)
-		ft_start_builtin(data, cmd, is_builtin);
-	pid = fork();
-	if (pid < 0)
-		exit(ft_throw_system_error("fork"));
-	else if (pid == 0)
+	if (is_builtin >= 0)
 	{
-		printf("is_builtin: %d\n", is_builtin);
+		ft_single_builtin(data, cmd, is_builtin);
+		return;
+	}
+	*pid = fork();
+	if (*pid < 0)
+		exit(ft_throw_system_error("fork"));
+	else if (*pid == 0)
+	{
+		signal(SIGINT, &ft_sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		if (cmd->cmd_data->is_redir)
 			ft_redirect(cmd, data);
-		if (is_builtin >= 0)
-			ft_start_builtin(data, cmd, is_builtin);
-		else
-			ft_execve(data, cmd);
+		ft_execve(data, cmd);
 		exit(EXIT_SUCCESS);
 	}
 	else
 	{
-		waitpid(pid, &data->status, 0);
+		waitpid(*pid, &data->status, 0);
 		ft_get_status(data);
 	}
 }
@@ -62,7 +62,7 @@ void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 		ft_redirect((*cmd), data);
 	is_builtin = ft_processing_builtin(data, (*cmd));
 	if (is_builtin >= 0)
-		ft_start_builtin(data, (*cmd), is_builtin);
+		ft_start_builtin(&data, (*cmd), is_builtin);
 	else
 		ft_execve(data, (*cmd));
 	exit(EXIT_SUCCESS);
@@ -113,5 +113,5 @@ void	ft_execute(t_data *data)
 	if (cmd && data->pipes_number > 0)
 		ft_pipe(data, cmd, prev, &pid);
 	else if (cmd)
-		ft_execute_single_cmd(data, data->commands);
+		ft_execute_single_cmd(data, data->commands, &pid);
 }
