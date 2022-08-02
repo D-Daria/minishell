@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 15:10:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 20:29:55 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 21:56:56 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,6 @@ void	ft_execute(t_data *data)
 	prev = NULL;
 	if (data->redirs)
 		ft_process_redirs(data);
-	ft_set_builtins(data);
 	debug_print_commands_list(data);
 	if (data->status > 0)
 		return ;
