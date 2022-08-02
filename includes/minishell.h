@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/01 22:14:17 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/02 14:06:28 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,11 +120,13 @@ void		ft_parse_quotes(t_data *data, size_t *i, size_t *st);
 void		ft_commands(t_data *data);
 
 /*commands_utils.c*/
-void		ft_get_paths(t_data *data, t_parser *parser);
 t_command	*ft_create_command(char **cmd_args);
 t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
-char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_cmd(t_list ****token, char ***cmd);
+
+/*paths.c*/
+char		*ft_access_paths(t_parser *parser, char *cmd);
+void		ft_get_paths(t_data *data, t_parser *parser);
 
 //env_variables_utils.c
 char    	*ft_getenv(t_data *data, char *var);
