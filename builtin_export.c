@@ -12,6 +12,45 @@
 
 #include "minishell.h"
 
+void	ft_free_arr_env_vars(char ***arr)
+{
+	// size_t	i;
+
+	// if (!(*arr))
+	// 	return ;
+	// i = 0;
+	// while ((*arr)[i])
+	// 	ft_memdel((*arr)[i++]);
+	(void)arr;
+}
+
+void	ft_change_arr_env_vars(t_data *data)
+{
+	t_list	*tmp;
+	char	**old;
+	size_t	i;
+
+	old = data->current_arr_env_vars;
+	ft_free_arr_env_vars(&old);
+	data->current_arr_env_vars = (char **)malloc(sizeof(char *) \
+	* data->amount_env_vars + 1);
+	if (!data->current_arr_env_vars)
+		ft_error_exit("malloc_error in ft_create_envplists\n");
+	tmp = data->envplist;
+	i = 0;
+	while (tmp)
+	{
+		(data->current_arr_env_vars)[i] = tmp->envp_str;
+		tmp = tmp->next;
+		i++;
+	}
+	(data->current_arr_env_vars)[i] = NULL;
+//check:
+	// i=0;
+	// while((data->current_arr_env_vars)[i])
+	// 	printf("%s\n",(data->current_arr_env_vars)[i++]);
+}
+
 void	ft_export_without_args(t_data *data)
 {
 	t_list	*current;
@@ -20,7 +59,7 @@ void	ft_export_without_args(t_data *data)
 	current = data->sorted_envplist;
 	while (current)
 	{
-		printf("declare x ");
+		printf("declare -x ");
 		i = 0;
 		while ((current->envp_str)[i] && (current->envp_str)[i] != '=')
 			printf("%c", (current->envp_str)[i++]);
@@ -172,8 +211,13 @@ void	ft_export(t_data *data, t_list *cmd)
 		if (ret == 1)
 		{
 			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
+			ft_change_arr_env_vars(data);
 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
-			ft_adding_var_to_envplist_if_flag(data, *tmp_cmd);
+			if (data->add_new_var_envplist == 1)
+			{
+				ft_adding_var_to_envplist_if_flag(data, *tmp_cmd);
+				ft_change_arr_env_vars(data);
+			}
 			ft_adding_var_to_sortlist_if_flag(data, *tmp_cmd);
 		}
 		else if (ret == 0)

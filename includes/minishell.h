@@ -67,7 +67,8 @@ typedef struct s_parser {
 
 typedef struct s_data {
 	char		*last_user_cmd;
-	char		**envp;
+	char		**current_arr_env_vars;
+	size_t		amount_env_vars;
 	int			stopshell;
 	char		*expand_dollar;
 	int			status;
@@ -131,6 +132,15 @@ void		ft_get_paths(t_data *data, t_parser *parser);
 char    	*ft_getenv(t_data *data, char *var);
 void		ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new);
 void   		ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new);
+
+/*builtin_export.c*/
+void		ft_export(t_data *data, t_list *cmd);
+void		ft_change_arr_env_vars(t_data *data);
+void		ft_free_arr_env_vars(char ***arr);
+
+/*builtin_unset.c*/
+void		ft_unset(t_data *data, t_list *cmd);
+void		ft_get_length_var(char *cmd, size_t *length);
 
 /*builtins_utils.c*/
 void		ft_set_builtins(t_data *parser);
