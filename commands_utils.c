@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 15:44:45 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 13:40:03 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ char	*ft_access_paths(t_parser *parser, char *cmd)
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	i = 0;
+	if (!parser->paths || !parser->paths[i])
+		return (NULL);
 	while (parser->paths[i])
 	{
 		join = ft_strjoin(parser->paths[i], cmd);
@@ -107,15 +109,21 @@ void	ft_get_paths(t_data *data, t_parser *parser)
 	char	*env_path;
 	char	**path;
 	char	*join;
-	int		i;
+	size_t	i;
 
 	env_path = ft_getenv(data, "PATH");
+	if (env_path == NULL)
+	{
+		parser->paths = NULL;
+		return ;
+	}
 	path = ft_split(env_path, ':');
 	if (path == NULL)
 		return ;
 	i = 0;
-	while (path[i])
-		i++;
+	i = ft_split_len(path);
+	// while (path[i])
+	// 	i++;
 	parser->paths = (char **)malloc(sizeof(char *) * (i + 1));
 	if (parser->paths == NULL)
 		return ;
