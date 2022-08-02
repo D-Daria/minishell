@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtins_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/02 20:20:43 by mrhyhorn          #+#    #+#             */
+/*   Updated: 2022/08/02 20:39:54 by mrhyhorn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	ft_is_builtin(t_data *data, t_list *cmd_lst)
@@ -16,7 +28,7 @@ int	ft_is_builtin(t_data *data, t_list *cmd_lst)
 	return (-1);
 }
 
-void	ft_start_builtin(t_data *data, t_list *cmd, int i)
+void	ft_start_builtin(t_data **data, t_list *cmd, int i)
 {
 	ptr_fn_builtin	arr_fn_builtins[7];
 
@@ -27,7 +39,7 @@ void	ft_start_builtin(t_data *data, t_list *cmd, int i)
 	arr_fn_builtins[4] = ft_unset; //Eugene
 	arr_fn_builtins[5] = ft_env; //Eugene
 	arr_fn_builtins[6] = ft_exit;
-	arr_fn_builtins[i](data, cmd); /*запускаю функцию с индексом=i,
+	arr_fn_builtins[i]((*data), cmd); /*запускаю функцию с индексом=i,
 	передаю ей в параметры (data, cmd)*/
 }
 
@@ -43,6 +55,25 @@ void	ft_set_builtins(t_data *data)
 	data->builtins[7] = NULL;
 }
 
+void	ft_single_builtin(t_data *data, t_list *cmd, int index)
+{
+	int		tmp_fd_in;
+	int		tmp_fd_out;
+
+	tmp_fd_in = -1;
+	tmp_fd_out = -1;
+	if (index == 6)
+		ft_start_builtin(&data, cmd, index);
+	if (cmd->cmd_data->is_redir)
+	{
+		ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'b');
+		ft_redirect(cmd, data);
+	}
+	ft_start_builtin(&data, cmd, index);
+	ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'r');
+	ft_close_all(data);
+}
+
 int	ft_processing_builtin(t_data *data, t_list *cmd)
 {
 	int		ret;
@@ -52,6 +83,5 @@ int	ft_processing_builtin(t_data *data, t_list *cmd)
 	ret = ft_is_builtin(data, cmd);
 	if (ret == -1)
 		return (-1);
-	ft_start_builtin(data, cmd, ret);
 	return (ret);
 }

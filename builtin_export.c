@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/29 19:42:51 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 23:18:31 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/02 19:05:19 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	ft_change_var(t_list **lst, char *new, t_data *data, char name_list)
 	(*lst)->envp_str = ft_strdup(new);
 	if ((*lst)->envp_str == NULL)
 		ft_error_exit("malloc_error in ft_change_var\n");
-	free (old);
+	free(old);
 }
 
 void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
@@ -111,8 +111,8 @@ void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
             if (ft_strcmp(shift, var + len_old) == 0)
             {
                 data->add_new_var_envplist = 0;
-				free (new_var);
-				free (old_var);
+				free(new_var);
+				free(old_var);
                 return ;
             }
 	    	ft_change_var(&env, var, data, 'e');
@@ -201,6 +201,7 @@ void	ft_export(t_data *data, t_list *cmd)
 	size_t	length;
 	int		ret;
 
+	printf("ft_export\n");
 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
 	if (!(*tmp_cmd))
 		return (ft_export_without_args(data));

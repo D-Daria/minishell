@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 14:06:28 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 20:21:43 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	ft_sigint_handler(int signum);
 
 /*utils.c*/
 void	ft_error_exit(const char *error);
-// void	ft_free_3darray(char ***arr);
 int		ft_throw_system_error(const char *str);
 size_t	ft_split_len(char **str);
 
@@ -146,6 +145,8 @@ void		ft_get_length_var(char *cmd, size_t *length);
 /*builtins_utils.c*/
 void		ft_set_builtins(t_data *parser);
 int			ft_processing_builtin(t_data *data, t_list *cmd);
+void		ft_start_builtin(t_data **data, t_list *cmd, int ret);
+void		ft_single_builtin(t_data *data, t_list *cmd, int index);
 
 /*builtins.c*/
 void		ft_echo(t_data *data, t_list *cmd);
@@ -154,10 +155,24 @@ void		ft_pwd(t_data *data, t_list *cmd);
 void		ft_env(t_data *data, t_list *cmd);
 void		ft_exit(t_data *data, t_list *cmd);
 
+/*builtin_export.c*/
+void		ft_export(t_data *data, t_list *cmd);
+
+/*builtin_unset.c*/
+void		ft_unset(t_data *data, t_list *cmd);
+void		ft_get_length_var(char *cmd, size_t *length);
+
 /*execution.c*/
 void		ft_execute(t_data *data);
 void		ft_execve(t_data *data, t_list *cmd);
 void		ft_get_status(t_data *data);
+
+/*execution_utils.c*/
+void		ft_close_pipes(t_list *current);
+void		ft_dup(t_list **cmd, t_list **prev);
+void		ft_get_status(t_data *data);
+void		ft_wait_children(t_data *data);
+void		ft_backup_dup(int *tmp_fd_in, int *tmp_fd_out, int type);
 
 /*exection_errors.c*/
 void		ft_perror(t_list *cmd);

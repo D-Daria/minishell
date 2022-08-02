@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:05:14 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 14:09:54 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 16:12:25 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ char	*ft_access_paths(t_parser *parser, char *cmd)
 		return (NULL);
 	while (parser->paths[i])
 	{
-		printf("parser->paths[i]: %s\n", parser->paths[i]);
 		join = ft_strjoin(parser->paths[i], cmd);
 		if (access(join, X_OK) == 0)
 			return (join);

@@ -1,15 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/02 15:10:41 by mrhyhorn          #+#    #+#             */
+/*   Updated: 2022/08/02 20:29:55 by mrhyhorn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	ft_get_status(t_data *data)
-{
-	printf("exit status: %d\n", WEXITSTATUS(data->status));
-	printf("stop status: %d\n", WSTOPSIG(data->status));
-	printf("if signaled: %d\n", WIFSIGNALED(data->status));
-	if (WIFSIGNALED(data->status))
-		data->status = 128 + SIGINT;
-	else
-		data->status = WEXITSTATUS(data->status);
-}
+#include "minishell.h"
 
 void	ft_execve(t_data *data, t_list *cmd)
 {
@@ -22,16 +23,20 @@ void	ft_execve(t_data *data, t_list *cmd)
 	ft_perror(cmd);
 }
 
-void	ft_execute_single_cmd(t_data *data, t_list *cmd)
+void	ft_execute_single_cmd(t_data *data, t_list *cmd, int *pid)
 {
-	pid_t	pid;
+	int		is_builtin;
 
-	if (ft_processing_builtin(data, cmd) >= 0)
-		return ;
-	pid = fork();
-	if (pid < 0)
+	is_builtin = ft_processing_builtin(data, cmd);
+	if (is_builtin >= 0)
+	{
+		ft_single_builtin(data, cmd, is_builtin);
+		return;
+	}
+	*pid = fork();
+	if (*pid < 0)
 		exit(ft_throw_system_error("fork"));
-	else if (pid == 0)
+	else if (*pid == 0)
 	{
 		signal(SIGINT, &ft_sigint_handler);
 		signal(SIGQUIT, SIG_IGN);
@@ -42,58 +47,26 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 	}
 	else
 	{
-		waitpid(pid, &data->status, 0);
+		waitpid(*pid, &data->status, 0);
 		ft_get_status(data);
 	}
 }
 
 void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 {
+	int	is_builtin;
+
 	signal(SIGINT, &ft_sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
-	if ((*prev))
-	{
-		dup2((*prev)->cmd_data->pipe_fd[0], STDIN_FILENO);
-		close((*prev)->cmd_data->pipe_fd[0]);
-		close((*prev)->cmd_data->pipe_fd[1]);
-	}
-	if ((*cmd)->next)
-	{
-		close((*cmd)->cmd_data->pipe_fd[0]);
-		dup2((*cmd)->cmd_data->pipe_fd[1], STDOUT_FILENO);
-		close((*cmd)->cmd_data->pipe_fd[1]);
-	}
-	if (!(*prev) && !(*cmd)->next) //в случае > file | wc -l
-	{
-		dup2((*cmd)->cmd_data->pipe_fd[0], STDIN_FILENO);
-		close((*cmd)->cmd_data->pipe_fd[0]);
-		close((*cmd)->cmd_data->pipe_fd[1]);
-	}
+	ft_dup(cmd, prev);
 	if ((*cmd)->cmd_data->is_redir)
 		ft_redirect((*cmd), data);
-	if (ft_processing_builtin(data, (*cmd)) == -1)
+	is_builtin = ft_processing_builtin(data, (*cmd));
+	if (is_builtin >= 0)
+		ft_start_builtin(&data, (*cmd), is_builtin);
+	else
 		ft_execve(data, (*cmd));
 	exit(EXIT_SUCCESS);
-}
-
-static void	ft_close_pipes(t_list *prev)
-{
-	close(prev->cmd_data->pipe_fd[0]);
-	close(prev->cmd_data->pipe_fd[1]);
-}
-
-void	ft_wait_children(t_data *data)
-{
-	t_list	*cmd;
-
-	cmd = data->commands;
-	while (cmd)
-	{
-		waitpid(0, &data->status, 0);
-		ft_get_status(data);
-		cmd = cmd->next;
-	}
-	ft_close_all(data);
 }
 
 int	ft_pipe(t_data *data, t_list *cmd, t_list *prev, int *pid)
@@ -141,5 +114,5 @@ void	ft_execute(t_data *data)
 	if (cmd && data->pipes_number > 0)
 		ft_pipe(data, cmd, prev, &pid);
 	else if (cmd)
-		ft_execute_single_cmd(data, data->commands);
+		ft_execute_single_cmd(data, data->commands, &pid);
 }

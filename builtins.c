@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/30 14:15:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 20:04:03 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	ft_echo(t_data *data, t_list *cmd_lst)
 	char	**cmd;
 
 	(void)data;
+	printf("ECHO\n");
 	cmd = cmd_lst->cmd_data->cmd;
 	nl = 1;
 	i = 1;
@@ -29,15 +30,23 @@ void	ft_echo(t_data *data, t_list *cmd_lst)
 		nl = 0;
 	}
 	len = ft_split_len(cmd);
+	// printf("redir_out_fd: %d\n", cmd_lst->cmd_data->redir_out->redir_data->fd);
 	while (cmd[i])
 	{
-		printf("%s", cmd[i]);
+		ft_putstr_fd(cmd[i], STDOUT_FILENO);
+		// printf("%s", cmd[i]);
 		if (i != len - 1)
-			printf(" ");
+		{
+			// printf(" ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
+		}
 		i++;
 	}
 	if (nl)
-		printf("\n");
+	{
+		// printf("\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
 }
 
 void	ft_cd(t_data *data, t_list *cmd)
@@ -92,6 +101,7 @@ void	ft_exit(t_data *data, t_list *cmd)
 	(void)data;
 	(void)cmd;
 	printf("exit\n");
+	ft_free_data_ptr(data);
 	if (cmd->next)
 		exit(EXIT_FAILURE);
 	else
