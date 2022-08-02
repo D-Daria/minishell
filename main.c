@@ -23,6 +23,7 @@ void	ft_create_envplists(t_data *data, char **envp)
 	{
 		data->add_new_var_envplist = 1;
 		ft_adding_var_to_envplist_if_flag(data, envp[i]);
+		data->amount_env_vars += 1;
 		data->add_new_var_sortlist = 1;
 		ft_adding_var_to_sortlist_if_flag(data, envp[i]);
 		i++;

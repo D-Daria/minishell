@@ -33,7 +33,7 @@ void	ft_free_commands(t_list	**cmd_head)
 			(*cmd_head) = next;
 		}
 	}
-	ft_memdel((*cmd_head));
+	// ft_memdel((*cmd_head));//не надо, или я ошибаюсь?
 }
 
 void	ft_free_redirs(t_list **redir_head)
@@ -53,7 +53,7 @@ void	ft_free_redirs(t_list **redir_head)
 			(*redir_head) = next;
 		}
 	}
-	ft_memdel((*redir_head));
+	// ft_memdel((*redir_head));//не надо, или я ошибаюсь?
 }
 
 void	ft_free_tokenlist(t_list **list)
@@ -98,7 +98,7 @@ void	ft_free_data_ptr(t_data *data_ptr)
 	ft_free_commands(&data_ptr->commands);
 	if (data_ptr->parser_ptr)
 		ft_memdel(data_ptr->parser_ptr);
-	ft_free_arr_env_vars(&data_ptr->current_arr_env_vars);
+	ft_free_arr_env_vars(data_ptr->current_arr_env_vars);
 	ft_free_envplist_or_free_sortlist(&data_ptr->envplist);
 	ft_free_envplist_or_free_sortlist(&data_ptr->sorted_envplist);
 }
