@@ -27,6 +27,7 @@ void	ft_create_envplists(t_data *data, char **envp)
 		ft_adding_var_to_sortlist_if_flag(data, envp[i]);
 		i++;
 	}
+	ft_change_arr_env_vars(data);
 }
 
 void	ft_init(t_data *data_ptr, char **envp)
@@ -39,7 +40,7 @@ void	ft_init(t_data *data_ptr, char **envp)
 	}
 	ft_create_envplists(data_ptr, envp);
 	ft_set_builtins(data_ptr);
-	data_ptr->envp = envp;
+	// data_ptr->envp = envp;
 }
 
 void	ft_sigint_handler(int signum)
