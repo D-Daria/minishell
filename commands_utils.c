@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/29 15:44:45 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 14:05:33 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,52 +80,4 @@ t_list	*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num)
 	cmd_lst->cmd_data = new_cmd;
 	cmd_lst->next = NULL;
 	return (cmd_lst);
-}
-
-char	*ft_access_paths(t_parser *parser, char *cmd)
-{
-	int		i;
-	char	*join;
-
-	if (access(cmd, X_OK) == 0)
-		return (ft_strdup(cmd));
-	i = 0;
-	while (parser->paths[i])
-	{
-		join = ft_strjoin(parser->paths[i], cmd);
-		if (access(join, X_OK) == 0)
-			return (join);
-		else
-			free(join);
-		i++;
-	}
-	return (NULL);
-}
-
-void	ft_get_paths(t_data *data, t_parser *parser)
-{
-	char	*env_path;
-	char	**path;
-	char	*join;
-	int		i;
-
-	env_path = ft_getenv(data, "PATH");
-	path = ft_split(env_path, ':');
-	if (path == NULL)
-		return ;
-	i = 0;
-	while (path[i])
-		i++;
-	parser->paths = (char **)malloc(sizeof(char *) * (i + 1));
-	if (parser->paths == NULL)
-		return ;
-	i = 0;
-	while (path[i])
-	{
-		join = ft_strjoin(path[i], "/");
-		parser->paths[i++] = ft_strdup(join);
-		free(join);
-	}
-	parser->paths[i] = NULL;
-	ft_free_split(path);
 }
