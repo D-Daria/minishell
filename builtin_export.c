@@ -116,6 +116,7 @@ void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
                 return ;
             }
 	    	ft_change_var(&env, var, data, 'e');
+			ft_change_arr_env_vars(data);
 			break ;
 		}
 		env = env->next;
@@ -211,7 +212,6 @@ void	ft_export(t_data *data, t_list *cmd)
 		if (ret == 1)
 		{
 			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
-			ft_change_arr_env_vars(data);
 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
 			if (data->add_new_var_envplist == 1)
 			{
