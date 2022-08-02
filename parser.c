@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 21:50:23 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 22:15:09 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/02 16:21:53 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_expand_dollar_question(t_data *data)
 {
-	data->expand_dollar = ft_itoa(WEXITSTATUS(data->status));
+	data->expand_dollar = ft_itoa(data->status);
 	if (!data->expand_dollar)
 		ft_error_exit("malloc_error in ft_itoa\n");
 }

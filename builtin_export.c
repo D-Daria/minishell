@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/29 19:42:51 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 23:18:31 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/02 17:25:24 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,7 @@ void	ft_export(t_data *data, t_list *cmd)
 	size_t	length;
 	int		ret;
 
+	printf("ft_export\n");
 	tmp_cmd = (cmd->cmd_data->cmd) + 1;
 	if (!(*tmp_cmd))
 		return (ft_export_without_args(data));

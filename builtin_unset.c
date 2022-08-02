@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:12:05 by sshield           #+#    #+#             */
-/*   Updated: 2022/07/31 03:11:51 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/02 17:17:50 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 		data->envplist = (*var)->next;
 	else 
 		(*prev)->next = (*var)->next;
-	free ((*var)->envp_str);
-	free (*var);
+	free((*var)->envp_str);
+	free(*var);
 }
 
 void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)

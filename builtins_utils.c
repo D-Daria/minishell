@@ -52,6 +52,6 @@ int	ft_processing_builtin(t_data *data, t_list *cmd)
 	ret = ft_is_builtin(data, cmd);
 	if (ret == -1)
 		return (-1);
-	ft_start_builtin(data, cmd, ret);
+	// ft_start_builtin(data, cmd, ret);
 	return (ret);
 }

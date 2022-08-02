@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/07/30 14:15:10 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/02 16:28:04 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	ft_exit(t_data *data, t_list *cmd)
 	(void)data;
 	(void)cmd;
 	printf("exit\n");
+	ft_free_data_ptr(data);
 	if (cmd->next)
 		exit(EXIT_FAILURE);
 	else
