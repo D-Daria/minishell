@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reading_cmds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 22:05:12 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 22:27:29 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/03 16:48:58 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 
 		if (ft_strcmp(now_user_cmd, data_ptr->last_user_cmd) != 0)
 			add_history(now_user_cmd);
+		ft_memdel(data_ptr->last_user_cmd);
 		data_ptr->last_user_cmd = ft_strdup(now_user_cmd);
 		if (!data_ptr->last_user_cmd)
 		{

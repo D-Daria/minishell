@@ -13,6 +13,7 @@ SRCS_MF =	main.c debug_tests.c parser.c reading_cmds.c\
 OBJS_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.o, $(SRCS_MF)))
 D_FILES_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.d, $(SRCS_MF)))
 
+
 LIBFT = ./libft/libft.a
 LIB_INC = -L./libft/ -lft
 

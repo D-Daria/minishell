@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/29 19:42:51 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/03 13:31:05 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/03 16:39:34 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,14 +111,16 @@ void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
 				free(old_var);
                 return ;
             }
+			free(old_var);
 	    	ft_change_var(&env, var, data, 'e');
 			ft_change_arr_env_vars(data);
 			break ;
 		}
+		free(old_var);
 		env = env->next;
 	}
 	free (new_var);
-	free (old_var);
+	// free (old_var);
 }
 
 void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
@@ -154,13 +156,15 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 				free (new_var);
                 return ;
             }
-	    	ft_change_var(&lst, var, data, 's');
+			free(old_var);
+			ft_change_var(&lst, var, data, 's');
 			break ;
 		}
+		ft_memdel(old_var);
 		lst = lst->next;
 	}
 	free (new_var);
-	free (old_var);
+	// free (old_var);
 }
 
 int    ft_check_varerrors(char *var, t_data *data, size_t *length)

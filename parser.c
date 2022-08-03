@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 21:50:23 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/02 16:21:53 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/03 19:03:05 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,12 @@ void	ft_add_this_str_to_word(t_data *data, size_t *i, size_t *st)
 	str = data->last_user_cmd;
 	tmp = data->last_token->content->token;
 	tmp2 = ft_substr(str, *st, *i - *st);
+	str = NULL;
 	if (tmp2 == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 	data->last_token->content->token = ft_strjoin(tmp, tmp2);
-	ft_memdel(tmp);
 	ft_memdel(tmp2);
+	ft_memdel(tmp);
 	if (data->last_token->content->token == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
 }
@@ -259,7 +260,9 @@ void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
 		while(last_indx-- > 1)
 			ptr = ptr->next;
 		ptr->next = NULL;
-		free (data->last_token->content);
+		free(data->last_token->content->token);
+		free(data->last_token->content);
+		free(data->last_token);
 		data->last_token = NULL;
 	}
 	if (str[*i] == ' ')
@@ -286,7 +289,7 @@ void	ft_parser(t_data *data)
 		if (str[i] == '<' || str[i] == '>' || str[i] == '|' || str[i] == ' ')
 		{
 			ft_parse_by_delimitter(data, &i, &start_token);
-			if(str[i] == '\0')
+			if (str[i] == '\0')
 				return ;
 			ft_find_token_word(data, &i, &start_token);
 		}
