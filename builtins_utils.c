@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 20:20:43 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 20:39:54 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/03 13:14:06 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ void	ft_start_builtin(t_data **data, t_list *cmd, int i)
 	arr_fn_builtins[0] = ft_echo;
 	arr_fn_builtins[1] = ft_cd;
 	arr_fn_builtins[2] = ft_pwd;
-	arr_fn_builtins[3] = ft_export; //Eugene
-	arr_fn_builtins[4] = ft_unset; //Eugene
-	arr_fn_builtins[5] = ft_env; //Eugene
+	arr_fn_builtins[3] = ft_export;
+	arr_fn_builtins[4] = ft_unset;
+	arr_fn_builtins[5] = ft_env;
 	arr_fn_builtins[6] = ft_exit;
 	arr_fn_builtins[i]((*data), cmd); /*запускаю функцию с индексом=i,
 	передаю ей в параметры (data, cmd)*/

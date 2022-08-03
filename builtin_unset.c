@@ -27,7 +27,6 @@ void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 		(*prev)->next = (*var)->next;
 	free ((*var)->envp_str);
 	free (*var);
-	data->amount_env_vars -= 1;
 }
 
 void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
@@ -47,6 +46,7 @@ void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
 				&& ((*tmp_cmd)[length] == '\0'))
 			{
 				ft_delete_env_var(data, &prev_env, &current_env);
+				data->amount_env_vars -= 1;
 				ft_change_arr_env_vars(data);
 				break ;
 			}

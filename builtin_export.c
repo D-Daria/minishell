@@ -6,49 +6,45 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/29 19:42:51 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/02 19:05:19 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/03 13:31:05 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_free_arr_env_vars(char ***arr)
+void	ft_free_arr_env_vars(char **arr)
 {
-	// size_t	i;
+	size_t	i;
 
-	// if (!(*arr))
-	// 	return ;
-	// i = 0;
-	// while ((*arr)[i])
-	// 	ft_memdel((*arr)[i++]);
-	(void)arr;
+	if (!(arr))
+		return ;
+	i = 0;
+	while ((arr)[i])
+		ft_memdel((arr)[i++]);
+	ft_memdel(arr);	
 }
 
 void	ft_change_arr_env_vars(t_data *data)
 {
 	t_list	*tmp;
-	char	**old;
 	size_t	i;
 
-	old = data->current_arr_env_vars;
-	ft_free_arr_env_vars(&old);
+	ft_free_arr_env_vars(data->current_arr_env_vars);
 	data->current_arr_env_vars = (char **)malloc(sizeof(char *) \
-	* data->amount_env_vars + 1);
+	* (data->amount_env_vars + 1));
 	if (!data->current_arr_env_vars)
 		ft_error_exit("malloc_error in ft_create_envplists\n");
 	tmp = data->envplist;
 	i = 0;
 	while (tmp)
 	{
-		(data->current_arr_env_vars)[i] = tmp->envp_str;
+		(data->current_arr_env_vars)[i] = ft_strdup(tmp->envp_str);
+		if (!(data->current_arr_env_vars)[i])
+			ft_error_exit("malloc_error\n");
 		tmp = tmp->next;
 		i++;
 	}
 	(data->current_arr_env_vars)[i] = NULL;
-//check:
-	// i=0;
-	// while((data->current_arr_env_vars)[i])
-	// 	printf("%s\n",(data->current_arr_env_vars)[i++]);
 }
 
 void	ft_export_without_args(t_data *data)
@@ -116,6 +112,7 @@ void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
                 return ;
             }
 	    	ft_change_var(&env, var, data, 'e');
+			ft_change_arr_env_vars(data);
 			break ;
 		}
 		env = env->next;
@@ -211,11 +208,11 @@ void	ft_export(t_data *data, t_list *cmd)
 		if (ret == 1)
 		{
 			ft_change_envplist_if_var_found(*tmp_cmd, length, data);
-			ft_change_arr_env_vars(data);
 			ft_change_sortlist_if_var_found(*tmp_cmd, length, data);
 			if (data->add_new_var_envplist == 1)
 			{
 				ft_adding_var_to_envplist_if_flag(data, *tmp_cmd);
+				data->amount_env_vars += 1;
 				ft_change_arr_env_vars(data);
 			}
 			ft_adding_var_to_sortlist_if_flag(data, *tmp_cmd);
