@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 22:13:43 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/03 13:08:12 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,6 @@ int main(int argc, char **argv, char **envp)
 		ft_free_redirs(&data.redirs);
 		ft_free_commands(&data.commands);
 	}
-	// ft_free_data_ptr(&data);
+	ft_free_data_ptr(&data);
 	return (0);
 }
