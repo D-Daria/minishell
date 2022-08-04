@@ -92,7 +92,7 @@ void	ft_exit(t_data *data, t_list *cmd)
 	(void)data;
 	(void)cmd;
 	printf("exit\n");
-	ft_free_data_ptr(data);
+	// ft_free_data_ptr(data);
 	if (cmd->next)
 		exit(EXIT_FAILURE);
 	else

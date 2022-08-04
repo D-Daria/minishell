@@ -14,6 +14,16 @@
 
 void	ft_execve(t_data *data, t_list *cmd)
 {
+	if (cmd->cmd_data->cmd_path == NULL)
+	{
+		// ft_putstr_fd("\naccess(NULL) нельзя!\n\n", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		exit(127);
+		// ft_perror(cmd);
+		return ;
+	}
 	if (access(cmd->cmd_data->cmd_path, X_OK) == 0)
 	{
 		execve(cmd->cmd_data->cmd_path, cmd->cmd_data->cmd, \

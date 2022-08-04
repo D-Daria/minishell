@@ -31,7 +31,7 @@ void	ft_change_arr_env_vars(t_data *data)
 
 	ft_free_arr_env_vars(data->current_arr_env_vars);
 	data->current_arr_env_vars = (char **)malloc(sizeof(char *) \
-	* data->amount_env_vars + 1);
+	* (data->amount_env_vars + 1));
 	if (!data->current_arr_env_vars)
 		ft_error_exit("malloc_error in ft_create_envplists\n");
 	tmp = data->envplist;
