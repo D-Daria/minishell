@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:13:57 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 21:38:41 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/05 18:53:18 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,5 +149,5 @@ void	ft_commands(t_data *data)
 	// debug_print_redirections(data->redirs);
 	if (data->commands && data->redirs)
 		ft_set_cmd_redirs(data);
-	printf("data->parser_ptr->paths cleared\n");
+	// printf("data->parser_ptr->paths cleared\n");
 }

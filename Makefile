@@ -8,7 +8,7 @@ SRCS_MF =	main.c debug_tests.c parser.c reading_cmds.c\
 			execution_errors.c redirection.c redirection_utils.c\
 			free_utils.c env_variables_utils.c\
 			builtins.c builtins_utils.c builtin_export.c builtin_unset.c\
-			paths.c execution_utils.c
+			paths.c execution_utils.c signals.c
 
 OBJS_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.o, $(SRCS_MF)))
 D_FILES_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.d, $(SRCS_MF)))

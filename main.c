@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/03 13:08:12 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:39:39 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,26 +41,6 @@ void	ft_init(t_data *data_ptr, char **envp)
 	}
 	ft_create_envplists(data_ptr, envp);
 	ft_set_builtins(data_ptr);
-}
-
-void	ft_sigint_handler(int signum)
-{
-	t_termios	term;
-	int			res;
-
-	res = tcgetattr(0, &term); /* чтобы не отображался ^C */
-	if (res < 0)
-	{
-		ft_throw_system_error("tcgetattr");
-		return;
-	}
-	term.c_lflag &= ~ECHOCTL;
-	tcsetattr(0, TCSANOW, &term);
-	rl_on_new_line();
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_redisplay();
-	(void)signum;
 }
 
 int main(int argc, char **argv, char **envp)

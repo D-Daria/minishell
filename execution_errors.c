@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 13:14:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/03 13:14:50 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/05 19:00:04 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,45 +92,45 @@ static void	ft_dir_error(t_list *cmd, char *path)
 
 	directory = opendir(path);
 	fd = open(path, O_RDWR);
-	if (fd == -1 && directory)
+	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+		perror(cmd->cmd_data->cmd_path); /*permission denied*/
+	else if (path && (fd == -1 && directory))
 	{
+		closedir(directory);
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
-		if (directory)
-			closedir(directory);
-		if (fd)
-			close(fd);
 		exit(1);
 	}
-	else if (!directory && ft_strrchr(cmd->cmd_data->cmd[0], '/'))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
-		ft_putstr_fd(": Not a directory\n", STDERR_FILENO);
-		exit(126);
-	}
+	if (directory)
+		closedir(directory);
+	if (fd)
+		close(fd);
+	exit(126);
 }
 
-void	ft_perror(t_list *cmd)
+void	ft_perror(t_data *data, t_list *cmd)
 {
 	char	*path;
-	
+
+	(void)data;
 	path = cmd->cmd_data->cmd_path;
-	ft_dir_error(cmd, path);
-	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
+	if (path)
+		ft_dir_error(cmd, path);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
+	if ((access(cmd->cmd_data->cmd[0], F_OK) == 0))
 	{
-		perror(cmd->cmd_data->cmd_path); /*permission denied*/
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
 		exit(126);
 	}
-	if (cmd->cmd_data->cmd && path && (ft_strchr(cmd->cmd_data->cmd_path, '/')))
-		perror(cmd->cmd_data->cmd[0]);
-	else
+	if (!path && (ft_strchr(cmd->cmd_data->cmd[0], '/')))
 	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(cmd->cmd_data->cmd[0], STDERR_FILENO);
-		ft_putstr_fd(": command not found\n", STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		exit(126);
 	}
+	else
+		ft_putstr_fd(": command not found\n", STDERR_FILENO);
 	if (cmd->next == NULL)
 		exit(127);
 }

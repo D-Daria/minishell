@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 21:54:40 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/05 14:07:56 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,13 @@ void	ft_echo(t_data *data, t_list *cmd_lst)
 void	ft_cd(t_data *data, t_list *cmd)
 {
 	(void)data;
-	(void)cmd;
-	printf(" CD\n\n");
-	// printf("dir before: %s\n", getcwd(NULL, 0));
 	if (cmd->cmd_data->cmd[1])
 	{
 		if (chdir(cmd->cmd_data->cmd[1]) == -1)
+		{
 			perror("chdir");
-		// else
-		// 	printf("dir after: %s\n", getcwd(NULL, 0));
+			data->status = 1;
+		}
 	}
 }
 
@@ -61,11 +59,13 @@ void	ft_pwd(t_data *data, t_list *cmd)
 
 	(void)data;
 	(void)cmd;
-	printf(" PWD\n\n");
 	path = NULL;
 	path = getcwd(NULL, 0);
 	if (path == NULL)
+	{
 		perror("getcwd()");
+		data->status = 1;
+	}
 	else
 	{
 		printf("%s\n", path);
@@ -92,9 +92,8 @@ void	ft_exit(t_data *data, t_list *cmd)
 	(void)data;
 	(void)cmd;
 	printf("exit\n");
-	// ft_free_data_ptr(data);
 	if (cmd->next)
 		exit(EXIT_FAILURE);
 	else
-		exit(127);
+		exit(0);
 }

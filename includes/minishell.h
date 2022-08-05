@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 20:21:43 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/05 22:56:01 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,6 @@ typedef struct s_data {
 
 typedef void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
 
-void	ft_sigint_handler(int signum);
-
 /*utils.c*/
 void	ft_error_exit(const char *error);
 int		ft_throw_system_error(const char *str);
@@ -115,6 +113,12 @@ void    ft_read_user_cmd(t_data *data_ptr);
 void		ft_parser(t_data *data_ptr);
 t_list		*ft_calloc_new_token(void);
 void		ft_parse_quotes(t_data *data, size_t *i, size_t *st);
+
+/*signals.c*/
+void		ft_sigquit_handler(int signum);
+void		ft_sigint_handler(int signum);
+void		ft_signals(void);
+void		ft_signals_process(void);
 
 /*commands.c*/
 void		ft_commands(t_data *data);
@@ -165,17 +169,17 @@ void		ft_get_length_var(char *cmd, size_t *length);
 /*execution.c*/
 void		ft_execute(t_data *data);
 void		ft_execve(t_data *data, t_list *cmd);
-void		ft_get_status(t_data *data);
 
 /*execution_utils.c*/
 void		ft_close_pipes(t_list *current);
 void		ft_dup(t_list **cmd, t_list **prev);
-void		ft_get_status(t_data *data);
+// void		ft_get_status(t_data *data);
+void		ft_get_status(t_data *data, t_list *cmd);
 void		ft_wait_children(t_data *data);
 void		ft_backup_dup(int *tmp_fd_in, int *tmp_fd_out, int type);
 
 /*exection_errors.c*/
-void		ft_perror(t_list *cmd);
+void		ft_perror(t_data *data, t_list *cmd);
 int			ft_close_all(t_data *data);
 void		ft_perror_redir(t_data *data, t_list *redir);
 void		ft_file_error(t_data *data, char *file, int process);
