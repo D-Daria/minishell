@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 14:05:33 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/03 19:12:01 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 {
 	size_t	n;
 	t_list	*tmp;
-
 
 	tmp = ***token;
 	n = 0;
