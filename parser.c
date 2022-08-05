@@ -24,8 +24,8 @@ void	ft_expand_dollar(t_data *data, char *str, size_t *i)
 	unsigned int	start;
 	char 			*str_after_dollar;
 
-	if (data->expand_dollar)
-		ft_memdel(data->expand_dollar);
+	// if (data->expand_dollar)
+	// 	ft_memdel(data->expand_dollar);
 	if (str[(*i) + 1] == '?')
 	{	
 		ft_expand_dollar_question(data);
@@ -83,6 +83,8 @@ void	ft_add_expand_dollar_to_word(t_data *data, char *str, size_t *i)
 	data->last_token->content->token = ft_strjoin(tmp, data->expand_dollar);
 	if (data->last_token->content->token == NULL)
 		ft_error_exit("malloc_error in ft_add_dollar_to_word\n");
+	ft_memdel(tmp);
+	ft_memdel(data->expand_dollar);
 }
 
 void	ft_dubble_quotes(t_data *data, size_t *i, size_t *start_token)
