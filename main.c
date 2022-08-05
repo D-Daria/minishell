@@ -41,7 +41,6 @@ void	ft_init(t_data *data_ptr, char **envp)
 	}
 	ft_create_envplists(data_ptr, envp);
 	ft_set_builtins(data_ptr);
-	// data_ptr->envp = envp;
 }
 
 void	ft_sigint_handler(int signum)

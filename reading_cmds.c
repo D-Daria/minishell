@@ -40,6 +40,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 			//если введены одни пробелы (после ft_strtrim это пустая строка)
 			rl_on_new_line();
 			rl_replace_line("", 0);
+			ft_memdel(data_ptr->last_user_cmd);
 			data_ptr->last_user_cmd = NULL;
 			ft_memdel(now_user_cmd);
 			ft_memdel(rl_buffer);
@@ -48,6 +49,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 
 		if (ft_strcmp(now_user_cmd, data_ptr->last_user_cmd) != 0)
 			add_history(now_user_cmd);
+		ft_memdel(data_ptr->last_user_cmd);
 		data_ptr->last_user_cmd = ft_strdup(now_user_cmd);
 		if (!data_ptr->last_user_cmd)
 		{
@@ -63,8 +65,8 @@ void    ft_read_user_cmd(t_data *data_ptr)
 		//если user нажал один только enter(без других символов)
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		data_ptr->last_user_cmd = NULL;
-		
+		ft_memdel(data_ptr->last_user_cmd);
+		data_ptr->last_user_cmd = NULL;	
 	}
 	ft_memdel(now_user_cmd);
 	ft_memdel(rl_buffer);

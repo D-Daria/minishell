@@ -107,18 +107,19 @@ void	ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data)
             if (ft_strcmp(shift, var + len_old) == 0)
             {
                 data->add_new_var_envplist = 0;
-				free(new_var);
-				free(old_var);
+				ft_memdel(new_var);
+				ft_memdel(old_var);
                 return ;
             }
 	    	ft_change_var(&env, var, data, 'e');
 			ft_change_arr_env_vars(data);
+			ft_memdel(old_var);
 			break ;
 		}
+		ft_memdel(old_var);
 		env = env->next;
 	}
-	free (new_var);
-	free (old_var);
+	ft_memdel(new_var);
 }
 
 void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
@@ -142,25 +143,26 @@ void	ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data)
 			if (var[l] == '\0')
 			{
 				data->add_new_var_sortlist = 0;
-				free (old_var);
-				free (new_var);
+				ft_memdel(old_var);
+				ft_memdel(new_var);
 				return ;
 			}
             shift = lst->envp_str + l;
             if (ft_strcmp(shift, var + l) == 0)
             {
                 data->add_new_var_sortlist = 0;
-				free (old_var);
-				free (new_var);
+				ft_memdel(old_var);
+				ft_memdel(new_var);
                 return ;
             }
 	    	ft_change_var(&lst, var, data, 's');
+			ft_memdel(old_var);
 			break ;
 		}
 		lst = lst->next;
+		ft_memdel(old_var);
 	}
-	free (new_var);
-	free (old_var);
+	ft_memdel(new_var);
 }
 
 int    ft_check_varerrors(char *var, t_data *data, size_t *length)

@@ -60,12 +60,15 @@ void    ft_sorting_find_prev_list(t_list **prev, char *s_new, t_data *data)
 		if (old_var == NULL)
 			ft_error_exit("malloc_error\n");
 		if (ft_strcmp(new_var, old_var) < 0)
+		{
+			ft_memdel(old_var);
 			break ;
+		}
 		*prev = current;
 		current = current->next;
+		ft_memdel(old_var);
 	}
-	free (old_var);
-	free (new_var);
+	ft_memdel(new_var);
 }
 
 void	ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new)

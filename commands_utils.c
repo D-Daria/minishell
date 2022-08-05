@@ -28,7 +28,8 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 	n = 0;
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
-		(*cmd)[n] = (***token)->content->token;
+		(*cmd)[n] = ft_strdup((***token)->content->token);
+	printf("33: %s\n", (***token)->content->token);
 		(***token) = (***token)->next;
 		n++;
 	}
