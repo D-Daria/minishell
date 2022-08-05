@@ -65,6 +65,7 @@ void	ft_free_tokenlist(t_list **list)
 	while (*list != NULL)
 	{
 		tmp = (*list)->next;
+		free((*list)->content->token);
 		free((*list)->content);
 		(*list)->content = NULL;
 		free ((*list));
