@@ -1,0 +1,4 @@
+1. Если подаётся только pipe bash выдаёт ошибку (bash: syntax error near unexpected token `|')
+2. если подать пустую строку, bash пишет, что команда не найдена
+	[bash 3.2]$ ''
+	bash: : command not found

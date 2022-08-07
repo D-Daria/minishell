@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:17:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 15:06:42 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 15:49:35 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_open_files(t_data *data, t_list *redir, int id, int is_process)
 		fd = open(file_name, O_WRONLY | O_TRUNC | O_CREAT, 0666);
 	else if (id == R2_REDIRECT)
 		fd = open(file_name, O_WRONLY | O_APPEND | O_CREAT, 0666);
-	else if (id == L2_HEREDOC)
+	else if (id == L2_HEREDOC && data->status == 0)
 		fd = ft_process_heredoc(data, redir);
 	if (fd == -1 && is_process)
 		ft_file_error(data, file_name, is_process);

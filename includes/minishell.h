@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 14:32:19 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 16:05:21 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_list		*ft_calloc_new_token(void);
 void		ft_parse_quotes(t_data *data, size_t *i, size_t *st);
 
 /*signals.c*/
-void		ft_sigquit_handler(int signum);
+void		ft_sigquit_parent(int signum);
 void		ft_sigint_handler(int signum);
 void		ft_sigint_parent(int signum);
 void		ft_signals(void);

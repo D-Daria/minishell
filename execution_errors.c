@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 13:14:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 14:07:36 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 16:02:45 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,13 +92,13 @@ static void	ft_dir_error(t_list *cmd, char *path)
 
 	directory = opendir(path);
 	fd = open(path, O_RDWR);
-	if (path && (access(cmd->cmd_data->cmd_path, F_OK) == 0))
-		perror(cmd->cmd_data->cmd_path); /*permission denied*/
-	else if (path && (fd == -1 && directory))
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(path, STDERR_FILENO);
+	if (access(cmd->cmd_data->cmd_path, F_OK) == 0)
+		ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+	else if (fd == -1 && directory)
 	{
 		closedir(directory);
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": is a directory\n", STDERR_FILENO);
 		exit(1);
 	}

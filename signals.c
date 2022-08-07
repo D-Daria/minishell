@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 15:39:15 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 13:03:09 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 16:18:55 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,19 @@
 
 void	ft_sigint_parent(int signum)
 {
+	(void)signum;
+}
+
+void	ft_sigquit_parent(int signum)
+{
+	size_t	input;
+	char	buff[1024];
+
+	input = 0;
+	input = read(1, buff, STDIN_FILENO);
+	printf("input: %zu\n", input);
+	if (input <= 0)
+		close(STDIN_FILENO);
 	(void)signum;
 }
 
