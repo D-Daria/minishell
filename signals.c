@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 15:39:15 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 23:37:06 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 13:03:09 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,16 @@
 /* ^C - SIGINT - KILL status - 2 */
 /* ^D - EOF */
 
-void	ft_sigquit_handler(int signum)
+void	ft_sigint_parent(int signum)
 {
-	printf("ft_sigquit_handler\n");
-	printf("Quit: %d\n", signum);
+	(void)signum;
 }
 
-// void ft_sigquit_process(int signum)
-// {
-// 	printf("ft_sigquit_process\n");
-// 	(void)signum;
-// 	exit(signum);
-// }
+void ft_sigquit_child(int signum)
+{
+	if (signum == SIGQUIT)
+		exit(signum);
+}
 
 void	ft_sigint_handler(int signum)
 {
@@ -49,14 +47,9 @@ void	ft_sigint_handler(int signum)
 	(void)signum;
 }
 
-void	ft_signals(void)
+void	ft_signals_child(void)
 {
-	signal(SIGINT, &ft_sigint_handler);
-	signal(SIGQUIT, &ft_sigquit_handler);
+	printf("ft_signals_child\n");
+	signal(SIGQUIT, &ft_sigquit_child);
+	signal(SIGINT, SIG_DFL);
 }
-
-// void	ft_signals_process(void)
-// {
-// 	signal(SIGINT, &ft_sigint_handler);
-// 	signal(SIGQUIT, &ft_sigquit_process);
-// }

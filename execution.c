@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 15:10:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 23:36:54 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 03:07:09 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_execve(t_data *data, t_list *cmd)
 }
 
 //trying to kill process with its own pid
-void	ft_execute_single_cmd(t_data *data, t_list *cmd, int pid)
+void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 {
 	int		is_builtin;
 
@@ -39,21 +39,20 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd, int pid)
 		ft_single_builtin(data, cmd, is_builtin);
 		return;
 	}
-	pid = fork();
-	if (pid < 0)
+	cmd->cmd_data->pid = fork();
+	if (cmd->cmd_data->pid < 0)
 		exit(ft_throw_system_error("fork"));
-	else if (pid == 0)
+	else if (cmd->cmd_data->pid == 0)
 	{
-		ft_signals();
+		ft_signals_child();
 		if (cmd->cmd_data->is_redir)
 			ft_redirect(cmd, data);
 		ft_execve(data, cmd);
-		exit(EXIT_SUCCESS);
+		exit(data->status);
 	}
 	else
 	{
-		ft_signals();
-		waitpid(0, &data->status, 0);
+		waitpid(cmd->cmd_data->pid, &data->status, 0);
 		ft_get_status(data, cmd);
 	}
 }
@@ -62,7 +61,7 @@ void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 {
 	int	is_builtin;
 
-	ft_signals();
+	ft_signals_child();
 	ft_dup(cmd, prev);
 	if ((*cmd)->cmd_data->is_redir)
 		ft_redirect((*cmd), data);
@@ -151,5 +150,8 @@ void	ft_execute(t_data *data)
 		// ft_pipe(data, cmd, prev, &pid);
 	}
 	else if (cmd)
-		ft_execute_single_cmd(data, data->commands, cmd->cmd_data->pid);
+	{
+		// ft_execute_single_cmd(data, data->commands, cmd->cmd_data->pid);
+		ft_execute_single_cmd(data, data->commands);
+	}
 }

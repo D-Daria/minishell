@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 22:56:01 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 14:32:19 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@
 # define PIPE 5
 # define WORD 6
 
-typedef struct stat	t_stat;
+typedef struct sigaction t_sig;
+typedef struct stat t_stat;
 typedef struct termios t_termios;
 
 typedef struct s_parser {
@@ -106,7 +107,7 @@ void	ft_print_envplist(t_data *data);
 void	debug_print_commands_list(t_data *data);
 void 	debug_print_redirections(t_list *redirs);
 
-//read_user_cmd.c
+/*read_user_cmd.c*/
 void    ft_read_user_cmd(t_data *data_ptr);
 
 /*parser.c*/
@@ -117,8 +118,9 @@ void		ft_parse_quotes(t_data *data, size_t *i, size_t *st);
 /*signals.c*/
 void		ft_sigquit_handler(int signum);
 void		ft_sigint_handler(int signum);
+void		ft_sigint_parent(int signum);
 void		ft_signals(void);
-void		ft_signals_process(void);
+void		ft_signals_child(void);
 
 /*commands.c*/
 void		ft_commands(t_data *data);
@@ -193,5 +195,8 @@ t_list		*ft_new_redir_lst(char *file, int id, int num);
 /*redirection_utils.c*/
 int			ft_open_files(t_data *data, t_list *redir, int id, int process);
 void		ft_process_redirs(t_data *data);
+
+/*heredoc.c*/
+int			ft_process_heredoc(t_data *data, t_list *redir);
 
 #endif

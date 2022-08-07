@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 14:07:56 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 13:25:25 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,12 +42,28 @@ void	ft_echo(t_data *data, t_list *cmd_lst)
 
 void	ft_cd(t_data *data, t_list *cmd)
 {
-	(void)data;
-	if (cmd->cmd_data->cmd[1])
+	char	*arg;
+	char	*home;
+
+	home = ft_getenv(data, "HOME");
+	arg = cmd->cmd_data->cmd[1];
+	if (arg)
 	{
-		if (chdir(cmd->cmd_data->cmd[1]) == -1)
+		if (ft_strcmp(arg, "~") == 0)
+			arg = home;
+		if (chdir(arg) == -1 && arg)
 		{
-			perror("chdir");
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			perror(arg);
+			data->status = 1;
+		}
+	}
+	else if (!arg)
+	{
+		if (chdir(home) == -1)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
 			data->status = 1;
 		}
 	}

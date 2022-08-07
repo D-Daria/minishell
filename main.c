@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/05 15:39:39 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 15:04:33 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,17 @@ void	ft_init(t_data *data_ptr, char **envp)
 	ft_set_builtins(data_ptr);
 }
 
+// void	ft_sigquit_parent(int signum)
+// {
+// 	Keymap km;
+
+// 	// printf("ft_sigquit_parent\n");
+// 	km = rl_get_keymap();
+// 	// printf("%c\n", km->type);
+// 	(void)signum;
+// 	close(STDIN_FILENO);
+// }
+
 int main(int argc, char **argv, char **envp)
 {
 	t_data data;
@@ -51,11 +62,15 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&data, sizeof(t_data));
 	ft_init(&data, envp);
-	signal(SIGINT, &ft_sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	// signal(SIGINT, &ft_sigint_handler);
+	// signal(SIGQUIT, SIG_IGN);
+	// signal(SIGQUIT, &ft_sigquit_parent); 
 	while (data.stopshell == 0)
 	{
+		signal(SIGINT, &ft_sigint_handler);
+		signal(SIGQUIT, SIG_IGN);
 		ft_read_user_cmd(&data);
+		signal(SIGINT, &ft_sigint_parent);
 		if (data.last_user_cmd == NULL)
 			continue;
 		ft_parser(&data);

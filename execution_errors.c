@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 13:14:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 19:00:04 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/07 14:07:36 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_close_all(t_data *data)
 	redir = data->redirs;
 	while (redir)
 	{
-		if (redir->redir_data->fd)
+		if (redir->redir_data->fd >= 0)
 			close(redir->redir_data->fd);
 		redir = redir->next;
 	}

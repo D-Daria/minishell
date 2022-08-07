@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   reading_cmds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 22:05:12 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/01 22:27:29 by sshield          ###   ########.fr       */
+/*   Updated: 2022/08/07 02:44:00 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <minishell.h>
+#include "minishell.h"
 
 void    ft_read_user_cmd(t_data *data_ptr)
 {
@@ -21,7 +21,8 @@ void    ft_read_user_cmd(t_data *data_ptr)
 	now_user_cmd = NULL;
 	if (rl_buffer == NULL)
 	{
-		printf("ctr+D:--->exit\n");
+		// printf("ctr+D:--->exit\n");
+		printf("exit\n");
 		ft_free_data_ptr(data_ptr);
 		exit(EXIT_SUCCESS);
 	}
