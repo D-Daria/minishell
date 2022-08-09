@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 16:05:21 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/09 13:54:41 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@
 # define SUCCESS	0
 # define ERROR		-1
 
-#ifndef NULL
-# define NULL		(void *)0
-#endif
-
 /*TOKENS IDs*/
 # define L1_REDIRECT 1
 # define L2_HEREDOC 2
@@ -54,9 +50,9 @@
 # define PIPE 5
 # define WORD 6
 
-typedef struct sigaction t_sig;
-typedef struct stat t_stat;
-typedef struct termios t_termios;
+typedef struct sigaction	t_sig;
+typedef struct stat			t_stat;
+typedef struct termios		t_termios;
 
 typedef struct s_parser {
 	char	***cmds;
@@ -87,28 +83,28 @@ typedef struct s_data {
 	bool		add_new_var_sortlist;
 }				t_data;
 
-typedef void (*ptr_fn_builtin)(t_data *data, t_list *cmd);
+typedef void	(*ptr_fn_builtin)(t_data *data, t_list *cmd);
 
 /*utils.c*/
-void	ft_error_exit(const char *error);
-int		ft_throw_system_error(const char *str);
-size_t	ft_split_len(char **str);
+void		ft_error_exit(const char *error);
+int			ft_throw_system_error(const char *str);
+size_t		ft_split_len(char **str);
 
 /*free_utils.c*/
-void	ft_free_commands(t_list **cmd_head);
-void	ft_free_redirs(t_list **redir_head);
-void	ft_free_data_ptr(t_data *data_ptr);
-void	ft_free_tokenlist(t_list **list);
+void		ft_free_commands(t_list **cmd_head);
+void		ft_free_redirs(t_list **redir_head);
+void		ft_free_data_ptr(t_data *data_ptr);
+void		ft_free_tokenlist(t_list **list);
 
 /*debug.c*/ //tests
-void	debug_print_double_arr(char **arr);
-void	ft_print_list_of_tokens(t_data *data);
-void	ft_print_envplist(t_data *data);
-void	debug_print_commands_list(t_data *data);
-void 	debug_print_redirections(t_list *redirs);
+void		debug_print_double_arr(char **arr);
+void		ft_print_list_of_tokens(t_data *data);
+void		ft_print_envplist(t_data *data);
+void		debug_print_commands_list(t_data *data);
+void		debug_print_redirections(t_list *redirs);
 
 /*read_user_cmd.c*/
-void    ft_read_user_cmd(t_data *data_ptr);
+void		ft_read_user_cmd(t_data *data_ptr);
 
 /*parser.c*/
 void		ft_parser(t_data *data_ptr);
@@ -129,15 +125,16 @@ void		ft_commands(t_data *data);
 t_command	*ft_create_command(char **cmd_args);
 t_list		*ft_new_cmd_lst(char *cmd_path, char **cmd_args, int id, int num);
 void		ft_get_cmd(t_list ****token, char ***cmd);
+void		ft_fill_command(t_data *data, t_list ***token, int id, int num);
 
 /*paths.c*/
 char		*ft_access_paths(t_parser *parser, char *cmd);
 void		ft_get_paths(t_data *data, t_parser *parser);
 
-//env_variables_utils.c
-char    	*ft_getenv(t_data *data, char *var);
+/*env_variables_utils.c*/
+char		*ft_getenv(t_data *data, char *var);
 void		ft_adding_var_to_sortlist_if_flag(t_data *data, char *s_new);
-void   		ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new);
+void		ft_adding_var_to_envplist_if_flag(t_data *data, char *s_new);
 
 /*builtin_export.c*/
 void		ft_export(t_data *data, t_list *cmd);
@@ -161,8 +158,17 @@ void		ft_pwd(t_data *data, t_list *cmd);
 void		ft_env(t_data *data, t_list *cmd);
 void		ft_exit(t_data *data, t_list *cmd);
 
+/*builtin_cd.c*/
+void		ft_cd_process(t_data *data, t_list *cmd);
+
+/*builtin_echo.c*/
+void		ft_echo_process(t_data *data, t_list *cmd);
+
 /*builtin_export.c*/
 void		ft_export(t_data *data, t_list *cmd);
+void		ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data);
+void		ft_change_sortlist_if_var_found(char *var, size_t l, t_data *data);
+void		ft_change_arr_env_vars(t_data *data);
 
 /*builtin_unset.c*/
 void		ft_unset(t_data *data, t_list *cmd);
@@ -175,7 +181,6 @@ void		ft_execve(t_data *data, t_list *cmd);
 /*execution_utils.c*/
 void		ft_close_pipes(t_list *current);
 void		ft_dup(t_list **cmd, t_list **prev);
-// void		ft_get_status(t_data *data);
 void		ft_get_status(t_data *data, t_list *cmd);
 void		ft_wait_children(t_data *data);
 void		ft_backup_dup(int *tmp_fd_in, int *tmp_fd_out, int type);
