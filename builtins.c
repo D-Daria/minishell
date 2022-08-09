@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 13:25:25 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/08 14:14:35 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,31 @@
 
 void	ft_echo(t_data *data, t_list *cmd_lst)
 {
-	size_t	i;
-	size_t	len;
-	int		nl;
-	char	**cmd;
+	ft_echo_process(data, cmd_lst);
+	// size_t	i;
+	// size_t	len;
+	// int		nl;
+	// char	**cmd;
 
-	(void)data;
-	cmd = cmd_lst->cmd_data->cmd;
-	nl = 1;
-	i = 1;
-	if (ft_strcmp(cmd[1], "-n") == 0)
-	{
-		i = 2;
-		nl = 0;
-	}
-	len = ft_split_len(cmd);
-	while (cmd[i])
-	{
-		ft_putstr_fd(cmd[i], STDOUT_FILENO);
-		if (i != len - 1)
-			ft_putstr_fd(" ", STDOUT_FILENO);
-		i++;
-	}
-	if (nl)
-		ft_putstr_fd("\n", STDOUT_FILENO);
+	// (void)data;
+	// cmd = cmd_lst->cmd_data->cmd;
+	// nl = 1;
+	// i = 1;
+	// if (ft_strcmp(cmd[1], "-n") == 0)
+	// {
+	// 	i = 2;
+	// 	nl = 0;
+	// }
+	// len = ft_split_len(cmd);
+	// while (cmd[i])
+	// {
+	// 	ft_putstr_fd(cmd[i], STDOUT_FILENO);
+	// 	if (i != len - 1)
+	// 		ft_putstr_fd(" ", STDOUT_FILENO);
+	// 	i++;
+	// }
+	// if (nl)
+	// 	ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
 void	ft_cd(t_data *data, t_list *cmd)
