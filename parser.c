@@ -76,6 +76,7 @@ void	ft_add_expand_dollar_to_word(t_data *data, char *str, size_t *i)
 {
 	char	*tmp;
 
+	data->exp_dol_flag = 1;
 	ft_expand_dollar(data, str, i);//malloc в data->expand_dollar
 	if (data->expand_dollar == NULL)
 		return ;
@@ -234,6 +235,7 @@ void	ft_find_token_word(t_data *data, size_t *i, size_t *start_token)
 	if (!data->last_token->content->token)
 		ft_error_exit("malloc error in ft_find_first_word\n");
 	(data->last_token->content->token)[0] = '\0';
+	data->exp_dol_flag = 0;
 }
 
 void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
@@ -243,9 +245,10 @@ void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
 	str = data->last_user_cmd;
 	if (data->last_token->content->token_id == WORD)
 		ft_add_this_str_to_word(data, i, st);
-	if (data->last_token->content->token_id == WORD && *data->last_token->content->token == '\0')
+	if (data->last_token->content->token_id == WORD && \
+		*data->last_token->content->token == '\0' && \
+		data->exp_dol_flag == 1)
 	{
-		//надо удалить последний элемент из списка. Список односвязынй.
 		t_list *ptr; ptr = data->tokens; int last_indx = -1;
 		while (ptr)
 		{
@@ -255,13 +258,14 @@ void	ft_parse_by_delimitter(t_data *data, size_t *i, size_t *st)
 		ptr = data->tokens; 
 		if (last_indx == 0)
 		{
-			data->tokens = NULL; free (ptr->content); free (ptr); return ;}
-		//иду до предпоследнего и перенаправляю в null предпоследний.
-
+			data->tokens = NULL; free (ptr->content->token);
+			free (ptr->content); free (ptr); return ;}
 		while(last_indx-- > 1)
 			ptr = ptr->next;
-		ptr->next = NULL;
-		free (data->last_token->content);
+		ptr->next = NULL;//перенаправляю предпоследний в null
+		free (data->last_token->content->token);
+		free (data->last_token->content); //удаляю последний лист
+		free (data->last_token);
 		data->last_token = NULL;
 	}
 	if (str[*i] == ' ')

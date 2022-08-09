@@ -42,6 +42,10 @@
 # define SUCCESS	0
 # define ERROR		-1
 
+#ifndef NULL
+# define NULL		(void *)0
+#endif
+
 /*TOKENS IDs*/
 # define L1_REDIRECT 1
 # define L2_HEREDOC 2
@@ -68,6 +72,7 @@ typedef struct s_data {
 	size_t		amount_env_vars;
 	int			stopshell;
 	char		*expand_dollar;
+	bool		exp_dol_flag;
 	int			status;
 	char		*builtins[8];
 	size_t		pipes_number;

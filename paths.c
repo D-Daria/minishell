@@ -17,6 +17,8 @@ char	*ft_access_paths(t_parser *parser, char *cmd)
 	int		i;
 	char	*join;
 
+	if (*cmd == '\0')
+		return (NULL);
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
 	i = 0;
