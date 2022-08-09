@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/03 19:12:01 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/09 13:35:05 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,30 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
 		(*cmd)[n] = ft_strdup((***token)->content->token);
-	printf("33: %s\n", (***token)->content->token);
+		// printf("33: %s\n", (***token)->content->token);
 		(***token) = (***token)->next;
 		n++;
 	}
 	(*cmd)[n] = NULL;
+}
+
+void	ft_fill_command(t_data *data, t_list ***token, int id, int num)
+{
+	char		**cmd;
+	char		*cmd_path;
+	t_list		*new_cmd;
+
+	cmd = NULL;
+	cmd_path = NULL;
+	new_cmd = NULL;
+	ft_get_cmd(&(token), &cmd);
+	cmd_path = ft_access_paths(data->parser_ptr, *cmd);
+	new_cmd = ft_new_cmd_lst(cmd_path, cmd, id, num);
+	ft_lstadd_back(&data->commands, new_cmd);
+	new_cmd = NULL;
+	ft_free_split(cmd);
+	ft_memdel(cmd_path);
+	data->cmds_number += 1;
 }
 
 t_command	*ft_create_command(char **args)

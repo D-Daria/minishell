@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/07 16:53:02 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/09 12:58:07 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,7 @@ int main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&data, sizeof(t_data));
 	ft_init(&data, envp);
-	// signal(SIGINT, &ft_sigint_handler);
-	// signal(SIGQUIT, SIG_IGN);
-	// signal(SIGQUIT, &ft_sigquit_parent); 
+	rl_outstream = stderr;
 	while (data.stopshell == 0)
 	{
 		signal(SIGINT, &ft_sigint_handler);

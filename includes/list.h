@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   list.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 14:54:01 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 22:43:16 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/09 13:33:44 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIST_H
 # define LIST_H
 
-typedef struct s_list t_list;
-typedef struct s_redir t_redir;
+typedef struct s_list	t_list;
+typedef struct s_redir	t_redir;
 
 typedef struct s_redir {
 	int		num;
@@ -25,9 +25,9 @@ typedef struct s_redir {
 
 typedef struct s_command {
 	int		cmd_num;
-	char	**cmd;		/* команда с аргументами ("ls" "-l" "-a" "-p") */
-	char	*cmd_path;	/* путь к команде ("/bin/ls") */
-	int		cmd_id;		/* id токена (redirect; here_doc) */
+	char	**cmd;
+	char	*cmd_path;
+	int		cmd_id;
 	int		pipe_fd[2];
 	int		is_redir;
 	pid_t	pid;

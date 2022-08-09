@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   reading_cmds.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 22:05:12 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/07 16:53:45 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/08 14:49:53 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void    ft_read_user_cmd(t_data *data_ptr)
 	char	*now_user_cmd;
 	char	*rl_buffer;
 
-	rl_buffer = readline(BLUE PROMPT BREAK);
+	rl_buffer = readline(PROMPT);
 	now_user_cmd = NULL;
 	if (rl_buffer == NULL)
 	{

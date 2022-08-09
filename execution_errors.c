@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_errors.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 13:14:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/07 16:02:45 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/09 16:19:41 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

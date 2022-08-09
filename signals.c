@@ -62,7 +62,6 @@ void	ft_sigint_handler(int signum)
 
 void	ft_signals_child(void)
 {
-	printf("ft_signals_child\n");
 	signal(SIGQUIT, &ft_sigquit_child);
 	signal(SIGINT, SIG_DFL);
 }
