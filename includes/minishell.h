@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/02 14:08:10 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 13:54:41 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/10 14:27:02 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_data {
 	int			stopshell;
 	char		*expand_dollar;
 	bool		exp_dol_flag;
+	int			exit_status;
 	int			status;
 	char		*builtins[8];
 	size_t		pipes_number;
@@ -169,6 +170,9 @@ void		ft_cd_process(t_data *data, t_list *cmd);
 /*builtin_echo.c*/
 void		ft_echo_process(t_data *data, t_list *cmd);
 
+/*builtin_exit.c*/
+void		ft_exit_process(t_data *data, t_list *cmd);
+
 /*builtin_export.c*/
 void		ft_export(t_data *data, t_list *cmd);
 void		ft_change_envplist_if_var_found(char *var, size_t l_var, t_data *data);
@@ -200,11 +204,14 @@ void		ft_token_error(t_data *data, int id, int process);
 /*redirection.c*/
 void		ft_redirect(t_list *cmd, t_data *data);
 void		ft_process_redirs(t_data *data);
+void		ft_process_redirs_test(t_data *data);
 t_list		*ft_new_redir_lst(char *file, int id, int num);
 
 /*redirection_utils.c*/
 int			ft_open_files(t_data *data, t_list *redir, int id, int process);
 void		ft_process_redirs(t_data *data);
+void		ft_set_cmd_redirs(t_data *data);
+void		ft_set_cmd_redirs_test(t_data *data);
 
 /*heredoc.c*/
 int			ft_process_heredoc(t_data *data, t_list *redir);

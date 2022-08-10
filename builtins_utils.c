@@ -6,7 +6,7 @@
 /*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 20:20:43 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/03 13:14:06 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/10 15:12:30 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	ft_single_builtin(t_data *data, t_list *cmd, int index)
 	tmp_fd_in = -1;
 	tmp_fd_out = -1;
 	if (index == 6)
+	{
 		ft_start_builtin(&data, cmd, index);
+		return ;
+	}
 	if (cmd->cmd_data->is_redir)
 	{
 		ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'b');

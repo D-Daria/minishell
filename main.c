@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/01 16:57:00 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/09 12:58:07 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/10 14:11:15 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int main(int argc, char **argv, char **envp)
 		signal(SIGINT, &ft_sigint_parent);
 		if (data.last_user_cmd == NULL)
 			continue;
+		data.exit_status = data.status;
 		ft_parser(&data);
 		ft_commands(&data);
 		ft_execute(&data);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 14:39:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/10 16:11:30 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,5 @@ void	ft_env(t_data *data, t_list *cmd)
 
 void	ft_exit(t_data *data, t_list *cmd)
 {
-	(void)data;
-	(void)cmd;
-	printf("exit\n");
-	if (cmd->next)
-		exit(EXIT_FAILURE);
-	else
-		exit(0);
+	ft_exit_process(data, cmd);
 }
