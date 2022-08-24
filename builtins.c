@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/16 21:29:36 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/10 16:11:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 14:00:38 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void	ft_pwd(t_data *data, t_list *cmd)
 	if (path == NULL)
 	{
 		perror("getcwd()");
-		data->status = 1;
+		g_status = 1;
 	}
 	else
 	{
 		ft_putendl_fd(path, STDOUT_FILENO);
-		free(path);
+		ft_memdel(path);
 	}
 }
 

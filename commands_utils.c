@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/15 18:56:44 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 13:35:05 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 14:04:37 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	ft_get_cmd(t_list ****token, char ***cmd)
 	while ((***token) && (***token)->content->token_id == WORD)
 	{
 		(*cmd)[n] = ft_strdup((***token)->content->token);
-		// printf("33: %s\n", (***token)->content->token);
 		(***token) = (***token)->next;
 		n++;
 	}

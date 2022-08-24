@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 20:20:43 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/10 15:12:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 16:38:43 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ft_is_builtin(t_data *data, t_list *cmd_lst)
 
 void	ft_start_builtin(t_data **data, t_list *cmd, int i)
 {
-	ptr_fn_builtin	arr_fn_builtins[7];
+	t_ptr_fn_builtin	arr_fn_builtins[7];
 
 	arr_fn_builtins[0] = ft_echo;
 	arr_fn_builtins[1] = ft_cd;
@@ -39,8 +39,7 @@ void	ft_start_builtin(t_data **data, t_list *cmd, int i)
 	arr_fn_builtins[4] = ft_unset;
 	arr_fn_builtins[5] = ft_env;
 	arr_fn_builtins[6] = ft_exit;
-	arr_fn_builtins[i]((*data), cmd); /*запускаю функцию с индексом=i,
-	передаю ей в параметры (data, cmd)*/
+	arr_fn_builtins[i]((*data), cmd);
 }
 
 void	ft_set_builtins(t_data *data)
@@ -70,7 +69,12 @@ void	ft_single_builtin(t_data *data, t_list *cmd, int index)
 	if (cmd->cmd_data->is_redir)
 	{
 		ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'b');
-		ft_redirect(cmd, data);
+		ft_redirect(cmd, data, 0);
+		if (g_status > 0)
+		{
+			ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'r');
+			return ;
+		}
 	}
 	ft_start_builtin(&data, cmd, index);
 	ft_backup_dup(&tmp_fd_in, &tmp_fd_out, 'r');

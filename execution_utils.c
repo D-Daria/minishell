@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 17:31:25 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/08 15:30:29 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 14:14:54 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_kill_all(t_list *cmd, int signal)
+static void	ft_kill_all(t_list *cmd, int signal)
 {
-	t_list *cmd_tmp;
+	t_list	*cmd_tmp;
 
 	cmd_tmp = cmd;
 	while (cmd_tmp)
 	{
-		// printf("kill\n");
 		kill(cmd->cmd_data->pid, signal);
 		cmd_tmp = cmd_tmp->next;
 	}
@@ -27,24 +26,37 @@ void	ft_kill_all(t_list *cmd, int signal)
 
 void	ft_get_status(t_data *data, t_list *cmd)
 {
-	// printf("exit status: %d\n", WEXITSTATUS(data->status));
-	// printf("stopsig status: %d\n", WSTOPSIG(data->status));
-	// printf("if signaled: %d\n", WIFSIGNALED(data->status));
-	// printf("sig status: %d\n", WTERMSIG(data->status));
-	if (WIFSIGNALED(data->status))
+	(void)data;
+	if (WIFSIGNALED(g_status))
 	{
-		if (WTERMSIG(data->status) == SIGQUIT)
+		if (WTERMSIG(g_status) == SIGQUIT)
 		{
 			if (!cmd->next)
-				printf("Quit: %d\n", WTERMSIG(data->status));
+				printf("Quit: %d\n", WTERMSIG(g_status));
 			ft_kill_all(cmd, SIGQUIT);
 		}
-		if (WTERMSIG(data->status) == SIGINT)
+		if (WTERMSIG(g_status) == SIGINT)
 			ft_kill_all(cmd, SIGINT);
-		data->status = 128 + WTERMSIG(data->status);
+		g_status = 128 + WTERMSIG(g_status);
 	}
 	else
-		data->status = WEXITSTATUS(data->status);
+		g_status = WEXITSTATUS(g_status);
+}
+
+int	ft_close_all(t_data *data)
+{
+	t_list	*redir;
+
+	redir = data->redirs;
+	while (redir)
+	{
+		if (redir->redir_data->fd > 0)
+			close(redir->redir_data->fd);
+		redir = redir->next;
+	}
+	if (access("here_doc", F_OK) == 0)
+		unlink("here_doc");
+	return (1);
 }
 
 void	ft_wait_children(t_data *data)
@@ -54,7 +66,7 @@ void	ft_wait_children(t_data *data)
 	cmd = data->commands;
 	while (cmd)
 	{
-		waitpid(cmd->cmd_data->pid, &data->status, 0);
+		waitpid(cmd->cmd_data->pid, &g_status, 0);
 		ft_get_status(data, cmd);
 		cmd = cmd->next;
 	}
@@ -65,49 +77,4 @@ void	ft_close_pipes(t_list *current)
 {
 	close(current->cmd_data->pipe_fd[0]);
 	close(current->cmd_data->pipe_fd[1]);
-}
-
-void	ft_dup(t_list **cmd, t_list **prev)
-{
-	if ((*prev))
-	{
-		dup2((*prev)->cmd_data->pipe_fd[0], STDIN_FILENO);
-		close((*prev)->cmd_data->pipe_fd[0]);
-		close((*prev)->cmd_data->pipe_fd[1]);
-	}
-	if ((*cmd)->next)
-	{
-		close((*cmd)->cmd_data->pipe_fd[0]);
-		dup2((*cmd)->cmd_data->pipe_fd[1], STDOUT_FILENO);
-		close((*cmd)->cmd_data->pipe_fd[1]);
-	}
-	if (!(*prev) && !(*cmd)->next) /* в случае > file | wc -l */
-	{
-		dup2((*cmd)->cmd_data->pipe_fd[0], STDIN_FILENO);
-		close((*cmd)->cmd_data->pipe_fd[0]);
-		close((*cmd)->cmd_data->pipe_fd[1]);
-	}
-}
-
-void	ft_backup_dup(int *tmp_fd_in, int *tmp_fd_out, int type)
-{
-	if (type == 'b')
-	{
-		*tmp_fd_in = dup(STDIN_FILENO);
-		*tmp_fd_out = dup(STDOUT_FILENO);
-	}
-	else if (type == 'r')
-	{
-		if (*tmp_fd_in >= 0)
-		{
-			dup2(*tmp_fd_in, STDIN_FILENO);
-			close(*tmp_fd_in);
-		}
-		if (*tmp_fd_out >= 0)
-		{
-			dup2(*tmp_fd_out, STDOUT_FILENO);
-			close(*tmp_fd_out);
-		}
-		
-	}
 }

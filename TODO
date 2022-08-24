@@ -1,7 +1,0 @@
-1. Если подаётся только pipe bash выдаёт ошибку (bash: syntax error near unexpected token `|')
-2. если подать пустую строку, bash пишет, что команда не найдена
-	[bash 3.2]$ ''
-	bash: : command not found
-3. export var+=new_var
-4. heredoc << $PATH -> как строка
-5. cat -e > out > out1 > permission_denied_file > out2 (shouldn't be created)

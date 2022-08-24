@@ -3,30 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_unset.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:12:05 by sshield           #+#    #+#             */
-/*   Updated: 2022/08/02 19:05:48 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/12 19:33:18 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_get_length_var(char *cmd, size_t *length)
-{
-	*length = 0;
-	while (cmd[*length] != '=' && cmd[*length])
-		*length +=1;
-}
-
 void	ft_delete_env_var(t_data *data, t_list **prev, t_list **var)
 {
-	if ((*prev) == NULL)//переменная нашлась в первой строке, удалить этот list
+	if ((*prev) == NULL)
 		data->envplist = (*var)->next;
-	else 
+	else
 		(*prev)->next = (*var)->next;
 	free ((*var)->envp_str);
 	free (*var);
+}
+
+void	ft_unset_pwd_oldpwd(t_data *data, char *cmd)
+{
+	if (data->pwd_flag == 1 && (ft_strcmp(cmd, "PWD") == 0))
+	{
+		data->pwd_flag = 0;
+		ft_memdel(data->pwd);
+		data->pwd = ft_calloc(1, sizeof(char));
+	}
+	else if (data->oldpwd_flag == 1 && (ft_strcmp(cmd, "OLDPWD") == 0))
+	{
+		data->oldpwd_flag = 0;
+		ft_memdel(data->oldpwd);
+		data->oldpwd = ft_calloc(1, sizeof(char));
+	}
 }
 
 void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
@@ -45,6 +54,7 @@ void	ft_delete_if_found_in_envplist(char **tmp_cmd, t_data *data)
 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
 				&& ((*tmp_cmd)[length] == '\0'))
 			{
+				ft_unset_pwd_oldpwd(data, *tmp_cmd);
 				ft_delete_env_var(data, &prev_env, &current_env);
 				data->amount_env_vars -= 1;
 				ft_change_arr_env_vars(data);
@@ -73,6 +83,7 @@ void	ft_delete_if_found_in_sortlist(char **tmp_cmd, t_data *data)
 			if (ft_strncmp(current_env->envp_str, *tmp_cmd, length) == 0 \
 				&& ((*tmp_cmd)[length] == '\0'))
 			{
+				ft_unset_pwd_oldpwd(data, *tmp_cmd);
 				ft_delete_env_var(data, &prev_env, &current_env);
 				break ;
 			}

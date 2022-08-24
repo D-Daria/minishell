@@ -3,13 +3,14 @@ NAME = minishell
 #---mandatory part---#
 OBJS_DIR =	objs
 
-SRCS_MF =	main.c debug_tests.c parser.c reading_cmds.c\
-			utils.c commands.c commands_utils.c execution.c\
-			execution_errors.c redirection.c redirection_utils.c\
-			free_utils.c env_variables_utils.c\
-			builtins.c builtins_utils.c builtin_export.c builtin_unset.c\
-			paths.c execution_utils.c signals.c heredoc.c builtin_echo.c\
-			builtin_cd.c builtin_exit.c
+SRCS_MF =	main.c main_init.c reading_cmds.c\
+			parser.c parser_dollar.c parser_quotes.c parser_utils.c\
+			utils.c commands.c commands_utils.c execution.c execution_dup.c\
+			execution_errors.c redirection.c redirection_utils.c redirection_open.c\
+			free_utils.c env_vars_utils.c env_vars_pwd_oldpwd.c\
+			builtins.c builtins_utils.c builtin_unset.c builtin_exit.c\
+			builtin_export.c builtin_export_listshandling.c builtin_export_utils.c\
+			paths.c execution_utils.c signals.c heredoc.c builtin_echo.c builtin_cd.c
 
 OBJS_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.o, $(SRCS_MF)))
 D_FILES_M = $(addprefix $(OBJS_DIR)/, $(patsubst %.c,%.d, $(SRCS_MF)))

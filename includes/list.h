@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/17 14:54:01 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 13:33:44 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 13:44:05 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_command {
 	int		cmd_id;
 	int		pipe_fd[2];
 	int		is_redir;
+	int		is_process;
 	pid_t	pid;
 	t_list	*heredoc;
 	t_list	*redir_in;

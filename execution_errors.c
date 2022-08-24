@@ -3,76 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   execution_errors.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 13:14:47 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 16:19:41 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 16:45:20 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_close_all(t_data *data)
-{
-	t_list	*redir;
-
-	redir = data->redirs;
-	while (redir)
-	{
-		if (redir->redir_data->fd >= 0)
-			close(redir->redir_data->fd);
-		redir = redir->next;
-	}
-	return (1);
-}
-
 void	ft_token_error(t_data *data, int id, int process)
 {
 	char	*token;
 
+	(void)data;
 	token = NULL;
 	if (id == L1_REDIRECT)
-		token = "`<'";
+		token = "`newline'";
 	else if (id == L2_HEREDOC)
-		token = "`<<'";
+		token = "`newline'";
 	else if (id == R1_REDIRECT)
-		token = "`>'";
+		token = "`newline'";
 	else if (id == R2_REDIRECT)
-		token = "`>>'";
+		token = "`newline'";
 	else if (id == PIPE)
 		token = "`|'";
-	ft_putstr_fd("minishell: syntax error near unexpected token ", STDERR_FILENO);
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd("syntax error near unexpected token ", STDERR_FILENO);
 	ft_putendl_fd(token, STDERR_FILENO);
 	if (process)
 		exit(258);
 	else
-		data->status = 258;
+		g_status = 258;
 }
 
-void	ft_file_error(t_data *data, char *file, int process)
+void	ft_file_error(t_data *data, char *file, int is_process)
 {
 	int	fd;
 
+	(void)data;
 	fd = open(file, O_RDWR);
 	if (fd == -1)
 	{
-		ft_putstr_fd(RED, STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror(file);
-		ft_putstr_fd(BREAK, STDERR_FILENO);
 	}
 	else
 		close(fd);
-	if (process)
+	if (is_process)
 		exit(1);
 	else
-		data->status = 1;
+		g_status = 1;
 }
 
 void	ft_perror_redir(t_data *data, t_list *redir)
 {
 	int	num;
 
-	if (!redir || data->status > 0)
+	if (!redir || (g_status > 0))
 		return ;
 	num = redir->redir_data->num;
 	if (num == -1)

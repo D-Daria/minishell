@@ -3,31 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/18 17:08:37 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/02 19:31:30 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 16:44:35 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_redir_out(t_data *data, t_list *cmd)
+static void	ft_redir_out(t_data *data, t_list *cmd, int is_process)
 {
-	t_list	*redir_out;
+	t_list	*redir;
 	int		id;
+	int		cmd_num;
 
-	printf("redir_out\n");
-	redir_out = NULL;
+	redir = NULL;
 	id = 0;
-	redir_out = cmd->cmd_data->redir_out;
-	if (redir_out->redir_data->fd < 0)
-		ft_file_error(data, redir_out->redir_data->file, 1);
-	id = redir_out->redir_data->id;
-	if (id == R1_REDIRECT || id == R2_REDIRECT)
+	redir = cmd->cmd_data->redir_out;
+	cmd_num = cmd->cmd_data->cmd_num;
+	while (redir && redir->redir_data->num == cmd_num)
 	{
-		dup2(redir_out->redir_data->fd, STDOUT_FILENO);
-		close(redir_out->redir_data->fd);
+		if (redir->redir_data->fd < 0)
+			ft_file_error(data, redir->redir_data->file, is_process);
+		if (g_status > 0 && !is_process)
+			return ;
+		id = redir->redir_data->id;
+		if (id == R1_REDIRECT || id == R2_REDIRECT)
+		{
+			dup2(redir->redir_data->fd, STDOUT_FILENO);
+			close(redir->redir_data->fd);
+		}
+		redir = redir->next;
 	}
 }
 
@@ -69,7 +76,7 @@ void	ft_heredoc(t_data *data, t_list *cmd)
 		unlink("here_doc");
 }
 
-void	ft_redir_in_heredoc(t_data *data, t_list *cmd) /*учитываем порядок редиректов*/
+void	ft_redir_in_heredoc(t_data *data, t_list *cmd, int is_process)
 {
 	t_list	*redir;
 	int		cmd_num;
@@ -84,7 +91,7 @@ void	ft_redir_in_heredoc(t_data *data, t_list *cmd) /*учитываем пор�
 	while (redir && redir->redir_data->num == cmd_num)
 	{
 		if (redir->redir_data->fd < 0)
-			ft_file_error(data, redir->redir_data->file, 1);
+			ft_file_error(data, redir->redir_data->file, is_process);
 		id = redir->redir_data->id;
 		if (id == L1_REDIRECT || id == L2_HEREDOC)
 		{
@@ -97,12 +104,12 @@ void	ft_redir_in_heredoc(t_data *data, t_list *cmd) /*учитываем пор�
 		unlink("here_doc");
 }
 
-void	ft_redirect(t_list *cmd, t_data *data)
+void	ft_redirect(t_list *cmd, t_data *data, int is_process)
 {	
 	if (!cmd)
 		return ;
 	if (cmd->cmd_data->redir_out)
-		ft_redir_out(data, cmd);
+		ft_redir_out(data, cmd, is_process);
 	if (cmd->cmd_data->heredoc || cmd->cmd_data->redir_in)
-		ft_redir_in_heredoc(data, cmd);
+		ft_redir_in_heredoc(data, cmd, is_process);
 }

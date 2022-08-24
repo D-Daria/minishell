@@ -37,3 +37,17 @@ size_t	ft_split_len(char **str)
 		i++;
 	return (i);
 }
+
+bool	ft_check_in_change_envplist(t_data *data, char *new_var, char ch)
+{
+	if (!new_var)
+		ft_error_exit("malloc error\n");
+	if (ch != '=')
+	{
+		ft_delete_if_found_in_envplist(&new_var, data);
+		ft_memdel(new_var);
+		data->add_new_var_envplist = 0;
+		return (1);
+	}
+	return (0);
+}

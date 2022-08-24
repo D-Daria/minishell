@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 15:10:41 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 16:06:24 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 15:27:39 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_status;
 
 void	ft_execve(t_data *data, t_list *cmd)
 {
@@ -36,7 +38,7 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 	if (is_builtin >= 0)
 	{
 		ft_single_builtin(data, cmd, is_builtin);
-		return;
+		return ;
 	}
 	cmd->cmd_data->pid = fork();
 	if (cmd->cmd_data->pid < 0)
@@ -45,15 +47,12 @@ void	ft_execute_single_cmd(t_data *data, t_list *cmd)
 	{
 		ft_signals_child();
 		if (cmd->cmd_data->is_redir)
-			ft_redirect(cmd, data);
+			ft_redirect(cmd, data, 1);
 		ft_execve(data, cmd);
-		exit(data->status);
+		exit(g_status);
 	}
 	else
-	{
-		waitpid(cmd->cmd_data->pid, &data->status, 0);
-		ft_get_status(data, cmd);
-	}
+		ft_wait_children(data);
 }
 
 void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
@@ -63,7 +62,8 @@ void	ft_execute_child(t_data *data, t_list **cmd, t_list **prev)
 	ft_signals_child();
 	ft_dup(cmd, prev);
 	if ((*cmd)->cmd_data->is_redir)
-		ft_redirect((*cmd), data);
+		ft_redirect((*cmd), data, 1);
+	(*cmd)->cmd_data->is_process = 1;
 	is_builtin = ft_processing_builtin(data, (*cmd));
 	if (is_builtin >= 0)
 		ft_start_builtin(&data, (*cmd), is_builtin);
@@ -104,14 +104,22 @@ void	ft_execute(t_data *data)
 	t_list	*cmd;
 	t_list	*prev;
 
-	data->status = 0;
 	cmd = data->commands;
 	prev = NULL;
+	g_status = 0;
 	if (data->redirs)
-		ft_process_redirs(data);
-	debug_print_commands_list(data);
-	if (data->status > 0)
+	{
+		ft_open_heredoc(data);
+		ft_open_redirs(data);
+	}
+	if (data->commands && data->redirs)
+		ft_set_cmd_redirs(data);
+	if (g_status > 250 || (g_status > 0 && !cmd))
+	{
+		if (g_status == 512)
+			g_status = 1;
 		return ;
+	}
 	if (cmd && data->pipes_number > 0)
 		ft_pipe(data, cmd, prev);
 	else if (cmd)

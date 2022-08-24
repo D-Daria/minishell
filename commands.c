@@ -3,14 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 14:13:57 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/09 13:35:52 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 14:09:11 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	ft_set_cmd_redirs(t_data *data)
+{
+	t_list	*cmd;
+	int		cmd_num;
+
+	cmd = data->commands;
+	while (cmd)
+	{
+		cmd_num = cmd->cmd_data->cmd_num;
+		ft_set_redir(data, &cmd->cmd_data->redir_in, cmd_num, L1_REDIRECT);
+		ft_set_redir(data, &cmd->cmd_data->redir_out, cmd_num, R1_REDIRECT);
+		ft_set_redir(data, &cmd->cmd_data->redir_out, cmd_num, R2_REDIRECT);
+		ft_set_redir(data, &cmd->cmd_data->heredoc, cmd_num, L2_HEREDOC);
+		if (cmd->cmd_data->redir_in || cmd->cmd_data->redir_out \
+			|| cmd->cmd_data->heredoc)
+		{
+			cmd->cmd_data->is_redir = 1;
+		}
+		cmd = cmd->next;
+	}
+}
 
 void	ft_fill_redir(t_data *data, t_list ***token, int id, int num)
 {
@@ -82,35 +104,6 @@ void	ft_process_tokens(t_data *data, t_list *current, t_list *prev)
 	}
 }
 
-static void	ft_set_cmd_redirs(t_data *data)
-{
-	t_list	*cmd;
-	t_list	*redir;
-	int		id;
-
-	cmd = data->commands;
-	while (cmd)
-	{
-		redir = data->redirs;
-		while (redir)
-		{
-			if (cmd->cmd_data->cmd_num == redir->redir_data->num)
-			{
-				cmd->cmd_data->is_redir = 1;
-				id = redir->redir_data->id;
-				if (id == L1_REDIRECT)
-					cmd->cmd_data->redir_in = redir;
-				if (id == R1_REDIRECT || id == R2_REDIRECT)
-					cmd->cmd_data->redir_out = redir;
-				if (id == L2_HEREDOC)
-					cmd->cmd_data->heredoc = redir;
-			}
-			redir = redir->next;
-		}
-		cmd = cmd->next;
-	}
-}
-
 void	ft_commands(t_data *data)
 {
 	t_list	*token;
@@ -120,12 +113,7 @@ void	ft_commands(t_data *data)
 	data->redirs = NULL;
 	token = NULL;
 	prev = NULL;
-	/*ft_print_list_of_tokens(data);*/
 	ft_get_paths(data, data->parser_ptr);
 	ft_process_tokens(data, token, prev);
 	ft_free_split(data->parser_ptr->paths);
-	/*debug_print_redirections(data->redirs);*/
-	if (data->commands && data->redirs)
-		ft_set_cmd_redirs(data);
-	/*printf("data->parser_ptr->paths cleared\n");*/
 }

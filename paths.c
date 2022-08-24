@@ -36,7 +36,7 @@ char	*ft_access_paths(t_parser *parser, char *cmd)
 	return (NULL);
 }
 
-static void ft_join_path(char **path, t_parser *parser)
+static void	ft_join_path(char **path, t_parser *parser)
 {
 	char	*join;
 	size_t	i;

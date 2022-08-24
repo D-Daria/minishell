@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: sshield <sshield@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/25 14:32:49 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/05 18:55:22 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 14:18:03 by sshield          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void	ft_free_commands(t_list	**cmd_head)
 			(*cmd_head) = next;
 		}
 	}
-	// ft_memdel((*cmd_head));//не надо, или я ошибаюсь?
 }
 
 void	ft_free_redirs(t_list **redir_head)
@@ -53,7 +52,6 @@ void	ft_free_redirs(t_list **redir_head)
 			(*redir_head) = next;
 		}
 	}
-	// ft_memdel((*redir_head));//не надо, или я ошибаюсь?
 }
 
 void	ft_free_tokenlist(t_list **list)

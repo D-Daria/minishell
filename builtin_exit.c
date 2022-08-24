@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mrhyhorn <mrhyhorn@student.21-school.ru    +#+  +:+       +#+        */
+/*   By: mrhyhorn <mrhyhorn@student21-school.ru>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 14:19:25 by mrhyhorn          #+#    #+#             */
-/*   Updated: 2022/08/10 16:09:51 by mrhyhorn         ###   ########.fr       */
+/*   Updated: 2022/08/13 12:39:54 by mrhyhorn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,16 @@ static int	ft_validate_digits(t_list *cmd)
 
 void	ft_exit_process(t_data *data, t_list *cmd)
 {
-	size_t	len;
-
-	len = ft_split_len(cmd->cmd_data->cmd);
-	ft_putendl_fd("exit", STDOUT_FILENO);
-	if (len > 2)
+	if (cmd->cmd_data->is_process == 0)
+		ft_putendl_fd("exit", STDOUT_FILENO);
+	if (ft_split_len(cmd->cmd_data->cmd) > 2)
 	{
 		ft_putstr_fd("minishell: exit: ", STDERR_FILENO);
 		ft_putendl_fd("too many arguments", STDERR_FILENO);
-		data->status = 1;
+		g_status = 1;
 		return ;
 	}
-	else if (len == 2)
+	else if (ft_split_len(cmd->cmd_data->cmd) == 2)
 	{
 		if (!ft_validate_digits(cmd))
 		{
@@ -53,5 +51,7 @@ void	ft_exit_process(t_data *data, t_list *cmd)
 		}
 		exit(ft_atoi(cmd->cmd_data->cmd[1]));
 	}
-	exit(data->exit_status);
+	if (cmd->cmd_data->is_process == 0)
+		exit(data->exit_status);
+	exit(0);
 }
