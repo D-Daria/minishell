@@ -22,8 +22,8 @@ The aim of this project is to implement our own shell with limited functionality
 <details>
 
 <div style="height: 10px"></div>
-<summary>Requirements</summary>
-<div style="height: 10px"></div>
+
+<span style="margin-bottom: 5px"><summary>Requirements</summary></span>
 
 The shell should:
 
