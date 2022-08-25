@@ -1,7 +1,7 @@
 # minishell
 
 ## mrhyhorn and sshield group 👩🏻‍💻 🧑🏻‍💻 at School21
-<hr>
+
 <div style="height: 10px"></div>
 <div>
 <span>
