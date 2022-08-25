@@ -20,7 +20,7 @@ The aim of this project is to implement our own shell with limited functionality
 <div style="height: 10px"></div>
  
 <details>
-
+<div style="height: 10px"></div>
 <summary>Requirements</summary>
 <div style="height: 10px"></div>
 
