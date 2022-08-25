@@ -1,6 +1,7 @@
 NAME = minishell
 
 #---mandatory part---#
+SRCS_DIR =	srcs
 OBJS_DIR =	objs
 
 SRCS_MF =	main.c main_init.c reading_cmds.c\
@@ -54,7 +55,7 @@ $(NAME) : $(OBJS_M) $(LIBFT)
 	$(CC) $(CFLAGS) $(OPFLAGS) $(OBJS_M) $(LIB_INC) $(MEM_LIB) $(RDLINE) -o $(NAME)
 	@echo "$(BLUE)$(NAME)$(GREEN) --> DONE!$(BREAK)"
 
-$(OBJS_DIR)/%.o : %.c | $(OBJS_DIR)
+$(OBJS_DIR)/%.o : $(SRCS_DIR)/%.c | $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(OPFLAGS) $(INCLUDES) -c $< -o $@ -MD
 
 clean :
