@@ -27,61 +27,47 @@ The aim of this project is to implement our own shell with limited functionality
 
 The shell should:
 
-• Display a prompt when waiting for a new command.
+- Display a prompt when waiting for a new command.
 
-• Have a working history.
+- Have a working history.
 
-• Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
+- Search and launch the right executable (based on the PATH variable or using a relative or an absolute path).
 
-• Not use more than one global variable. Think about it. You will have to explain its purpose.
+- Not use more than one global variable. Think about it. You will have to explain its purpose.
 
-• Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
+- Not interpret unclosed quotes or special characters which are not required by the subject such as \ (backslash) or ; (semicolon).
 
-• Handle ’ (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
+- Handle <code>’</code> (single quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence.
 
-• Handle " (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
+- Handle <code>"</code> (double quote) which should prevent the shell from interpreting the metacharacters in the quoted sequence except for $ (dollar sign).
 
-• Implement redirections:
+- Implement redirections:
+	- <code> < </code> should redirect input.
+	- <code> > </code> should redirect output.
+	- <code> << </code> should be given a delimiter, then read the input until a line containing the delimiter is seen.
+	- <code> >> </code> should redirect output in append mode.
 
-<span class="marg_left">◦ <code> < </code> should redirect input.</span>
+- Implement pipes (<code>|</code> character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
 
-<span class="marg_left">◦ <code> > </code> should redirect output.</span>
+- Handle environment variables (<code>$</code> followed by a sequence of characters) which should expand to their values.
 
-<span class="marg_left">◦ <code> << </code> should be given a delimiter, then read the input until a line containing the delimiter is seen. </span>
+- Handle <code>$?</code> which should expand to the exit status of the most recently executed foreground pipeline.
 
-<span class="marg_left">◦ <code> >> </code> should redirect output in append mode.</span>
+- Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
 
-• Implement pipes (| character). The output of each command in the pipeline is connected to the input of the next command via a pipe.
+- In interactive mode:
+	- ctrl-C displays a new prompt on a new line.
+	- ctrl-D exits the shell.
+	- ctrl-\ does nothing.
 
-• Handle environment variables ($ followed by a sequence of characters) which should expand to their values.
-
-• Handle $? which should expand to the exit status of the most recently executed foreground pipeline.
-
-• Handle ctrl-C, ctrl-D and ctrl-\ which should behave like in bash.
-
-• In interactive mode:
-
-<span class="marg_left">◦ ctrl-C displays a new prompt on a new line.</span>
-
-<span class="marg_left">◦ ctrl-D exits the shell.</span>
-
-<span class="marg_left">◦ ctrl-\ does nothing.</span>
-
-• Your shell must implement the following builtins:
-
-<span class="marg_left">◦ echo with option -n</span>
-
-<span class="marg_left">◦ cd with only a relative or absolute path</span>
-
-<span class="marg_left">◦ pwd with no options</span>
-
-<span class="marg_left">◦ export with no options</span>
-
-<span class="marg_left">◦ unset with no options</span>
-
-<span class="marg_left">◦ env with no options or arguments</span>
-
-<span class="marg_left">◦ exit with no options</span>
+- Your shell must implement the following builtins:
+	- <code>echo</code> with option -n
+	- <code>cd</code> with only a relative or absolute path
+	- <code>pwd</code> with no options
+	- <code>export</code> with no options
+	- <code>unset</code> with no options
+	- <code>env</code> with no options or arguments
+	- <code>exit</code> with no options
 
 </details>
 
@@ -153,10 +139,3 @@ After pressing CTRL-C <code>echo $?</code> should display exit status 1
 	declare -x HOME="MY_HOME"
 	[minishell]-> cd ~
 	bash: cd: MY_HOME: No such file or directory
-
-
-<style>
-	.marg_left {
-		margin-left: 40px
-	}
-</style>
