@@ -1,15 +1,21 @@
 <div>
-	<span style="width: 200px"><img style="width: 200px" src="info/imgs/terminal_15.png"></span>
+	<span style="width: 150px"><img style="width: 150px" src="info/imgs/terminal_15.png"></span>
 </div>
 
 ## mrhyhorn and sshield group 👩🏻‍💻 🧑🏻‍💻 at School21
-
 <div style="height: 10px"></div>
 <div>
 <span>
-	<img src="https://img.shields.io/badge/language-00599C?logo=C&logoColor=white&style=for-the-badge">
+	<img src="https://img.shields.io/badge/language-00599C?logo=C&?logoWidth=40&logoColor=white&style=for-the-badge">
+</span>
+<span>
+	<img src="info/imgs/school21_badge.svg">
+</span>
+<span>
+    <img src="https://img.shields.io/badge/ecole-black?logo=42&logoWidth=20&style=for-the-badge&?labelColor=black">
 </span>
 </div>
+<div style="height: 10px"></div>
 
 <div style="height: 10px"></div>
 
