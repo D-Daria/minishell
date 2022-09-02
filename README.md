@@ -2,9 +2,8 @@
 	<span style="width: 150px"><img style="width: 150px" src="info/imgs/terminal_15.png"></span>
 </div>
 
-## mrhyhorn and sshield group 👩🏻‍💻 🧑🏻‍💻 at School21
 <div style="height: 10px"></div>
-<div>
+<div style="display: flex; column-gap: 5px; justify-content: flex-start; align-content: stretch">
 <span>
 	<img src="https://img.shields.io/badge/language-00599C?logo=C&?logoWidth=40&logoColor=white&style=for-the-badge">
 </span>
@@ -16,6 +15,8 @@
 </span>
 </div>
 <div style="height: 10px"></div>
+
+## mrhyhorn and sshield group 👩🏻‍💻 🧑🏻‍💻 at School21
 
 <div style="height: 10px"></div>
 
