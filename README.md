@@ -1,4 +1,6 @@
-# minishell
+<div>
+	<span style="width: 200px"><img style="width: 200px" src="info/imgs/terminal_15.png"></span>
+</div>
 
 ## mrhyhorn and sshield group 👩🏻‍💻 🧑🏻‍💻 at School21
 
