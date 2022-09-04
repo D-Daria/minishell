@@ -1,9 +1,8 @@
-<div>
+<div align="center" >
 	<span style="width: 150px"><img style="width: 150px" src="info/imgs/terminal_15.png"></span>
 </div>
-
 <div style="height: 10px"></div>
-<div style="display: flex; align-items: center; column-gap: 5px">
+<div align="center" style="display: flex; justify-content: center; align-items: center; column-gap: 5px">
 <span>
 	<img src="https://img.shields.io/badge/language-00599C?logo=C&?logoWidth=40&logoColor=white&style=for-the-badge">
 </span>
