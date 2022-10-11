@@ -22,6 +22,7 @@
 ## 📄 Summary
 
 The aim of this project is to implement our own shell with limited functionality (it's mini).
+It allows to get better understanding of UNIX command-line interpreter.
 
 ## 📝 Project description
 
@@ -80,6 +81,18 @@ The shell should:
 </details>
 
 <div style="height: 10px"></div>
+
+## 🏁 How to run
+
+The program can be compiled on both MacOS and Linux.
+
+	make
+<!-- break -->
+	./minishell
+
+or
+
+	make && ./minishell
 
 ## 🛠 Tests
 
